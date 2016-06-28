@@ -103,14 +103,6 @@
       },
       "oauth_client": [
         {
-          "client_id": "33342368256-4ka8hgnomr89fmakod0gc3soar225cvh.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "assistance.shopping.msc.assistant",
-            "certificate_hash": "B6FE66890B0183F452899CF3E69370947D212347"
-          }
-        },
-        {
           "client_id": "33342368256-78c8pjhdhds4btdg9r4nan2m8kfrecnp.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

@@ -1,0 +1,16 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorAccent"
+    tools:context="assistance.shopping.msc.assistant.StreetFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <fragment
+
+        android:name="com.google.android.gms.maps.StreetViewPanoramaFragment"
+        android:id="@+id/streetView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</FrameLayout>

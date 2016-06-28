@@ -42,7 +42,7 @@ public class LoginActivity extends Activity {
             @Override
             public void onClick(View v) {
 
-                Intent takeUserResetPassword = new Intent(LoginActivity.this, HomeActivity.class);
+                Intent takeUserResetPassword = new Intent(LoginActivity.this, RegisterActivity.class);
                 startActivity(takeUserResetPassword);
 
             }
@@ -69,7 +69,7 @@ public class LoginActivity extends Activity {
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 Log.d(TAG, "signInWithEmail:onComplete:" + task.isSuccessful());
 
-                                Intent takeUserHome = new Intent(LoginActivity.this, HomeActivity.class);
+                                Intent takeUserHome = new Intent(LoginActivity.this, NavigationActivity.class);
                                 startActivity(takeUserHome);
                                 // If sign in fails, display a message to the user. If sign in succeeds
                                 // the auth state listener will be notified and logic to handle the
@@ -85,7 +85,6 @@ public class LoginActivity extends Activity {
 
 
 
-
             }
         });
 
@@ -97,7 +96,8 @@ public class LoginActivity extends Activity {
                 if (user != null) {
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                    Intent takeUserResetPassword = new Intent(LoginActivity.this, HomeActivity.class);
+                    Toast.makeText(LoginActivity.this, "Welcome" + user.getEmail(), Toast.LENGTH_LONG).show();
+                    Intent takeUserResetPassword = new Intent(LoginActivity.this, NavigationActivity.class);
                     startActivity(takeUserResetPassword);
 
                 } else {
@@ -110,9 +110,22 @@ public class LoginActivity extends Activity {
         // ...
 
     }
+    @Override
+    public void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
 
 
 
 
+}
 
 }
