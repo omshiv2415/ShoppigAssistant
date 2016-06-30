@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         // be handled here. If you want a different intent fired, set the click_action
         // field of the notification message to the desired intent. The launcher intent
         // is used when no click_action is specified.
-        //
+
         // Handle possible data accompanying notification message.
         // [START handle_data_extras]
         if (getIntent().getExtras() != null) {
