@@ -15,18 +15,16 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class RegisterActivity extends Activity {
 
+    private static final String TAG = "EmailPassword";
+    protected Button mButtonRegisterRegister;
+    Support support = new Support();
     private EditText mEmailFieldRegister;
     private EditText mPasswordFieldRegister;
-    protected Button mButtonRegisterRegister;
-    private static final String TAG = "EmailPassword";
     private FirebaseAuth mAuth;
     private TextToSpeech speech;
 
@@ -68,7 +66,7 @@ public class RegisterActivity extends Activity {
                         }
                     });
 
-                } else if (!isValidEmail(email)) {
+                } else if (!support.isValidEmail(email)) {
                     speech = new TextToSpeech(RegisterActivity.this, new TextToSpeech.OnInitListener() {
                         @Override
                         public void onInit(int status) {
@@ -84,7 +82,7 @@ public class RegisterActivity extends Activity {
                         }
                     });
 
-                } else if (!isValidPassword(password)) {
+                } else if (!support.isValidPassword(password)) {
 
                     speech = new TextToSpeech(RegisterActivity.this, new TextToSpeech.OnInitListener() {
                         @Override
@@ -122,34 +120,14 @@ public class RegisterActivity extends Activity {
                                 }
                             });
 
-                      }
-
                 }
 
-           });
+            }
+
+        });
 
 
-      }
-
-
-    // validating email id
-    private boolean isValidEmail(String email) {
-        String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
-                + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-
-        Pattern pattern = Pattern.compile(EMAIL_PATTERN);
-        Matcher matcher = pattern.matcher(email);
-        return matcher.matches();
     }
-
-    // validating password with retype password
-    private boolean isValidPassword(String pass) {
-        if (pass != null && pass.length() >= 7 && pass.length() <= 21) {
-            return true;
-        }
-        return false;
-    }
-
 
 
 }

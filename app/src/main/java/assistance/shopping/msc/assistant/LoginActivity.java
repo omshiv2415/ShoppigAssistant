@@ -24,28 +24,27 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.Locale;
 
-public class LoginActivity extends Activity implements
-        GoogleApiClient.OnConnectionFailedListener,
-        View.OnClickListener{
-    private EditText mEmailField;
-    private EditText mPasswordField;
+public class LoginActivity extends Activity implements GoogleApiClient.OnConnectionFailedListener,
+        View.OnClickListener {
+
+    private static final String TAG = "GoogleActivity";
+    private static final int RC_SIGN_IN = 9001;
     protected Button mButtonLogin;
     protected Button mInitialRegister;
     protected Button mInitialReset;
     protected Button mGoogleSignIn;
+    private EditText mEmailField;
+    private EditText mPasswordField;
     private TextToSpeech speech;
-    private static final String TAG = "GoogleActivity";
-    private static final int RC_SIGN_IN = 9001;
-
     private FirebaseAuth mAuth;
-
     private FirebaseAuth.AuthStateListener mAuthListener;
-
-
     private GoogleApiClient mGoogleApiClient;
+    final MyFirebaseMessagingService message = new MyFirebaseMessagingService();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,10 +53,15 @@ public class LoginActivity extends Activity implements
         mEmailField = (EditText) findViewById(R.id.editTextEmail);
         mPasswordField = (EditText) findViewById(R.id.editTextPassword);
         mButtonLogin = (Button) findViewById(R.id.buttonLogin);
-        mInitialRegister = (Button)findViewById(R.id.buttonInitialRegister);
-        mInitialReset = (Button)findViewById(R.id.buttonInitialReset);
-        mGoogleSignIn = (Button)findViewById(R.id.sign_in_button_by_Google);
+        mInitialRegister = (Button) findViewById(R.id.buttonInitialRegister);
+        mInitialReset = (Button) findViewById(R.id.buttonInitialReset);
+        mGoogleSignIn = (Button) findViewById(R.id.sign_in_button_by_Google);
         mAuth = FirebaseAuth.getInstance();
+
+
+
+        Log.d(TAG, "InstanceID token: " + FirebaseInstanceId.getInstance().getToken());
+
         // [START config_signin]
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -79,7 +83,7 @@ public class LoginActivity extends Activity implements
             @Override
             public void onClick(View v) {
                 Intent takeUserResetPassword = new Intent(LoginActivity.this, GoogleSignInActivity.class);
-               startActivity(takeUserResetPassword);
+                startActivity(takeUserResetPassword);
 
             }
         });
@@ -96,8 +100,11 @@ public class LoginActivity extends Activity implements
             @Override
             public void onClick(View v) {
 
-                Intent takeUserPasswordReset = new Intent(LoginActivity.this, PasswordResetActivity.class);
-                startActivity(takeUserPasswordReset);
+               Intent takeUserPasswordReset = new Intent(LoginActivity.this, PasswordResetActivity.class);
+               startActivity(takeUserPasswordReset);
+
+
+
 
             }
         });
@@ -175,6 +182,7 @@ public class LoginActivity extends Activity implements
         // ...
 
     }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -190,6 +198,7 @@ public class LoginActivity extends Activity implements
 
 
     }
+
     // [START onactivityresult]
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -216,7 +225,7 @@ public class LoginActivity extends Activity implements
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
         // [START_EXCLUDE silent]
-       // showProgressDialog();
+        // showProgressDialog();
         // [END_EXCLUDE]
 
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
@@ -263,6 +272,7 @@ public class LoginActivity extends Activity implements
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
+        Log.d(TAG, "onConnectionFailed:" + connectionResult);
+        Toast.makeText(this, "Google Play Services error.", Toast.LENGTH_SHORT).show();
     }
 }

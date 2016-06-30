@@ -26,7 +26,11 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="loading">Please wait</string>
 
-
+   <string name="quickstart_message">Click the SUBSCRIBE TO NEWS button below to subscribe to the
+        news topic. Messages sent to the news topic will be received. The LOG TOKEN button logs the
+        InstanceID token to logcat.</string>
+    <string name="subscribe_to_news">Subscribe To News</string>
+    <string name="log_token">Log Token</string>
 
 
     <string name="label_google_sign_in">Firebase + Google Sign In</string>

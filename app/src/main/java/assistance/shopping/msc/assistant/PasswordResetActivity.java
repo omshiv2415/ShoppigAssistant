@@ -1,23 +1,33 @@
 package assistance.shopping.msc.assistant;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class PasswordResetActivity extends Activity {
+import java.util.Locale;
 
+public class PasswordResetActivity extends LoginActivity {
+
+    private static final String TAG = "EmailPassword";
+    Support support = new Support();
     private Button mButtonPasswordReset;
     private EditText mEmailPasswordReset;
-    private static final String TAG = "EmailPassword";
+    private TextToSpeech speech;
+
+
+    public PasswordResetActivity() {
+        // Required empty public constructor
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,8 +35,9 @@ public class PasswordResetActivity extends Activity {
         setContentView(R.layout.activity_password_reset);
 
 
-        mButtonPasswordReset = (Button)findViewById(R.id.buttonPasswordReset);
-        mEmailPasswordReset = (EditText)findViewById(R.id.editTextPasswordReset);
+        mButtonPasswordReset = (Button) findViewById(R.id.buttonPasswordReset);
+        mEmailPasswordReset = (EditText) findViewById(R.id.editTextPasswordReset);
+
 
         mButtonPasswordReset.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -34,21 +45,36 @@ public class PasswordResetActivity extends Activity {
                 String emailreset = mEmailPasswordReset.getText().toString().trim();
 
                 FirebaseAuth auth = FirebaseAuth.getInstance();
+                if (!support.isValidEmail(emailreset)) {
 
-                auth.sendPasswordResetEmail(emailreset)
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    Log.d(TAG, "Email sent.");
 
-                                    Intent takeUserHome = new Intent(PasswordResetActivity.this, LoginActivity.class);
-                                    startActivity(takeUserHome);
-                                }
+                    speech = new TextToSpeech(PasswordResetActivity.this, new TextToSpeech.OnInitListener() {
+                        @Override
+                        public void onInit(int status) {
+                            if (status != TextToSpeech.ERROR) {
+                                speech.setLanguage(Locale.UK);
+                                String toSpeak = ("Please provide correct email");
+                                speech.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+                                Toast.makeText(PasswordResetActivity.this, toSpeak,
+                                        Toast.LENGTH_SHORT).show();
                             }
-                        });
+                        }
+                    });
+                } else {
+                    auth.sendPasswordResetEmail(emailreset)
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        Log.d(TAG, "Email sent.");
 
+                                        Intent takeUserHome = new Intent(PasswordResetActivity.this, LoginActivity.class);
+                                        startActivity(takeUserHome);
+                                    }
+                                }
+                            });
 
+                }
             }
         });
 
