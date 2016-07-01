@@ -21,7 +21,6 @@
 
     </android.support.design.widget.AppBarLayout>
 
-
     <RelativeLayout
         android:id="@+id/fragment_container"
         android:layout_marginTop="55dp"
