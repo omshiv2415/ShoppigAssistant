@@ -7,8 +7,8 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:background="@color/colorPrimary"
-    tools:context="assistance.shopping.msc.assistant.MainActivity">
+    android:background="@drawable/login_background"
+    tools:context="assistance.shopping.msc.assistant.main.MainActivity">
 
     <EditText
         android:layout_width="wrap_content"
@@ -35,7 +35,7 @@
 
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="145dp"
         android:layout_height="wrap_content"
         android:text="Reset Password"
         android:background="@color/colorAccent"
@@ -43,36 +43,21 @@
         android:layout_marginBottom="35dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentStart="true" />
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="145dp"
         android:layout_height="wrap_content"
         android:text="Register"
         android:background="@color/colorAccent"
         android:id="@+id/buttonInitialRegister"
-        android:layout_marginBottom="61dp"
-        android:layout_above="@+id/buttonInitialReset"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
+        android:layout_alignBaseline="@+id/buttonInitialReset"
+        android:layout_alignBottom="@+id/buttonInitialReset"
+        android:layout_toRightOf="@+id/buttonInitialReset"
+        android:layout_marginLeft="39dp"
+        android:layout_marginStart="39dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
-
-    <Button
-        android:id="@+id/sign_in_button_by_Google"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/btn_google_signin_dark_pressed_hdpi"
-        android:visibility="visible"
-        android:layout_above="@+id/buttonInitialRegister"
-        android:layout_marginBottom="44dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:text="Sign in" />
 
     <Button
         android:layout_width="wrap_content"
@@ -80,12 +65,23 @@
         android:text="Login"
         android:background="@color/colorAccent"
         android:id="@+id/buttonLogin"
-        android:layout_marginBottom="41dp"
-        android:layout_above="@+id/sign_in_button_by_Google"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_marginTop="31dp"
+        android:layout_below="@+id/editTextPassword"
+        android:layout_alignLeft="@+id/sign_in_button_by_Google"
+        android:layout_alignStart="@+id/sign_in_button_by_Google"
+        android:layout_alignRight="@+id/sign_in_button_by_Google"
+        android:layout_alignEnd="@+id/sign_in_button_by_Google" />
+
+    <Button
+        android:id="@+id/sign_in_button_by_Google"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_google_signin_dark_pressed_hdpi"
+        android:visibility="visible"
+        android:text="Sign in"
+        android:layout_below="@+id/buttonLogin"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="13dp" />
 
 
 </RelativeLayout>

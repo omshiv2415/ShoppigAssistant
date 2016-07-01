@@ -1,4 +1,4 @@
-package assistance.shopping.msc.assistant;
+package assistance.shopping.msc.assistant.main;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -27,6 +27,9 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.Locale;
+
+import assistance.shopping.msc.assistant.support.MyFirebaseMessagingService;
+import assistance.shopping.msc.assistant.R;
 
 public class LoginActivity extends Activity implements GoogleApiClient.OnConnectionFailedListener,
         View.OnClickListener {
@@ -186,6 +189,10 @@ public class LoginActivity extends Activity implements GoogleApiClient.OnConnect
     @Override
     public void onStart() {
         super.onStart();
+        if (mAuth.getCurrentUser() != null) {
+            startActivity(new Intent(LoginActivity.this, NavigationActivity.class));
+            finish();
+        }
 
     }
 

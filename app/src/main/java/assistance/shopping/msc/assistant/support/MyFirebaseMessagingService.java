@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package assistance.shopping.msc.assistant;
+package assistance.shopping.msc.assistant.support;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -27,6 +27,9 @@ import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+
+import assistance.shopping.msc.assistant.R;
+import assistance.shopping.msc.assistant.main.LoginActivity;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 

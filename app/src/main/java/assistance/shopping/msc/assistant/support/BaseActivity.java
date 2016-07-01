@@ -1,7 +1,11 @@
-package assistance.shopping.msc.assistant;
+package assistance.shopping.msc.assistant.support;
 
 import android.app.ProgressDialog;
 import android.support.v7.app.AppCompatActivity;
+
+import com.google.firebase.auth.FirebaseAuth;
+
+import assistance.shopping.msc.assistant.R;
 
 public class BaseActivity extends AppCompatActivity {
 
@@ -23,6 +27,9 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
+    public String getUid() {
+        return FirebaseAuth.getInstance().getCurrentUser().getUid();
+    }
     @Override
     public void onStop() {
         super.onStop();

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package assistance.shopping.msc.assistant;
+package assistance.shopping.msc.assistant.main;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -24,6 +24,8 @@ import android.widget.Button;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
+
+import assistance.shopping.msc.assistant.R;
 
 public class MainActivity extends AppCompatActivity {
 

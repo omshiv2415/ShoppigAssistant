@@ -1,4 +1,4 @@
-package assistance.shopping.msc.assistant;
+package assistance.shopping.msc.assistant.support;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -14,7 +14,7 @@ public class Support {
     }
 
     // validating email id
-    protected boolean isValidEmail(String email) {
+    public boolean isValidEmail(String email) {
         String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
                 + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 

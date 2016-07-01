@@ -5,6 +5,6 @@
     android:id="@+id/activity_home"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="assistance.shopping.msc.assistant.HomeActivity">
+    tools:context="assistance.shopping.msc.assistant.main.HomeActivity">
 
 </android.support.constraint.ConstraintLayout>

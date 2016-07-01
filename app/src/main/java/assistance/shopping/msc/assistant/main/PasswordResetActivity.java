@@ -1,4 +1,4 @@
-package assistance.shopping.msc.assistant;
+package assistance.shopping.msc.assistant.main;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +15,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Locale;
+
+import assistance.shopping.msc.assistant.R;
+import assistance.shopping.msc.assistant.support.Support;
 
 public class PasswordResetActivity extends LoginActivity {
 

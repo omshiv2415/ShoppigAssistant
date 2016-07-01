@@ -1,9 +1,10 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
     android:background="@color/colorPrimary"
-    tools:context="assistance.shopping.msc.assistant.MapFragment">
+    tools:context="assistance.shopping.msc.assistant.fragments.MapFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -14,4 +15,4 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-</FrameLayout>
+</RelativeLayout>

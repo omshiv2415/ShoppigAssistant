@@ -3,24 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorAccent"
-    tools:context="assistance.shopping.msc.assistant.ChatFragment">
+    tools:context="assistance.shopping.msc.assistant.fragments.ChatFragment">
 
     <!-- TODO: Update blank fragment layout -->
    <RelativeLayout
+       android:layout_marginTop="55dp"
        android:layout_width="match_parent"
        android:layout_height="match_parent">
-
-       <Button
-           android:text="Chat"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:layout_alignParentTop="true"
-           android:layout_alignParentLeft="true"
-           android:layout_alignParentStart="true"
-           android:layout_marginLeft="149dp"
-           android:layout_marginStart="149dp"
-           android:layout_marginTop="242dp"
-           android:id="@+id/button" />
    </RelativeLayout>
 
 </FrameLayout>

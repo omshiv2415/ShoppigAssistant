@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package assistance.shopping.msc.assistant;
+package assistance.shopping.msc.assistant.support;
 
 import android.util.Log;
 

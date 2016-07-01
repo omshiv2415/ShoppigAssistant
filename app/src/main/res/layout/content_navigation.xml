@@ -5,9 +5,8 @@
     android:id="@+id/content_navigation"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="assistance.shopping.msc.assistant.NavigationActivity"
+    tools:context="assistance.shopping.msc.assistant.main.NavigationActivity"
     tools:showIn="@layout/app_bar_navigation">
 
 </android.support.constraint.ConstraintLayout>

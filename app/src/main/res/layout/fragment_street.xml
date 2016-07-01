@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorAccent"
-    tools:context="assistance.shopping.msc.assistant.StreetFragment">
+
+    tools:context="assistance.shopping.msc.assistant.fragments.StreetFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -11,6 +12,7 @@
 
         android:name="com.google.android.gms.maps.StreetViewPanoramaFragment"
         android:id="@+id/streetView"
+
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </FrameLayout>

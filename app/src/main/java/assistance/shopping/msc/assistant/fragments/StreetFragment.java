@@ -1,4 +1,4 @@
-package assistance.shopping.msc.assistant;
+package assistance.shopping.msc.assistant.fragments;
 
 
 import android.content.pm.PackageManager;
@@ -8,6 +8,9 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +24,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+
+import assistance.shopping.msc.assistant.R;
 
 import static android.content.Context.LOCATION_SERVICE;
 
@@ -44,7 +49,12 @@ public class StreetFragment extends Fragment implements OnStreetViewPanoramaRead
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-
+        if (view != null) {
+            ViewGroup parent = (ViewGroup) view.getParent();
+            if (parent != null)
+                parent.removeView(view);
+        }
+        try{
         view = inflater.inflate(R.layout.fragment_street, container, false);
         final StreetViewPanoramaFragment streetViewPanoramaFragment =
                 (StreetViewPanoramaFragment) getActivity().getFragmentManager()
@@ -97,14 +107,20 @@ public class StreetFragment extends Fragment implements OnStreetViewPanoramaRead
         });
 
 
+
+
+
+    }catch (InflateException e) {
+        /* map is already there, just return view as it is */
+        }
+
         return view;
-
-
-
     }
 
     @Override
     public void onStreetViewPanoramaReady(StreetViewPanorama streetViewPanorama) {
         streetViewPanorama.setPosition(new LatLng(-33.87365, 151.20689));
     }
+
+
 }

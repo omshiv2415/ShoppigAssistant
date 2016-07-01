@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="assistance.shopping.msc.assistant.NavigationActivity">
+    tools:context="assistance.shopping.msc.assistant.main.NavigationActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -21,27 +21,39 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <FrameLayout
-        android:id="@+id/fragment_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/common_action_bar_splitter">
 
-            <Button
-                android:layout_width="150dp"
-                android:layout_height="50dp"
-                android:background="@color/colorAccent"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="271dp"
-                android:id="@+id/button2"
-                android:text="DashBoard" />
+    <RelativeLayout
+        android:id="@+id/fragment_container"
+        android:layout_marginTop="55dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".MainActivity">
+
+            <android.support.design.widget.TabLayout
+                android:id="@+id/tabs"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/container"
+                android:layout_marginTop="50dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fab_new_post"
+                android:layout_marginTop="50dp"
+                android:layout_width="wrap_content"
+                android:layout_height="515dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/ic_image_edit"
+                android:layout_margin="16dp"/>
+
         </RelativeLayout>
 
-    </FrameLayout>
+
 
 
 </android.support.design.widget.CoordinatorLayout>

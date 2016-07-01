@@ -1,4 +1,4 @@
-package assistance.shopping.msc.assistant;
+package assistance.shopping.msc.assistant.main;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -17,6 +17,9 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Locale;
+
+import assistance.shopping.msc.assistant.R;
+import assistance.shopping.msc.assistant.support.Support;
 
 public class RegisterActivity extends Activity {
 
