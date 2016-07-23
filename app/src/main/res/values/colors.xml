@@ -6,5 +6,5 @@
 
     <color name="grey_100">#F5F5F5</color>
     <color name="grey_300">#E0E0E0</color>
-    <color name="grey_back">#99FFFFFF</color>
+    <color name="grey_back">#99C0C0C0</color>
 </resources>
