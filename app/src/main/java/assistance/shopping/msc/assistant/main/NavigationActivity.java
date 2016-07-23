@@ -21,9 +21,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import assistance.shopping.msc.assistant.R;
 import assistance.shopping.msc.assistant.fragments.ChatFragment;
 import assistance.shopping.msc.assistant.fragments.DashBoardFragment;
+import assistance.shopping.msc.assistant.fragments.HistoryFragment;
 import assistance.shopping.msc.assistant.fragments.MapFragment;
+import assistance.shopping.msc.assistant.fragments.MyProfileFragment;
+import assistance.shopping.msc.assistant.fragments.PaymentFragment;
+import assistance.shopping.msc.assistant.fragments.ShoppingPointFragment;
 import assistance.shopping.msc.assistant.fragments.StreetFragment;
-import assistance.shopping.msc.assistant.support.BaseActivity;
 
 public class NavigationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -95,26 +98,65 @@ public class NavigationActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_dashboard) {
 
             startActivity(new Intent(NavigationActivity.this, NavigationActivity.class));
 
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.nav_chat) {
+
+            ChatFragment fragment = new ChatFragment();
+            android.support.v4.app.FragmentTransaction fragmentTransaction =
+                    getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container,fragment);
+            fragmentTransaction.commit();
+
+        } else if (id == R.id.nav_direction) {
+
             MapFragment fragment = new MapFragment();
             android.support.v4.app.FragmentTransaction fragmentTransaction =
                     getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.fragment_container,fragment);
             fragmentTransaction.commit();
 
-        } else if (id == R.id.nav_slideshow) {
+
+        } else if (id == R.id.nav_streetView) {
+
             StreetFragment fragment = new StreetFragment();
             android.support.v4.app.FragmentTransaction fragmentTransaction =
                     getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.fragment_container,fragment);
             fragmentTransaction.commit();
 
-        } else if (id == R.id.nav_manage) {
-            ChatFragment fragment = new ChatFragment();
+        } else if (id == R.id.nav_history) {
+
+            HistoryFragment fragment = new HistoryFragment();
+            android.support.v4.app.FragmentTransaction fragmentTransaction =
+                    getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container,fragment);
+            fragmentTransaction.commit();
+
+
+
+        } else if (id == R.id.nav_shoppingPoints) {
+
+            ShoppingPointFragment fragment = new ShoppingPointFragment();
+            android.support.v4.app.FragmentTransaction fragmentTransaction =
+                    getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container,fragment);
+            fragmentTransaction.commit();
+
+
+        } else if (id == R.id.nav_payment) {
+
+            PaymentFragment fragment = new PaymentFragment();
+            android.support.v4.app.FragmentTransaction fragmentTransaction =
+                    getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.fragment_container,fragment);
+            fragmentTransaction.commit();
+
+        } else if (id == R.id.nav_my_details) {
+
+            MyProfileFragment fragment = new MyProfileFragment();
             android.support.v4.app.FragmentTransaction fragmentTransaction =
                     getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.fragment_container,fragment);
@@ -122,11 +164,9 @@ public class NavigationActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_share) {
 
-        } else if (id == R.id.logout) {
-
-
 
         }
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -142,12 +182,13 @@ public class NavigationActivity extends AppCompatActivity
             private final Fragment[] mFragments = new Fragment[] {
                     new DashBoardFragment(),
                     new StreetFragment(),
-                    new MapFragment(),
+                    new MapFragment()
+
             };
             private final String[] mFragmentNames = new String[] {
-                    "Recent",
-                    "My Posts",
-                    "My Top Posts"
+                    "Dashboard",
+                    "Street View",
+                    "Map"
             };
             @Override
             public Fragment getItem(int position) {

@@ -2,13 +2,16 @@ package assistance.shopping.msc.assistant.main;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
+
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
@@ -28,7 +31,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.Locale;
 
-import assistance.shopping.msc.assistant.support.MyFirebaseMessagingService;
+
 import assistance.shopping.msc.assistant.R;
 
 public class LoginActivity extends Activity implements GoogleApiClient.OnConnectionFailedListener,
@@ -46,7 +49,7 @@ public class LoginActivity extends Activity implements GoogleApiClient.OnConnect
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private GoogleApiClient mGoogleApiClient;
-    final MyFirebaseMessagingService message = new MyFirebaseMessagingService();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +64,16 @@ public class LoginActivity extends Activity implements GoogleApiClient.OnConnect
         mGoogleSignIn = (Button) findViewById(R.id.sign_in_button_by_Google);
         mAuth = FirebaseAuth.getInstance();
 
+        // Load the ImageView that will host the animation and
+        // set its background to our AnimationDrawable XML resource.
+        //ImageView img = (ImageView)findViewById(R.id.magicKingdom);
 
+        //img.setBackgroundResource(R.drawable.magicplace);
+       // // Get the background, which has been compiled to an AnimationDrawable object.
+       // AnimationDrawable frameAnimation = (AnimationDrawable) img.getBackground();
+
+        /// Start the animation (looped playback by default).
+        //frameAnimation.start();
 
         Log.d(TAG, "InstanceID token: " + FirebaseInstanceId.getInstance().getToken());
 
@@ -192,7 +204,11 @@ public class LoginActivity extends Activity implements GoogleApiClient.OnConnect
         if (mAuth.getCurrentUser() != null) {
             startActivity(new Intent(LoginActivity.this, NavigationActivity.class));
             finish();
+
+
+
         }
+
 
     }
 
