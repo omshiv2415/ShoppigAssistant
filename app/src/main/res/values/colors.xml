@@ -7,7 +7,7 @@
     <color name="grey_100">#F5F5F5</color>
     <color name="grey_300">#E0E0E0</color>
     <color name="grey_back">#CCC0C0C0</color>
-    <color name="grey_back_one">#59000000</color>
+    <color name="grey_back_one">#3366ffff</color>
     <color name="grey_black">#99be5658</color>
 
 </resources>
