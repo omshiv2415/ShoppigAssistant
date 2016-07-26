@@ -16,9 +16,17 @@
         android:paddingTop="@dimen/activity_vertical_margin"
         android:background="@color/grey_back_one" >
 
+        <android.support.design.widget.TextInputLayout
 
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textInputLayout3"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="55dp">
         <EditText
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/editTextEmail"
             android:layout_marginTop="65dp"
@@ -30,28 +38,36 @@
             android:layout_alignParentEnd="true"
             android:textColorHint="@android:color/background_light"
             android:textColor="@android:color/white" />
+        </android.support.design.widget.TextInputLayout>
 
-        <EditText
-            android:layout_width="wrap_content"
+        <android.support.design.widget.TextInputLayout
+
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/editTextPassword"
-            android:hint="Password"
-            android:layout_below="@+id/editTextEmail"
+            android:layout_below="@+id/textInputLayout3"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:textColorHint="@android:color/background_light"
-            android:textColor="@android:color/white" />
+            android:layout_alignParentStart="true">
 
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/editTextPassword"
+                android:hint="Password"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:textColorHint="@android:color/background_light"
+                android:textColor="@android:color/white" />
+        </android.support.design.widget.TextInputLayout>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Register"
             android:id="@+id/buttonRegister"
             android:background="@color/grey_black"
-            android:layout_marginTop="46dp"
-            android:layout_below="@+id/editTextPassword"
+            android:layout_marginTop="98dp"
+            android:layout_below="@+id/textInputLayout3"
             android:layout_centerHorizontal="true" />
     </RelativeLayout>
 </RelativeLayout>

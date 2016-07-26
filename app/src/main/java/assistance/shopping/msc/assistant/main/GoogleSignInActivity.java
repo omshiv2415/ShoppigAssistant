@@ -155,20 +155,23 @@ public class GoogleSignInActivity extends BaseActivity implements
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+
                         Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
-
-                        Intent takeUserResetPassword = new Intent(GoogleSignInActivity.this, NavigationActivity.class);
-                        startActivity(takeUserResetPassword);
-
-
 
                         // If sign in fails, display a message to the user. If sign in succeeds
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
-                        if (!task.isSuccessful()) {
-                            Log.w(TAG, "signInWithCredential", task.getException());
+
+                        if (task.isSuccessful()) {
+                            Intent takeUserHome = new Intent(GoogleSignInActivity.this, NavigationActivity.class);
+                            startActivity(takeUserHome);
+                        }else if(!task.isSuccessful()){
+
+                            Log.w(TAG, "signInWithEmail", task.getException());
                             Toast.makeText(GoogleSignInActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
+                            Intent takeUserHome = new Intent(GoogleSignInActivity.this, LoginActivity.class);
+                            startActivity(takeUserHome);
                         }
                         // [START_EXCLUDE]
                         hideProgressDialog();

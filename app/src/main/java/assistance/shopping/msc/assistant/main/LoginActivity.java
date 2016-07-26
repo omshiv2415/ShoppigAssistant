@@ -156,15 +156,20 @@ public class LoginActivity extends Activity implements GoogleApiClient.OnConnect
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     Log.d(TAG, "signInWithEmail:onComplete:" + task.isSuccessful());
 
-                                    Intent takeUserHome = new Intent(LoginActivity.this, NavigationActivity.class);
-                                    startActivity(takeUserHome);
+
                                     // If sign in fails, display a message to the user. If sign in succeeds
                                     // the auth state listener will be notified and logic to handle the
                                     // signed in user can be handled in the listener.
-                                    if (!task.isSuccessful()) {
+                                    if (task.isSuccessful()) {
+                                        Intent takeUserHome = new Intent(LoginActivity.this, NavigationActivity.class);
+                                        startActivity(takeUserHome);
+                                    }else if(!task.isSuccessful()){
+
                                         Log.w(TAG, "signInWithEmail", task.getException());
                                         Toast.makeText(LoginActivity.this, "Authentication failed.",
                                                 Toast.LENGTH_SHORT).show();
+                                        Intent takeUserHome = new Intent(LoginActivity.this, LoginActivity.class);
+                                        startActivity(takeUserHome);
                                     }
 
                                 }
