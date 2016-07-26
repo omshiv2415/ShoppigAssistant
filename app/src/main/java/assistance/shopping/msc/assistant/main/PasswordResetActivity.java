@@ -17,6 +17,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import java.util.Locale;
 
 import assistance.shopping.msc.assistant.R;
+import assistance.shopping.msc.assistant.fragments.PaymentFragment;
 import assistance.shopping.msc.assistant.support.Support;
 
 public class PasswordResetActivity extends LoginActivity {
@@ -73,6 +74,17 @@ public class PasswordResetActivity extends LoginActivity {
 
                                         Intent takeUserHome = new Intent(PasswordResetActivity.this, LoginActivity.class);
                                         startActivity(takeUserHome);
+                                        Toast.makeText(PasswordResetActivity.this, "Please check your email and select new password",
+                                                Toast.LENGTH_SHORT).show();
+                                    } else if (task.isSuccessful()) {
+
+                                        Log.w(TAG, "signInWithEmail", task.getException());
+                                        Toast.makeText(PasswordResetActivity.this, "Authentication failed.",
+                                                Toast.LENGTH_SHORT).show();
+                                        Intent takeUserHome = new Intent(PasswordResetActivity.this, LoginActivity.class);
+                                        startActivity(takeUserHome);
+
+
                                     }
                                 }
                             });
