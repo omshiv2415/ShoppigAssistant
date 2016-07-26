@@ -15,10 +15,14 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Locale;
 
 import assistance.shopping.msc.assistant.R;
+import assistance.shopping.msc.assistant.model.User;
 import assistance.shopping.msc.assistant.support.Support;
 
 public class RegisterActivity extends Activity {
@@ -30,7 +34,7 @@ public class RegisterActivity extends Activity {
     private EditText mPasswordFieldRegister;
     private FirebaseAuth mAuth;
     private TextToSpeech speech;
-
+    private DatabaseReference mDatabase;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,7 +44,7 @@ public class RegisterActivity extends Activity {
         mPasswordFieldRegister = (EditText) findViewById(R.id.editTextPassword);
         mButtonRegisterRegister = (Button) findViewById(R.id.buttonRegister);
 
-
+        mDatabase = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
 
 
@@ -106,31 +110,66 @@ public class RegisterActivity extends Activity {
                 } else {
 
                     mAuth.createUserWithEmailAndPassword(email, password)
-                            .addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
+                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     Log.d(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
 
-                                    Toast.makeText(RegisterActivity.this, "Welcome to the Shopping Assistant", Toast.LENGTH_LONG).show();
-                                    Intent takeUserHome = new Intent(RegisterActivity.this, NavigationActivity.class);
-                                    startActivity(takeUserHome);
-                                    if (!task.isSuccessful()) {
+                                    if (task.isSuccessful()) {
+
+                                        onAuthSuccess(task.getResult().getUser());
+
+                                    }else if(!task.isSuccessful()){
+
                                         Toast.makeText(RegisterActivity.this, "Authentication failed.",
                                                 Toast.LENGTH_SHORT).show();
+
                                     }
 
 
                                 }
+
                             });
+
+
 
                 }
 
+
             }
 
-        });
+        });}
 
+    private void onAuthSuccess(FirebaseUser user) {
+        String username = usernameFromEmail(user.getEmail());
+
+        // Write new user
+        writeNewUser(user.getUid(), username, user.getEmail());
+
+        // Go to MainActivity
+        Toast.makeText(RegisterActivity.this, "Welcome to the Shopping Assistant", Toast.LENGTH_LONG).show();
+        Intent takeUserHome = new Intent(RegisterActivity.this, NavigationActivity.class);
+        startActivity(takeUserHome);
+        finish();
 
     }
+
+    private String usernameFromEmail(String email) {
+        if (email.contains("@")) {
+            return email.split("@")[0];
+        } else {
+            return email;
+        }
+
+    }
+
+    // [START basic_write]
+    private void writeNewUser(String userId, String name, String email) {
+        User user = new User(name, email);
+
+        mDatabase.child("users").child(userId).setValue(user);
+    }
+
 
 
 }
