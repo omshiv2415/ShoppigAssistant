@@ -79,7 +79,10 @@
 
     <string name="twitter_status_fmt">Twitter User: %s</string>
     <string name="twitter_title_text">Twitter Login</string>
-
+    <string name="FirstName">First Name</string>
+    <string name="LastName">Last Name</string>
+    <string name="DateofBirth">Date of Birth</string>
+    <string name="gender">Gender</string>
     <string name="id_fmt">User ID: %s</string>
     <string name="email_fmt">Email: %s</string>
     <string name="Email">E-Mail Address</string>

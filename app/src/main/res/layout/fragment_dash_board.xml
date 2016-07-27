@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/common_plus_signin_btn_text_dark_focused"
+    android:background="@color/colorPrimaryDark"
     tools:context="assistance.shopping.msc.assistant.fragments.DashBoardFragment">
 
     <!-- TODO: Update blank fragment layout -->
