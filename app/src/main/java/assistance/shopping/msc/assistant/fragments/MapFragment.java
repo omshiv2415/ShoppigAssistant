@@ -17,9 +17,7 @@ import android.view.ViewGroup;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.LocationSource;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -35,13 +33,11 @@ public class MapFragment extends Fragment {
 
 
     private static final View TODO = null;
-
+    private static View view;
+    GoogleMap map;
     public MapFragment() {
         // Required empty public constructor
     }
-
-    GoogleMap map;
-    private static View view;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -52,11 +48,11 @@ public class MapFragment extends Fragment {
                 parent.removeView(view);
         }
         try {
-
             view = inflater.inflate(R.layout.fragment_map, container, false);
             map = ((SupportMapFragment) getChildFragmentManager()
                     .findFragmentById(R.id.map))
                     .getMap(); // NullPointerException at this line
+
 
             final LocationManager locationManager = (LocationManager) getContext().getSystemService(LOCATION_SERVICE);
 
@@ -149,11 +145,6 @@ public class MapFragment extends Fragment {
 
                 }
             });
-
-
-
-
-
 
         } catch (InflateException e) {
         /* map is already there, just return view as it is */

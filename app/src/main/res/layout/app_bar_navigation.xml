@@ -23,9 +23,9 @@
 
     <RelativeLayout
         android:id="@+id/fragment_container"
-        android:layout_marginTop="55dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="55dp"
         tools:context=".MainActivity">
 
             <android.support.design.widget.TabLayout
@@ -36,24 +36,26 @@
 
             <android.support.v4.view.ViewPager
                 android:id="@+id/container"
-                android:layout_marginTop="50dp"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:layout_marginTop="50dp" />
 
     </RelativeLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_new_post"
-        android:layout_marginTop="50dp"
         android:layout_width="wrap_content"
         android:layout_height="515dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:src="@drawable/ic_image_edit"
+        android:layout_gravity="top|center_horizontal"
         android:layout_margin="16dp"
+        android:layout_marginTop="50dp"
+        android:src="@drawable/ic_image_edit"
+        app:backgroundTint="#80070708"
         app:layout_anchor="@+id/fragment_container"
-        app:layout_anchorGravity="bottom|left"
-        android:layout_gravity="top|right" />
+
+        app:layout_anchorGravity="bottom|left" />
 
 
 </android.support.design.widget.CoordinatorLayout>

@@ -1,21 +1,10 @@
 package assistance.shopping.msc.assistant.fragments;
 
 
-import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.Criteria;
-import android.location.Location;
-import android.location.LocationManager;
-import android.location.LocationProvider;
-import android.net.Uri;
 import android.os.Bundle;
-import android.speech.tts.TextToSpeech;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
@@ -23,31 +12,25 @@ import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.Calendar;
 import java.util.HashMap;
-
 import java.util.Map;
 
 import assistance.shopping.msc.assistant.R;
-
 import assistance.shopping.msc.assistant.main.NavigationActivity;
 import assistance.shopping.msc.assistant.model.MyDetails;
 import assistance.shopping.msc.assistant.model.User;
@@ -60,27 +43,21 @@ import assistance.shopping.msc.assistant.support.FragmentSupport;
 public class MyProfileFragment extends Fragment  {
 
 
+    // [END declare_database_ref]
+    private static final String TAG = "MyProfileFragment";
+    private static final String REQUIRED = "Required";
     private static View view;
-
-    public MyProfileFragment() {
-        // Required empty public constructor
-    }
+    FragmentSupport fragmentSupport = new FragmentSupport();
+    final String userId = fragmentSupport.getUid();
     private DatabaseReference mDatabase;
     private DatabaseReference mUserFirstName;
     private DatabaseReference mUserLastName;
     private DatabaseReference mUserDateOfBirth;
     private DatabaseReference mUserGender;
-
-
-
     private String[] state = {"Male", "Female", "Others"};
     private int mYear;
     private int mMonth;
     private int mDay;
-
-    // [END declare_database_ref]
-    private static final String TAG = "MyProfileFragment";
-    private static final String REQUIRED = "Required";
     private EditText mFirstName;
     private EditText mLastName;
     private EditText mDateOfBirth;
@@ -88,8 +65,10 @@ public class MyProfileFragment extends Fragment  {
     private Button btnSubmit;
     private FirebaseAuth mAuth;
 
-    FragmentSupport fragmentSupport = new FragmentSupport();
-    final String userId = fragmentSupport.getUid();
+    public MyProfileFragment() {
+        // Required empty public constructor
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

@@ -20,11 +20,14 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import assistance.shopping.msc.assistant.R;
 import assistance.shopping.msc.assistant.fragments.ChatFragment;
-import assistance.shopping.msc.assistant.fragments.DashBoardFragment;
 import assistance.shopping.msc.assistant.fragments.HistoryFragment;
 import assistance.shopping.msc.assistant.fragments.MapFragment;
+import assistance.shopping.msc.assistant.fragments.MyPostsFragment;
 import assistance.shopping.msc.assistant.fragments.MyProfileFragment;
+import assistance.shopping.msc.assistant.fragments.MyTopPostsFragment;
+import assistance.shopping.msc.assistant.fragments.NewShoppingFragment;
 import assistance.shopping.msc.assistant.fragments.PaymentFragment;
+import assistance.shopping.msc.assistant.fragments.RecentPostsFragment;
 import assistance.shopping.msc.assistant.fragments.ShoppingPointFragment;
 import assistance.shopping.msc.assistant.fragments.StreetFragment;
 
@@ -180,15 +183,14 @@ public class NavigationActivity extends AppCompatActivity
         // Create the adapter that will return a fragment for each section
         mPagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
             private final Fragment[] mFragments = new Fragment[] {
-                    new DashBoardFragment(),
-                    new StreetFragment(),
-                    new MapFragment()
-
+                    new RecentPostsFragment(),
+                    new MyPostsFragment(),
+                    new MyTopPostsFragment()
             };
             private final String[] mFragmentNames = new String[] {
-                    "Dashboard",
-                    "Street View",
-                    "Map"
+                    "Recent Shopping",
+                    "Post",
+                    "Top Post"
             };
             @Override
             public Fragment getItem(int position) {
@@ -213,7 +215,12 @@ public class NavigationActivity extends AppCompatActivity
         findViewById(R.id.fab_new_post).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(NavigationActivity.this, RegisterActivity.class));
+
+                NewShoppingFragment fragment = new NewShoppingFragment();
+                android.support.v4.app.FragmentTransaction fragmentTransaction =
+                        getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.fragment_container, fragment);
+                fragmentTransaction.commit();
             }
         });
 
