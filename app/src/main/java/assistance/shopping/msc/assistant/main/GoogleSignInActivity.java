@@ -17,6 +17,7 @@
 package assistance.shopping.msc.assistant.main;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -36,8 +37,11 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import assistance.shopping.msc.assistant.R;
+import assistance.shopping.msc.assistant.model.User;
 import assistance.shopping.msc.assistant.support.BaseActivity;
 
 /**
@@ -59,12 +63,13 @@ public class GoogleSignInActivity extends BaseActivity implements
     // [END declare_auth_listener]
 
     private GoogleApiClient mGoogleApiClient;
-
+    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_google);
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
         // [START config_signin]
         // Configure Google Sign In
@@ -149,6 +154,7 @@ public class GoogleSignInActivity extends BaseActivity implements
         // [START_EXCLUDE silent]
         showProgressDialog();
         // [END_EXCLUDE]
+        Uri photoUrl = acct.getPhotoUrl();
 
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)
@@ -163,6 +169,7 @@ public class GoogleSignInActivity extends BaseActivity implements
                         // signed in user can be handled in the listener.
 
                         if (task.isSuccessful()) {
+                            onAuthSuccess(task.getResult().getUser());
                             Intent takeUserHome = new Intent(GoogleSignInActivity.this, NavigationActivity.class);
                             startActivity(takeUserHome);
                         }else if(!task.isSuccessful()){
@@ -199,5 +206,35 @@ public class GoogleSignInActivity extends BaseActivity implements
     @Override
     public void onClick(View v) {
 
+    }
+
+    private void onAuthSuccess(FirebaseUser user) {
+        String username = usernameFromEmail(user.getEmail());
+
+        // Write new user
+        writeNewUser(user.getUid(), username, user.getEmail());
+
+        // Go to MainActivity
+        Toast.makeText(GoogleSignInActivity.this, "Welcome to the Shopping Assistant", Toast.LENGTH_LONG).show();
+        Intent takeUserHome = new Intent(GoogleSignInActivity.this, NavigationActivity.class);
+        startActivity(takeUserHome);
+        finish();
+
+    }
+
+    private String usernameFromEmail(String email) {
+        if (email.contains("@")) {
+            return email.split("@")[0];
+        } else {
+            return email;
+        }
+
+    }
+
+    // [START basic_write]
+    private void writeNewUser(String userId, String name, String email) {
+        User user = new User(name, email);
+
+        mDatabase.child("users").child(userId).setValue(user);
     }
 }

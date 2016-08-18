@@ -19,6 +19,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -87,6 +90,12 @@ public class NewShoppingFragment extends Fragment {
     private void submitPost() {
         final String title = mTitleField.getText().toString();
         final String body = mBodyField.getText().toString();
+        final Double Lat = (37.00);
+        final Double Lon = (-122.00);
+
+        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy EEE HH:mm:ss a");
+        Date date = new Date();
+        final String createdAt = String.valueOf(dateFormat.format(date)).toUpperCase();
 
         // Title is required
         if (TextUtils.isEmpty(title)) {
@@ -118,7 +127,8 @@ public class NewShoppingFragment extends Fragment {
                                     Toast.LENGTH_SHORT).show();
                         } else {
                             // Write new post
-                            writeNewPost(userId, user.displayName, title, body);
+                            writeNewPost(userId, user.UserName, title, body, Lat, Lon, createdAt);
+
                             Intent takeUserHome = new Intent(getActivity(), NavigationActivity.class);
                             startActivity(takeUserHome);
                         }
@@ -137,16 +147,16 @@ public class NewShoppingFragment extends Fragment {
     }
 
     // [START write_fan_out]
-    private void writeNewPost(String userId, String username, String title, String body) {
+    private void writeNewPost(String userId, String username, String title, String body, Double lat, Double lon, String createdAt) {
         // Create new post at /user-posts/$userid/$postid and at
         // /posts/$postid simultaneously
-        String key = mDatabase.child("posts").push().getKey();
-        Post post = new Post(userId, username, title, body);
+        String key = mDatabase.child("shopping-broadcast").push().getKey();
+        Post post = new Post(userId, username, title, body, createdAt, lat, lon);
         Map<String, Object> postValues = post.toMap();
 
         Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/posts/" + key, postValues);
-        childUpdates.put("/user-posts/" + userId + "/" + key, postValues);
+        childUpdates.put("/shopping-broadcast/" + key, postValues);
+        childUpdates.put("/user-shopping-broadcast/" + userId + "/" + key, postValues);
 
         mDatabase.updateChildren(childUpdates);
     }

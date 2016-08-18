@@ -4,6 +4,9 @@ package assistance.shopping.msc.assistant.fragments;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -17,6 +20,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,6 +30,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.InputStream;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -54,6 +59,7 @@ public class MyProfileFragment extends Fragment  {
     private DatabaseReference mUserLastName;
     private DatabaseReference mUserDateOfBirth;
     private DatabaseReference mUserGender;
+    private DatabaseReference mUserProfile;
     private String[] state = {"Male", "Female", "Others"};
     private int mYear;
     private int mMonth;
@@ -61,10 +67,11 @@ public class MyProfileFragment extends Fragment  {
     private EditText mFirstName;
     private EditText mLastName;
     private EditText mDateOfBirth;
+    private ImageView mProfileView;
     private AutoCompleteTextView mGender;
     private Button btnSubmit;
     private FirebaseAuth mAuth;
-
+    private String mPhotoUrl;
     public MyProfileFragment() {
         // Required empty public constructor
     }
@@ -88,6 +95,7 @@ public class MyProfileFragment extends Fragment  {
             mUserLastName = mDatabase.child("users").child(userId).child("LastName");
             mUserDateOfBirth = mDatabase.child("users").child(userId).child("DateOfBirth");
             mUserGender = mDatabase.child("users").child(userId).child("Gender");
+            mUserProfile = mDatabase.child("user").child(userId).child("UserPhoto");
 
             // [END initialize_database_ref]
             mAuth = FirebaseAuth.getInstance();
@@ -97,6 +105,11 @@ public class MyProfileFragment extends Fragment  {
             mDateOfBirth = (EditText) view.findViewById(R.id.dateOfBirth);
           //  mGender = (EditText) view.findViewById(R.id.gender);
             btnSubmit = (Button) view.findViewById(R.id.profileButton);
+
+
+            mPhotoUrl = mAuth.getCurrentUser().getPhotoUrl().toString();
+            new DownloadImageTask((ImageView) view.findViewById(R.id.profilePicture))
+                    .execute(mPhotoUrl);
 
             ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),android.R.layout.select_dialog_singlechoice, state);
             //Find TextView control
@@ -184,6 +197,7 @@ public class MyProfileFragment extends Fragment  {
             });
 
 
+            mUserProfile.setValue(mPhotoUrl);
             btnSubmit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -200,9 +214,6 @@ public class MyProfileFragment extends Fragment  {
 
         return view;
     }
-
-
-
 
     private void submitProfile(){
 
@@ -244,7 +255,9 @@ public class MyProfileFragment extends Fragment  {
         // [START single_value_read]
         final String userId = fragmentSupport.getUid();
 
-        mDatabase.child("users").child(userId).addListenerForSingleValueEvent(
+        mDatabase.child("users");
+        mDatabase.child(userId);
+        mDatabase.addListenerForSingleValueEvent(
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -260,7 +273,7 @@ public class MyProfileFragment extends Fragment  {
                                     Toast.LENGTH_SHORT).show();
                         } else {
                             // Update User Details
-                            writeToProfile(userId, sFirstName,sLastName,sDateOfBirth,sGender,sEmail,sUserName);
+                            writeToProfile(userId, sFirstName, sLastName, sDateOfBirth, sGender, sEmail, sUserName, String.valueOf(mAuth.getCurrentUser().getPhotoUrl()));
 
                             Intent takeUserHome = new Intent(getActivity(), NavigationActivity.class);
                             startActivity(takeUserHome);
@@ -280,6 +293,7 @@ public class MyProfileFragment extends Fragment  {
 
 
     }
+
     //creating username from email
     private String usernameFromEmail(String email) {
         if (email.contains("@")) {
@@ -291,10 +305,10 @@ public class MyProfileFragment extends Fragment  {
     }
 
     private void writeToProfile(String userId, String firstname, String lastname, String dateofbirth, String gender
-    ,String email, String username){
+            , String email, String username, String uPhoto) {
 
 
-        MyDetails myDetails = new MyDetails(userId,firstname,lastname,dateofbirth,gender,email,username);
+        MyDetails myDetails = new MyDetails(userId, firstname, lastname, dateofbirth, gender, email, username, uPhoto);
         Map<String, Object> myDetailsValues = myDetails.toMap();
 
         Map<String, Object> childUpdates  = new HashMap<>();
@@ -302,6 +316,31 @@ public class MyProfileFragment extends Fragment  {
         childUpdates.put("/users/" + userId + "/" , myDetailsValues);
 
         mDatabase.updateChildren(childUpdates);
+    }
+
+    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+        ImageView bmImage;
+
+        public DownloadImageTask(ImageView bmImage) {
+            this.bmImage = bmImage;
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap mIcon11 = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                mIcon11 = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+            return mIcon11;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            bmImage.setImageBitmap(result);
+        }
     }
 
 }

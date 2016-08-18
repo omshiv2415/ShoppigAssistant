@@ -72,7 +72,7 @@
             android:name=".main.NewPostActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".main.PostDetailActivity"
+            android:name=".main.ShoppingDetailActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
     </application>

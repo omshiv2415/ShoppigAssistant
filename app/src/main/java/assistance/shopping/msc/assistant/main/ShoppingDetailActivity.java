@@ -29,10 +29,10 @@ import assistance.shopping.msc.assistant.model.Post;
 import assistance.shopping.msc.assistant.model.User;
 import assistance.shopping.msc.assistant.support.BaseActivity;
 
-public class PostDetailActivity extends BaseActivity implements View.OnClickListener {
+public class ShoppingDetailActivity extends BaseActivity implements View.OnClickListener {
 
     public static final String EXTRA_POST_KEY = "post_key";
-    private static final String TAG = "PostDetailActivity";
+    private static final String TAG = "ShoppingDetailActivity";
     private DatabaseReference mPostReference;
     private DatabaseReference mCommentsReference;
     private ValueEventListener mPostListener;
@@ -42,6 +42,7 @@ public class PostDetailActivity extends BaseActivity implements View.OnClickList
     private TextView mAuthorView;
     private TextView mTitleView;
     private TextView mBodyView;
+    private TextView mTimeView;
     private EditText mCommentField;
     private Button mCommentButton;
     private RecyclerView mCommentsRecycler;
@@ -50,7 +51,7 @@ public class PostDetailActivity extends BaseActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_post_detail);
+        setContentView(R.layout.activity_shopping_detail);
 
         // Get post key from intent
         mPostKey = getIntent().getStringExtra(EXTRA_POST_KEY);
@@ -60,14 +61,15 @@ public class PostDetailActivity extends BaseActivity implements View.OnClickList
 
         // Initialize Database
         mPostReference = FirebaseDatabase.getInstance().getReference()
-                .child("posts").child(mPostKey);
+                .child("shopping-broadcast").child(mPostKey);
         mCommentsReference = FirebaseDatabase.getInstance().getReference()
-                .child("post-comments").child(mPostKey);
+                .child("shopping-broadcast-comments").child(mPostKey);
 
         // Initialize Views
         mAuthorView = (TextView) findViewById(R.id.post_author);
         mTitleView = (TextView) findViewById(R.id.post_title);
         mBodyView = (TextView) findViewById(R.id.post_body);
+        mTimeView = (TextView) findViewById(R.id.timeStamp);
         mCommentField = (EditText) findViewById(R.id.field_comment_text);
         mCommentButton = (Button) findViewById(R.id.button_post_comment);
         mCommentsRecycler = (RecyclerView) findViewById(R.id.recycler_comments);
@@ -93,6 +95,7 @@ public class PostDetailActivity extends BaseActivity implements View.OnClickList
                 mAuthorView.setText(post.author);
                 mTitleView.setText(post.title);
                 mBodyView.setText(post.body);
+                // mTimeView.setText(post.createdAt);
                 // [END_EXCLUDE]
             }
 
@@ -101,7 +104,7 @@ public class PostDetailActivity extends BaseActivity implements View.OnClickList
                 // Getting Post failed, log a message
                 Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
                 // [START_EXCLUDE]
-                Toast.makeText(PostDetailActivity.this, "Failed to load post.",
+                Toast.makeText(ShoppingDetailActivity.this, "Failed to load post.",
                         Toast.LENGTH_SHORT).show();
                 // [END_EXCLUDE]
             }
@@ -147,7 +150,7 @@ public class PostDetailActivity extends BaseActivity implements View.OnClickList
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         // Get user information
                         User user = dataSnapshot.getValue(User.class);
-                        String authorName = user.displayName;
+                        String authorName = user.UserName;
 
                         // Create new comment object
                         String commentText = mCommentField.getText().toString();

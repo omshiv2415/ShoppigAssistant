@@ -28,8 +28,8 @@ import assistance.shopping.msc.assistant.support.Support;
 public class RegisterActivity extends Activity {
 
     private static final String TAG = "EmailPassword";
-    protected Button mButtonRegisterRegister;
     public Support support = new Support();
+    protected Button mButtonRegisterRegister;
     private EditText mEmailFieldRegister;
     private EditText mPasswordFieldRegister;
     private FirebaseAuth mAuth;

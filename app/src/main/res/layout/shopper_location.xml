@@ -8,11 +8,11 @@
         android:id="@+id/textView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Croydon" />
+        android:text="Croydon" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/timeStamp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Thu 10-08-2016 9:00 AM" />
+        android:text="Thu 10-08-2016 9:00 AM" />
 </LinearLayout>

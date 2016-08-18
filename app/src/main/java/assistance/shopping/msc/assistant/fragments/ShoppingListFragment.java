@@ -21,8 +21,8 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.Transaction;
 
 import assistance.shopping.msc.assistant.R;
-import assistance.shopping.msc.assistant.main.PostDetailActivity;
-import assistance.shopping.msc.assistant.main.PostViewHolder;
+import assistance.shopping.msc.assistant.main.ShoppingBroadcastViewHolder;
+import assistance.shopping.msc.assistant.main.ShoppingDetailActivity;
 import assistance.shopping.msc.assistant.model.Post;
 
 
@@ -34,7 +34,7 @@ public abstract class ShoppingListFragment extends Fragment {
     private DatabaseReference mDatabase;
     // [END define_database_reference]
 
-    private FirebaseRecyclerAdapter<Post, PostViewHolder> mAdapter;
+    private FirebaseRecyclerAdapter<Post, ShoppingBroadcastViewHolder> mAdapter;
     private RecyclerView mRecycler;
     private LinearLayoutManager mManager;
 
@@ -69,10 +69,10 @@ public abstract class ShoppingListFragment extends Fragment {
 
         // Set up FirebaseRecyclerAdapter with the Query
         Query postsQuery = getQuery(mDatabase);
-        mAdapter = new FirebaseRecyclerAdapter<Post, PostViewHolder>(Post.class, R.layout.item_post,
-                PostViewHolder.class, postsQuery) {
+        mAdapter = new FirebaseRecyclerAdapter<Post, ShoppingBroadcastViewHolder>(Post.class, R.layout.item_post,
+                ShoppingBroadcastViewHolder.class, postsQuery) {
             @Override
-            protected void populateViewHolder(final PostViewHolder viewHolder, final Post model, final int position) {
+            protected void populateViewHolder(final ShoppingBroadcastViewHolder viewHolder, final Post model, final int position) {
                 final DatabaseReference postRef = getRef(position);
 
                 // Set click listener for the whole post view
@@ -80,9 +80,9 @@ public abstract class ShoppingListFragment extends Fragment {
                 viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // Launch PostDetailActivity
-                        Intent intent = new Intent(getActivity(), PostDetailActivity.class);
-                        intent.putExtra(PostDetailActivity.EXTRA_POST_KEY, postKey);
+                        // Launch ShoppingDetailActivity
+                        Intent intent = new Intent(getActivity(), ShoppingDetailActivity.class);
+                        intent.putExtra(ShoppingDetailActivity.EXTRA_POST_KEY, postKey);
                         startActivity(intent);
                     }
                 });
@@ -99,8 +99,8 @@ public abstract class ShoppingListFragment extends Fragment {
                     @Override
                     public void onClick(View starView) {
                         // Need to write to both places the post is stored
-                        DatabaseReference globalPostRef = mDatabase.child("posts").child(postRef.getKey());
-                        DatabaseReference userPostRef = mDatabase.child("user-posts").child(model.uid).child(postRef.getKey());
+                        DatabaseReference globalPostRef = mDatabase.child("shopping-broadcast").child(postRef.getKey());
+                        DatabaseReference userPostRef = mDatabase.child("user-shopping-broadcast").child(model.uid).child(postRef.getKey());
 
                         // Run two transactions
                         onStarClicked(globalPostRef);

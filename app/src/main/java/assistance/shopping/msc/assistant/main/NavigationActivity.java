@@ -19,15 +19,14 @@ import android.view.View;
 import com.google.firebase.auth.FirebaseAuth;
 
 import assistance.shopping.msc.assistant.R;
-import assistance.shopping.msc.assistant.fragments.ChatFragment;
 import assistance.shopping.msc.assistant.fragments.HistoryFragment;
 import assistance.shopping.msc.assistant.fragments.MapFragment;
-import assistance.shopping.msc.assistant.fragments.MyPostsFragment;
 import assistance.shopping.msc.assistant.fragments.MyProfileFragment;
-import assistance.shopping.msc.assistant.fragments.MyTopPostsFragment;
+import assistance.shopping.msc.assistant.fragments.MyShoppingBroadcastFragment;
+import assistance.shopping.msc.assistant.fragments.MyTopShoppingBroadcastFragment;
 import assistance.shopping.msc.assistant.fragments.NewShoppingFragment;
 import assistance.shopping.msc.assistant.fragments.PaymentFragment;
-import assistance.shopping.msc.assistant.fragments.RecentPostsFragment;
+import assistance.shopping.msc.assistant.fragments.RecentShoppingBroadcastFragment;
 import assistance.shopping.msc.assistant.fragments.ShoppingPointFragment;
 import assistance.shopping.msc.assistant.fragments.StreetFragment;
 
@@ -107,11 +106,7 @@ public class NavigationActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_chat) {
 
-            ChatFragment fragment = new ChatFragment();
-            android.support.v4.app.FragmentTransaction fragmentTransaction =
-                    getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.fragment_container,fragment);
-            fragmentTransaction.commit();
+            // need to implement chat feature
 
         } else if (id == R.id.nav_direction) {
 
@@ -183,14 +178,14 @@ public class NavigationActivity extends AppCompatActivity
         // Create the adapter that will return a fragment for each section
         mPagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
             private final Fragment[] mFragments = new Fragment[] {
-                    new RecentPostsFragment(),
-                    new MyPostsFragment(),
-                    new MyTopPostsFragment()
+                    new RecentShoppingBroadcastFragment(),
+                    new MyShoppingBroadcastFragment(),
+                    new MyTopShoppingBroadcastFragment()
             };
             private final String[] mFragmentNames = new String[] {
-                    "Recent Shopping",
-                    "Post",
-                    "Top Post"
+                    "Shopping Help Available",
+                    "My Shopping Broadcast",
+                    "Shopping Broadcast"
             };
             @Override
             public Fragment getItem(int position) {
@@ -223,7 +218,6 @@ public class NavigationActivity extends AppCompatActivity
                 fragmentTransaction.commit();
             }
         });
-
 
     }
 }
