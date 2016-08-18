@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,7 +28,7 @@ import java.util.Map;
 
 import assistance.shopping.msc.assistant.R;
 import assistance.shopping.msc.assistant.main.NavigationActivity;
-import assistance.shopping.msc.assistant.model.Post;
+import assistance.shopping.msc.assistant.model.ShoppingBroadcast;
 import assistance.shopping.msc.assistant.model.User;
 import assistance.shopping.msc.assistant.support.BaseActivity;
 
@@ -40,13 +41,13 @@ public class NewShoppingFragment extends Fragment {
     private static final String TAG = "NewPostActivity";
     private static final String REQUIRED = "Required";
     private static View view;
-    BaseActivity base = new BaseActivity();
+    BaseActivity baseActivity = new BaseActivity();
+    // [END declare_database_ref]
     // [START declare_database_ref]
     private DatabaseReference mDatabase;
-    // [END declare_database_ref]
-
     private EditText mTitleField;
     private EditText mBodyField;
+    private FirebaseAuth mAuth;
 
     public NewShoppingFragment() {
         // Required empty public constructor
@@ -68,7 +69,7 @@ public class NewShoppingFragment extends Fragment {
             // [START initialize_database_ref]
             mDatabase = FirebaseDatabase.getInstance().getReference();
             // [END initialize_database_ref]
-
+            mAuth = FirebaseAuth.getInstance();
             mTitleField = (EditText) view.findViewById(R.id.field_title);
             mBodyField = (EditText) view.findViewById(R.id.field_body);
 
@@ -93,6 +94,8 @@ public class NewShoppingFragment extends Fragment {
         final Double Lat = (37.00);
         final Double Lon = (-122.00);
 
+        final String SAPhoto = mAuth.getCurrentUser().getPhotoUrl().toString();
+
         DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy EEE HH:mm:ss a");
         Date date = new Date();
         final String createdAt = String.valueOf(dateFormat.format(date)).toUpperCase();
@@ -110,7 +113,7 @@ public class NewShoppingFragment extends Fragment {
         }
 
         // [START single_value_read]
-        final String userId = base.getUid();
+        final String userId = baseActivity.getUid();
         mDatabase.child("users").child(userId).addListenerForSingleValueEvent(
                 new ValueEventListener() {
                     @Override
@@ -127,14 +130,14 @@ public class NewShoppingFragment extends Fragment {
                                     Toast.LENGTH_SHORT).show();
                         } else {
                             // Write new post
-                            writeNewPost(userId, user.UserName, title, body, Lat, Lon, createdAt);
+                            writeNewPost(userId, user.UserName, title, body, Lat, Lon, createdAt, SAPhoto);
 
                             Intent takeUserHome = new Intent(getActivity(), NavigationActivity.class);
                             startActivity(takeUserHome);
                         }
 
                         // Finish this Activity, back to the stream
-                        base.finish();
+                        baseActivity.finish();
                         // [END_EXCLUDE]
                     }
 
@@ -147,12 +150,12 @@ public class NewShoppingFragment extends Fragment {
     }
 
     // [START write_fan_out]
-    private void writeNewPost(String userId, String username, String title, String body, Double lat, Double lon, String createdAt) {
-        // Create new post at /user-posts/$userid/$postid and at
+    private void writeNewPost(String userId, String username, String title, String body, Double lat, Double lon, String createdAt, String sAPhoto) {
+        // Create new shoppingBroadcast at /user-posts/$userid/$postid and at
         // /posts/$postid simultaneously
         String key = mDatabase.child("shopping-broadcast").push().getKey();
-        Post post = new Post(userId, username, title, body, createdAt, lat, lon);
-        Map<String, Object> postValues = post.toMap();
+        ShoppingBroadcast shoppingBroadcast = new ShoppingBroadcast(userId, username, title, body, createdAt, lat, lon, sAPhoto);
+        Map<String, Object> postValues = shoppingBroadcast.toMap();
 
         Map<String, Object> childUpdates = new HashMap<>();
         childUpdates.put("/shopping-broadcast/" + key, postValues);

@@ -113,7 +113,7 @@ public class MyProfileFragment extends Fragment  {
 
             ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),android.R.layout.select_dialog_singlechoice, state);
             //Find TextView control
-             mGender = (AutoCompleteTextView) view.findViewById(R.id.gender);
+            mGender = (AutoCompleteTextView) view.findViewById(R.id.gender);
             //Set the number of characters the user must type before the drop down list is shown
             mGender.setThreshold(1);
             //Set the adapter
@@ -196,8 +196,6 @@ public class MyProfileFragment extends Fragment  {
                 }
             });
 
-
-            mUserProfile.setValue(mPhotoUrl);
             btnSubmit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -250,7 +248,7 @@ public class MyProfileFragment extends Fragment  {
 
         final String sUserName = usernameFromEmail(mAuth.getCurrentUser().getEmail());
 
-
+        final String uPhoto = mAuth.getCurrentUser().getPhotoUrl().toString();
 
         // [START single_value_read]
         final String userId = fragmentSupport.getUid();
@@ -273,7 +271,7 @@ public class MyProfileFragment extends Fragment  {
                                     Toast.LENGTH_SHORT).show();
                         } else {
                             // Update User Details
-                            writeToProfile(userId, sFirstName, sLastName, sDateOfBirth, sGender, sEmail, sUserName, String.valueOf(mAuth.getCurrentUser().getPhotoUrl()));
+                            writeToProfile(userId, sFirstName, sLastName, sDateOfBirth, sGender, sEmail, sUserName, uPhoto);
 
                             Intent takeUserHome = new Intent(getActivity(), NavigationActivity.class);
                             startActivity(takeUserHome);

@@ -3,6 +3,7 @@ package assistance.shopping.msc.assistant.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -23,7 +25,7 @@ import com.google.firebase.database.Transaction;
 import assistance.shopping.msc.assistant.R;
 import assistance.shopping.msc.assistant.main.ShoppingBroadcastViewHolder;
 import assistance.shopping.msc.assistant.main.ShoppingDetailActivity;
-import assistance.shopping.msc.assistant.model.Post;
+import assistance.shopping.msc.assistant.model.ShoppingBroadcast;
 
 
 public abstract class ShoppingListFragment extends Fragment {
@@ -34,7 +36,7 @@ public abstract class ShoppingListFragment extends Fragment {
     private DatabaseReference mDatabase;
     // [END define_database_reference]
 
-    private FirebaseRecyclerAdapter<Post, ShoppingBroadcastViewHolder> mAdapter;
+    private FirebaseRecyclerAdapter<ShoppingBroadcast, ShoppingBroadcastViewHolder> mAdapter;
     private RecyclerView mRecycler;
     private LinearLayoutManager mManager;
 
@@ -67,13 +69,15 @@ public abstract class ShoppingListFragment extends Fragment {
         mManager.setStackFromEnd(true);
         mRecycler.setLayoutManager(mManager);
 
+
         // Set up FirebaseRecyclerAdapter with the Query
         Query postsQuery = getQuery(mDatabase);
-        mAdapter = new FirebaseRecyclerAdapter<Post, ShoppingBroadcastViewHolder>(Post.class, R.layout.item_post,
+        mAdapter = new FirebaseRecyclerAdapter<ShoppingBroadcast, ShoppingBroadcastViewHolder>(ShoppingBroadcast.class, R.layout.item_post,
                 ShoppingBroadcastViewHolder.class, postsQuery) {
             @Override
-            protected void populateViewHolder(final ShoppingBroadcastViewHolder viewHolder, final Post model, final int position) {
+            protected void populateViewHolder(final ShoppingBroadcastViewHolder viewHolder, final ShoppingBroadcast model, final int position) {
                 final DatabaseReference postRef = getRef(position);
+
 
                 // Set click listener for the whole post view
                 final String postKey = postRef.getKey();
@@ -87,6 +91,18 @@ public abstract class ShoppingListFragment extends Fragment {
                     }
                 });
 
+                if (model.ShoppingAssistantPhoto == null) {
+                    viewHolder.shoppingAssistantPhoto
+                            .setImageDrawable(ContextCompat
+                                    .getDrawable(getActivity(),
+                                            R.drawable.ic_account_circle_black_36dp));
+                } else {
+                    Glide.with(getActivity())
+                            .load(model.ShoppingAssistantPhoto.toString())
+                            .into(viewHolder.shoppingAssistantPhoto);
+                }
+
+
                 // Determine if the current user has liked this post and set UI accordingly
                 if (model.stars.containsKey(getUid())) {
                     viewHolder.starView.setImageResource(R.drawable.ic_toggle_star_24);
@@ -94,7 +110,7 @@ public abstract class ShoppingListFragment extends Fragment {
                     viewHolder.starView.setImageResource(R.drawable.ic_toggle_star_outline_24);
                 }
 
-                // Bind Post to ViewHolder, setting OnClickListener for the star button
+                // Bind ShoppingBroadcast to ViewHolder, setting OnClickListener for the star button
                 viewHolder.bindToPost(model, new View.OnClickListener() {
                     @Override
                     public void onClick(View starView) {
@@ -117,7 +133,7 @@ public abstract class ShoppingListFragment extends Fragment {
         postRef.runTransaction(new Transaction.Handler() {
             @Override
             public Transaction.Result doTransaction(MutableData mutableData) {
-                Post p = mutableData.getValue(Post.class);
+                ShoppingBroadcast p = mutableData.getValue(ShoppingBroadcast.class);
                 if (p == null) {
                     return Transaction.success(mutableData);
                 }

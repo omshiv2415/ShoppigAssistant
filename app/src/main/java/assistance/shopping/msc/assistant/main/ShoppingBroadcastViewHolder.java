@@ -6,7 +6,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import assistance.shopping.msc.assistant.R;
-import assistance.shopping.msc.assistant.model.Post;
+import assistance.shopping.msc.assistant.model.ShoppingBroadcast;
 
 
 public class ShoppingBroadcastViewHolder extends RecyclerView.ViewHolder {
@@ -31,12 +31,13 @@ public class ShoppingBroadcastViewHolder extends RecyclerView.ViewHolder {
         shoppingAssistantPhoto = (ImageView) itemView.findViewById(R.id.post_author_photo);
     }
 
-    public void bindToPost(Post post, View.OnClickListener starClickListener) {
-        titleView.setText(post.title);
-        authorView.setText(post.author);
-        numStarsView.setText(String.valueOf(post.starCount));
-        bodyView.setText(post.body);
-        timeView.setText(post.createdAt);
+    public void bindToPost(ShoppingBroadcast shoppingBroadcast, View.OnClickListener starClickListener) {
+        titleView.setText(shoppingBroadcast.title);
+        authorView.setText(shoppingBroadcast.author);
+        numStarsView.setText(String.valueOf(shoppingBroadcast.starCount));
+        bodyView.setText(shoppingBroadcast.body);
+        timeView.setText(shoppingBroadcast.createdAt);
         starView.setOnClickListener(starClickListener);
+
     }
 }

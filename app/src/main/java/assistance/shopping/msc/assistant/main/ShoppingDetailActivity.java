@@ -1,6 +1,9 @@
 package assistance.shopping.msc.assistant.main;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,9 +13,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -20,12 +25,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import assistance.shopping.msc.assistant.R;
 import assistance.shopping.msc.assistant.model.Comment;
-import assistance.shopping.msc.assistant.model.Post;
+import assistance.shopping.msc.assistant.model.ShoppingBroadcast;
 import assistance.shopping.msc.assistant.model.User;
 import assistance.shopping.msc.assistant.support.BaseActivity;
 
@@ -38,7 +44,7 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
     private ValueEventListener mPostListener;
     private String mPostKey;
     private CommentAdapter mAdapter;
-
+    private FirebaseAuth mAuth;
     private TextView mAuthorView;
     private TextView mTitleView;
     private TextView mBodyView;
@@ -76,6 +82,7 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
 
         mCommentButton.setOnClickListener(this);
         mCommentsRecycler.setLayoutManager(new LinearLayoutManager(this));
+        mAuth = FirebaseAuth.getInstance();
 
     }
 
@@ -88,20 +95,22 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
         ValueEventListener postListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                // Get Post object and use the values to update the UI
+                // Get ShoppingBroadcast object and use the values to update the UI
 
-                Post post = dataSnapshot.getValue(Post.class);
+                ShoppingBroadcast shoppingBroadcast = dataSnapshot.getValue(ShoppingBroadcast.class);
                 // [START_EXCLUDE]
-                mAuthorView.setText(post.author);
-                mTitleView.setText(post.title);
-                mBodyView.setText(post.body);
-                // mTimeView.setText(post.createdAt);
+                mAuthorView.setText(shoppingBroadcast.author);
+                mTitleView.setText(shoppingBroadcast.title);
+                mBodyView.setText(shoppingBroadcast.body);
+
+
+                // mTimeView.setText(shoppingBroadcast.createdAt);
                 // [END_EXCLUDE]
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                // Getting Post failed, log a message
+                // Getting ShoppingBroadcast failed, log a message
                 Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
                 // [START_EXCLUDE]
                 Toast.makeText(ShoppingDetailActivity.this, "Failed to load post.",
@@ -150,11 +159,12 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         // Get user information
                         User user = dataSnapshot.getValue(User.class);
-                        String authorName = user.UserName;
+                        String shoppingAssistantName = user.UserName;
+                        String shoppingAssistantPhoto = mAuth.getCurrentUser().getPhotoUrl().toString();
 
                         // Create new comment object
-                        String commentText = mCommentField.getText().toString();
-                        Comment comment = new Comment(uid, authorName, commentText);
+                        String shoppingBroadcast = mCommentField.getText().toString();
+                        Comment comment = new Comment(uid, shoppingAssistantName, shoppingBroadcast, shoppingAssistantPhoto);
 
                         // Push the comment, it will appear in the list
                         mCommentsReference.push().setValue(comment);
@@ -174,12 +184,14 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
 
         public TextView authorView;
         public TextView bodyView;
+        public ImageView shoppingRequestPhoto;
 
         public CommentViewHolder(View itemView) {
             super(itemView);
 
             authorView = (TextView) itemView.findViewById(R.id.comment_author);
             bodyView = (TextView) itemView.findViewById(R.id.comment_body);
+            shoppingRequestPhoto = (ImageView) itemView.findViewById(R.id.comment_photo);
         }
     }
 
@@ -191,6 +203,7 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
 
         private List<String> mCommentIds = new ArrayList<>();
         private List<Comment> mComments = new ArrayList<>();
+
 
         public CommentAdapter(final Context context, DatabaseReference ref) {
             mContext = context;
@@ -210,6 +223,7 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
                     // Update RecyclerView
                     mCommentIds.add(dataSnapshot.getKey());
                     mComments.add(comment);
+
                     notifyItemInserted(mComments.size() - 1);
                     // [END_EXCLUDE]
                 }
@@ -298,6 +312,9 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
             Comment comment = mComments.get(position);
             holder.authorView.setText(comment.author);
             holder.bodyView.setText(comment.text);
+            new DownloadImageTask((holder.shoppingRequestPhoto)).execute(comment.ShoppingAssistantPhoto);
+
+
         }
 
         @Override
@@ -311,5 +328,30 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
             }
         }
 
+    }
+
+    private static class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+        ImageView bmImage;
+
+        public DownloadImageTask(ImageView bmImage) {
+            this.bmImage = bmImage;
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap mIcon11 = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                mIcon11 = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+            return mIcon11;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            bmImage.setImageBitmap(result);
+        }
     }
 }
