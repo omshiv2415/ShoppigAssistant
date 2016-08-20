@@ -3,9 +3,9 @@ package assistance.shopping.msc.assistant.fragments;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 
-public class MyTopShoppingBroadcastFragment extends ShoppingListFragment {
+public class MyCompletedShoppingBroadcastFragment extends ShoppingListFragment {
 
-    public MyTopShoppingBroadcastFragment() {
+    public MyCompletedShoppingBroadcastFragment() {
     }
 
     @Override
@@ -13,10 +13,10 @@ public class MyTopShoppingBroadcastFragment extends ShoppingListFragment {
         // [START my_top_posts_query]
         // My top posts by number of stars
         String myUserId = getUid();
-        Query myTopPostsQuery = databaseReference.child("user-shopping-broadcast").child(myUserId)
-                .orderByChild("starCount");
+        Query myCompletedShoppingQuery = databaseReference.child("user-shopping-broadcast").child(myUserId)
+                .orderByChild("starCount").equalTo("Completed");
         // [END my_top_posts_query]
 
-        return myTopPostsQuery;
+        return myCompletedShoppingQuery;
     }
 }

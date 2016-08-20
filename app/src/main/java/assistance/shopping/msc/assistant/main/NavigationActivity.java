@@ -21,9 +21,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import assistance.shopping.msc.assistant.R;
 import assistance.shopping.msc.assistant.fragments.HistoryFragment;
 import assistance.shopping.msc.assistant.fragments.MapFragment;
+import assistance.shopping.msc.assistant.fragments.MyCompletedShoppingBroadcastFragment;
 import assistance.shopping.msc.assistant.fragments.MyProfileFragment;
 import assistance.shopping.msc.assistant.fragments.MyShoppingBroadcastFragment;
-import assistance.shopping.msc.assistant.fragments.MyTopShoppingBroadcastFragment;
 import assistance.shopping.msc.assistant.fragments.NewShoppingFragment;
 import assistance.shopping.msc.assistant.fragments.PaymentFragment;
 import assistance.shopping.msc.assistant.fragments.RecentShoppingBroadcastFragment;
@@ -180,12 +180,12 @@ public class NavigationActivity extends AppCompatActivity
             private final Fragment[] mFragments = new Fragment[] {
                     new RecentShoppingBroadcastFragment(),
                     new MyShoppingBroadcastFragment(),
-                    new MyTopShoppingBroadcastFragment()
+                    new MyCompletedShoppingBroadcastFragment()
             };
             private final String[] mFragmentNames = new String[] {
                     "Shopping Help Available",
                     "My Shopping Broadcast",
-                    "Shopping Broadcast"
+                    "Completed Shopping"
             };
             @Override
             public Fragment getItem(int position) {
@@ -199,12 +199,16 @@ public class NavigationActivity extends AppCompatActivity
             public CharSequence getPageTitle(int position) {
                 return mFragmentNames[position];
             }
+
         };
+
+
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mPagerAdapter);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
+
 
         // Button launches NewPostActivity
         findViewById(R.id.fab_new_post).setOnClickListener(new View.OnClickListener() {
@@ -220,4 +224,5 @@ public class NavigationActivity extends AppCompatActivity
         });
 
     }
+
 }

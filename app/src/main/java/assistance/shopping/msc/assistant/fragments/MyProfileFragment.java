@@ -67,10 +67,10 @@ public class MyProfileFragment extends Fragment  {
     private EditText mFirstName;
     private EditText mLastName;
     private EditText mDateOfBirth;
-    private ImageView mProfileView;
     private AutoCompleteTextView mGender;
     private Button btnSubmit;
     private FirebaseAuth mAuth;
+    private ImageView uProfile;
     private String mPhotoUrl;
     public MyProfileFragment() {
         // Required empty public constructor
@@ -95,7 +95,7 @@ public class MyProfileFragment extends Fragment  {
             mUserLastName = mDatabase.child("users").child(userId).child("LastName");
             mUserDateOfBirth = mDatabase.child("users").child(userId).child("DateOfBirth");
             mUserGender = mDatabase.child("users").child(userId).child("Gender");
-            mUserProfile = mDatabase.child("user").child(userId).child("UserPhoto");
+            mUserProfile = mDatabase.child("users").child(userId).child("UserPhoto");
 
             // [END initialize_database_ref]
             mAuth = FirebaseAuth.getInstance();
@@ -103,13 +103,12 @@ public class MyProfileFragment extends Fragment  {
             mFirstName = (EditText) view.findViewById(R.id.firstName);
             mLastName = (EditText) view.findViewById(R.id.lastName);
             mDateOfBirth = (EditText) view.findViewById(R.id.dateOfBirth);
-          //  mGender = (EditText) view.findViewById(R.id.gender);
+            uProfile = (ImageView) view.findViewById(R.id.profilePicture);
+
+            //  mGender = (EditText) view.findViewById(R.id.gender);
             btnSubmit = (Button) view.findViewById(R.id.profileButton);
 
 
-            mPhotoUrl = mAuth.getCurrentUser().getPhotoUrl().toString();
-            new DownloadImageTask((ImageView) view.findViewById(R.id.profilePicture))
-                    .execute(mPhotoUrl);
 
             ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),android.R.layout.select_dialog_singlechoice, state);
             //Find TextView control
@@ -196,6 +195,21 @@ public class MyProfileFragment extends Fragment  {
                 }
             });
 
+
+            mUserProfile.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    String text = dataSnapshot.getValue(String.class);
+                    new DownloadImageTask((ImageView) view.findViewById(R.id.profilePicture))
+                            .execute(String.valueOf(text));
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
             btnSubmit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

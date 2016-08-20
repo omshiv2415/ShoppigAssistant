@@ -11,6 +11,7 @@ public class Comment {
     public String text;
     public String ShoppingAssistantPhoto;
 
+
     public Comment() {
         // Default constructor required for calls to DataSnapshot.getValue(Comment.class)
     }
@@ -20,6 +21,7 @@ public class Comment {
         this.author = author;
         this.text = text;
         this.ShoppingAssistantPhoto = ShoppingAssistantPhoto;
+
     }
 
 }

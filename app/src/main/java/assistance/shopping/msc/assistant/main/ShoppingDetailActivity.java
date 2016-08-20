@@ -39,6 +39,7 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
 
     public static final String EXTRA_POST_KEY = "post_key";
     private static final String TAG = "ShoppingDetailActivity";
+    ShoppingBroadcast model = new ShoppingBroadcast();
     private DatabaseReference mPostReference;
     private DatabaseReference mCommentsReference;
     private ValueEventListener mPostListener;
@@ -52,7 +53,6 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
     private EditText mCommentField;
     private Button mCommentButton;
     private RecyclerView mCommentsRecycler;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +84,7 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
         mCommentsRecycler.setLayoutManager(new LinearLayoutManager(this));
         mAuth = FirebaseAuth.getInstance();
 
+
     }
 
     @Override
@@ -103,9 +104,18 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
                 mTitleView.setText(shoppingBroadcast.title);
                 mBodyView.setText(shoppingBroadcast.body);
 
+                new DownloadImageTask((ImageView) findViewById(R.id.post_author_photo))
+                        .execute(String.valueOf(shoppingBroadcast.ShoppingAssistantPhoto.toString()));
 
                 // mTimeView.setText(shoppingBroadcast.createdAt);
                 // [END_EXCLUDE]
+                if (mAuthorView.getText().toString().equals(shoppingBroadcast.author)) {
+
+                    mCommentField.setHint("Respond to shopping request");
+
+                } else {
+                    mCommentField.setHint("Request Shopping......");
+                }
             }
 
             @Override
@@ -162,6 +172,7 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
                         String shoppingAssistantName = user.UserName;
                         String shoppingAssistantPhoto = mAuth.getCurrentUser().getPhotoUrl().toString();
 
+
                         // Create new comment object
                         String shoppingBroadcast = mCommentField.getText().toString();
                         Comment comment = new Comment(uid, shoppingAssistantName, shoppingBroadcast, shoppingAssistantPhoto);
@@ -186,12 +197,15 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
         public TextView bodyView;
         public ImageView shoppingRequestPhoto;
 
+
         public CommentViewHolder(View itemView) {
             super(itemView);
 
             authorView = (TextView) itemView.findViewById(R.id.comment_author);
             bodyView = (TextView) itemView.findViewById(R.id.comment_body);
             shoppingRequestPhoto = (ImageView) itemView.findViewById(R.id.comment_photo);
+
+
         }
     }
 
@@ -310,10 +324,10 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
         @Override
         public void onBindViewHolder(CommentViewHolder holder, int position) {
             Comment comment = mComments.get(position);
+
             holder.authorView.setText(comment.author);
             holder.bodyView.setText(comment.text);
             new DownloadImageTask((holder.shoppingRequestPhoto)).execute(comment.ShoppingAssistantPhoto);
-
 
         }
 

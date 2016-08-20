@@ -13,5 +13,7 @@ public class MyShoppingBroadcastFragment extends ShoppingListFragment {
         // All my posts
         return databaseReference.child("user-shopping-broadcast")
                 .child(getUid());
+
     }
+
 }

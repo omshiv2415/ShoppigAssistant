@@ -10,6 +10,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -31,14 +33,14 @@ import assistance.shopping.msc.assistant.model.ShoppingBroadcast;
 public abstract class ShoppingListFragment extends Fragment {
 
     private static final String TAG = "ShoppingListFragment";
-
+    public ProgressBar Shopping;
+    // [END define_database_reference]
     // [START define_database_reference]
     private DatabaseReference mDatabase;
-    // [END define_database_reference]
-
     private FirebaseRecyclerAdapter<ShoppingBroadcast, ShoppingBroadcastViewHolder> mAdapter;
     private RecyclerView mRecycler;
     private LinearLayoutManager mManager;
+
 
     public ShoppingListFragment() {
     }
@@ -49,12 +51,14 @@ public abstract class ShoppingListFragment extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.fragment_all_shopping_request, container, false);
 
+
         // [START create_database_reference]
         mDatabase = FirebaseDatabase.getInstance().getReference();
         // [END create_database_reference]
 
         mRecycler = (RecyclerView) rootView.findViewById(R.id.messages_list);
         mRecycler.setHasFixedSize(true);
+
 
         return rootView;
     }
@@ -68,7 +72,7 @@ public abstract class ShoppingListFragment extends Fragment {
         mManager.setReverseLayout(true);
         mManager.setStackFromEnd(true);
         mRecycler.setLayoutManager(mManager);
-
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
         // Set up FirebaseRecyclerAdapter with the Query
         Query postsQuery = getQuery(mDatabase);
@@ -84,10 +88,20 @@ public abstract class ShoppingListFragment extends Fragment {
                 viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        // Launch ShoppingDetailActivity
-                        Intent intent = new Intent(getActivity(), ShoppingDetailActivity.class);
-                        intent.putExtra(ShoppingDetailActivity.EXTRA_POST_KEY, postKey);
-                        startActivity(intent);
+
+                        if (model.starCount.toString().equals("Completed")) {
+
+                            Toast.makeText(getActivity(), "Transaction is Completed", Toast.LENGTH_LONG).show();
+
+                        } else {
+
+                            Intent intent = new Intent(getActivity(), ShoppingDetailActivity.class);
+                            intent.putExtra(ShoppingDetailActivity.EXTRA_POST_KEY, postKey);
+                            startActivity(intent);
+
+
+                        }
+
                     }
                 });
 
@@ -95,7 +109,7 @@ public abstract class ShoppingListFragment extends Fragment {
                     viewHolder.shoppingAssistantPhoto
                             .setImageDrawable(ContextCompat
                                     .getDrawable(getActivity(),
-                                            R.drawable.ic_account_circle_black_36dp));
+                                            R.drawable.profile));
                 } else {
                     Glide.with(getActivity())
                             .load(model.ShoppingAssistantPhoto.toString())
@@ -105,9 +119,9 @@ public abstract class ShoppingListFragment extends Fragment {
 
                 // Determine if the current user has liked this post and set UI accordingly
                 if (model.stars.containsKey(getUid())) {
-                    viewHolder.starView.setImageResource(R.drawable.ic_toggle_star_24);
+                    viewHolder.starView.setImageResource(R.drawable.confirm_shopping_basket);
                 } else {
-                    viewHolder.starView.setImageResource(R.drawable.ic_toggle_star_outline_24);
+                    viewHolder.starView.setImageResource(R.drawable.in_process_shopping);
                 }
 
                 // Bind ShoppingBroadcast to ViewHolder, setting OnClickListener for the star button
@@ -140,11 +154,11 @@ public abstract class ShoppingListFragment extends Fragment {
 
                 if (p.stars.containsKey(getUid())) {
                     // Unstar the post and remove self from stars
-                    p.starCount = p.starCount - 1;
+                    p.starCount = "In Process";
                     p.stars.remove(getUid());
                 } else {
                     // Star the post and add self to stars
-                    p.starCount = p.starCount + 1;
+                    p.starCount = "Completed";
                     p.stars.put(getUid(), true);
                 }
 

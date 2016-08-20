@@ -18,7 +18,7 @@ public class ShoppingBroadcast {
     public Double LocationLon;
     public String createdAt;
     public String ShoppingAssistantPhoto;
-    public int starCount = 0;
+    public String starCount = "Processing";
     public Map<String, Boolean> stars = new HashMap<>();
     private String photoUrl;
 
