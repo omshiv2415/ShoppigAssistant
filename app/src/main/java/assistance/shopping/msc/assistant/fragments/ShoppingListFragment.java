@@ -28,12 +28,15 @@ import assistance.shopping.msc.assistant.R;
 import assistance.shopping.msc.assistant.main.ShoppingBroadcastViewHolder;
 import assistance.shopping.msc.assistant.main.ShoppingDetailActivity;
 import assistance.shopping.msc.assistant.model.ShoppingBroadcast;
+import assistance.shopping.msc.assistant.support.FragmentSupport;
 
 
 public abstract class ShoppingListFragment extends Fragment {
 
     private static final String TAG = "ShoppingListFragment";
     public ProgressBar Shopping;
+    FragmentSupport fragmentSupport = new FragmentSupport();
+    final String userId = fragmentSupport.getUid();
     // [END define_database_reference]
     // [START define_database_reference]
     private DatabaseReference mDatabase;
@@ -76,6 +79,8 @@ public abstract class ShoppingListFragment extends Fragment {
 
         // Set up FirebaseRecyclerAdapter with the Query
         Query postsQuery = getQuery(mDatabase);
+        // Query postsQuery = getQuery(mDatabase).orderByChild("starCount").equalTo("In Process");
+
         mAdapter = new FirebaseRecyclerAdapter<ShoppingBroadcast, ShoppingBroadcastViewHolder>(ShoppingBroadcast.class, R.layout.item_post,
                 ShoppingBroadcastViewHolder.class, postsQuery) {
             @Override
@@ -118,11 +123,17 @@ public abstract class ShoppingListFragment extends Fragment {
 
 
                 // Determine if the current user has liked this post and set UI accordingly
-                if (model.stars.containsKey(getUid())) {
+
+                if (model.starCount.equals("Completed")) {
+
                     viewHolder.starView.setImageResource(R.drawable.confirm_shopping_basket);
+
                 } else {
+
+
                     viewHolder.starView.setImageResource(R.drawable.in_process_shopping);
                 }
+
 
                 // Bind ShoppingBroadcast to ViewHolder, setting OnClickListener for the star button
                 viewHolder.bindToPost(model, new View.OnClickListener() {
@@ -152,16 +163,19 @@ public abstract class ShoppingListFragment extends Fragment {
                     return Transaction.success(mutableData);
                 }
 
-                if (p.stars.containsKey(getUid())) {
-                    // Unstar the post and remove self from stars
-                    p.starCount = "In Process";
-                    p.stars.remove(getUid());
-                } else {
-                    // Star the post and add self to stars
-                    p.starCount = "Completed";
-                    p.stars.put(getUid(), true);
-                }
+                if (p.uid.equals(userId)) {
 
+                    if (p.stars.containsKey(getUid())) {
+                        // Unstar the post and remove self from stars
+                        p.starCount = "In Process";
+                        p.stars.remove(getUid());
+                    } else {
+                        // Star the post and add self to stars
+                        p.starCount = "Completed";
+                        p.stars.put(getUid(), true);
+
+                    }
+                }
                 // Set value and report transaction success
                 mutableData.setValue(p);
                 return Transaction.success(mutableData);

@@ -52,8 +52,10 @@ public class MyProfileFragment extends Fragment  {
     private static final String TAG = "MyProfileFragment";
     private static final String REQUIRED = "Required";
     private static View view;
+
     FragmentSupport fragmentSupport = new FragmentSupport();
     final String userId = fragmentSupport.getUid();
+
     private DatabaseReference mDatabase;
     private DatabaseReference mUserFirstName;
     private DatabaseReference mUserLastName;
@@ -262,13 +264,17 @@ public class MyProfileFragment extends Fragment  {
 
         final String sUserName = usernameFromEmail(mAuth.getCurrentUser().getEmail());
 
-        final String uPhoto = mAuth.getCurrentUser().getPhotoUrl().toString();
+        String uPhoto = String.valueOf(mAuth.getCurrentUser().getPhotoUrl());
 
+
+        uPhoto.equals(null);
+        uPhoto = "https://lh5.googleusercontent.com/-GR9C2A9MSW4/AAAAAAAAAAI/AAAAAAAAAAA/YXsBkGA3iLc/s96-c/photo.jpg";
         // [START single_value_read]
         final String userId = fragmentSupport.getUid();
 
         mDatabase.child("users");
         mDatabase.child(userId);
+        final String finalUPhoto = uPhoto;
         mDatabase.addListenerForSingleValueEvent(
                 new ValueEventListener() {
                     @Override
@@ -285,7 +291,7 @@ public class MyProfileFragment extends Fragment  {
                                     Toast.LENGTH_SHORT).show();
                         } else {
                             // Update User Details
-                            writeToProfile(userId, sFirstName, sLastName, sDateOfBirth, sGender, sEmail, sUserName, uPhoto);
+                            writeToProfile(userId, sFirstName, sLastName, sDateOfBirth, sGender, sEmail, sUserName, finalUPhoto);
 
                             Intent takeUserHome = new Intent(getActivity(), NavigationActivity.class);
                             startActivity(takeUserHome);

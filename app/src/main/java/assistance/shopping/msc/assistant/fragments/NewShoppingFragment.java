@@ -94,7 +94,10 @@ public class NewShoppingFragment extends Fragment {
         final Double Lat = (37.00);
         final Double Lon = (-122.00);
 
-        final String SAPhoto = mAuth.getCurrentUser().getPhotoUrl().toString();
+        String SAPhoto = String.valueOf(mAuth.getCurrentUser().getPhotoUrl());
+
+        SAPhoto.equals(null);
+        SAPhoto = "https://lh5.googleusercontent.com/-GR9C2A9MSW4/AAAAAAAAAAI/AAAAAAAAAAA/YXsBkGA3iLc/s96-c/photo.jpg";
 
         DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy EEE HH:mm:ss a");
         Date date = new Date();
@@ -114,6 +117,7 @@ public class NewShoppingFragment extends Fragment {
 
         // [START single_value_read]
         final String userId = baseActivity.getUid();
+        final String finalSAPhoto = SAPhoto;
         mDatabase.child("users").child(userId).addListenerForSingleValueEvent(
                 new ValueEventListener() {
                     @Override
@@ -130,7 +134,7 @@ public class NewShoppingFragment extends Fragment {
                                     Toast.LENGTH_SHORT).show();
                         } else {
                             // Write new post
-                            writeNewPost(userId, user.UserName, title, body, Lat, Lon, createdAt, SAPhoto);
+                            writeNewPost(userId, user.UserName, title, body, Lat, Lon, createdAt, finalSAPhoto);
 
                             Intent takeUserHome = new Intent(getActivity(), NavigationActivity.class);
                             startActivity(takeUserHome);
