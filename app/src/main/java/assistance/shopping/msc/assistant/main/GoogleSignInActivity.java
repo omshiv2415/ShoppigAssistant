@@ -17,7 +17,6 @@
 package assistance.shopping.msc.assistant.main;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -154,7 +153,7 @@ public class GoogleSignInActivity extends BaseActivity implements
         // [START_EXCLUDE silent]
         showProgressDialog();
         // [END_EXCLUDE]
-        Uri photoUrl = acct.getPhotoUrl();
+
 
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)
@@ -211,6 +210,7 @@ public class GoogleSignInActivity extends BaseActivity implements
     private void onAuthSuccess(FirebaseUser user) {
         String username = usernameFromEmail(user.getEmail());
 
+
         // Write new user
         writeNewUser(user.getUid(), username, user.getEmail());
 
@@ -219,6 +219,7 @@ public class GoogleSignInActivity extends BaseActivity implements
         Intent takeUserHome = new Intent(GoogleSignInActivity.this, NavigationActivity.class);
         startActivity(takeUserHome);
         finish();
+
 
     }
 

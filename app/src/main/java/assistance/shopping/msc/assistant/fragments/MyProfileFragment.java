@@ -2,7 +2,6 @@ package assistance.shopping.msc.assistant.fragments;
 
 
 import android.app.DatePickerDialog;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -216,8 +215,6 @@ public class MyProfileFragment extends Fragment  {
                 @Override
                 public void onClick(View v) {
 
-                    ProgressDialog dialog = ProgressDialog.show(getActivity(), "Updating...", "Please wait...", true);
-                    dialog.show();
                     submitProfile();
 
                 }
@@ -265,50 +262,103 @@ public class MyProfileFragment extends Fragment  {
         final String sUserName = usernameFromEmail(mAuth.getCurrentUser().getEmail());
 
         String uPhoto = String.valueOf(mAuth.getCurrentUser().getPhotoUrl());
+        final String uGPhoto = String.valueOf(mAuth.getCurrentUser().getPhotoUrl());
 
 
-        uPhoto.equals(null);
-        uPhoto = "https://lh5.googleusercontent.com/-GR9C2A9MSW4/AAAAAAAAAAI/AAAAAAAAAAA/YXsBkGA3iLc/s96-c/photo.jpg";
-        // [START single_value_read]
-        final String userId = fragmentSupport.getUid();
+        if (uPhoto.equals(null)) {
 
-        mDatabase.child("users");
-        mDatabase.child(userId);
-        final String finalUPhoto = uPhoto;
-        mDatabase.addListenerForSingleValueEvent(
-                new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        // Get user value
-                        User user = dataSnapshot.getValue(User.class);
+            uPhoto = "https://lh3.googleusercontent.com/-et8-_Jd3MiY/AAAAAAAAAAI/AAAAAAAAAAs/9OWsA3w5ZGw/s96-c/photo.jpg";
+            final String userId = fragmentSupport.getUid();
 
-                        // [START_EXCLUDE]
-                        if (user == null) {
-                            // User is null, error out
-                            Log.e(TAG, "User " + userId + " is unexpectedly null");
-                            Toast.makeText(getActivity(),
-                                    "Error: could not fetch user.",
-                                    Toast.LENGTH_SHORT).show();
-                        } else {
-                            // Update User Details
-                            writeToProfile(userId, sFirstName, sLastName, sDateOfBirth, sGender, sEmail, sUserName, finalUPhoto);
+            mDatabase.child("users");
+            mDatabase.child(userId);
 
-                            Intent takeUserHome = new Intent(getActivity(), NavigationActivity.class);
-                            startActivity(takeUserHome);
+            final String finalUPhoto1 = uPhoto;
+            mDatabase.addListenerForSingleValueEvent(
+                    new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            // Get user value
+                            User user = dataSnapshot.getValue(User.class);
+
+                            // [START_EXCLUDE]
+                            if (user == null) {
+                                // User is null, error out
+                                Log.e(TAG, "User " + userId + " is unexpectedly null");
+                                Toast.makeText(getActivity(),
+                                        "Error: could not fetch user.",
+                                        Toast.LENGTH_SHORT).show();
+                            } else {
+                                // Update User Details
+                                writeToProfile(userId, sFirstName, sLastName, sDateOfBirth, sGender, sEmail, sUserName, finalUPhoto1);
+                                Toast.makeText(getActivity(), "Profile updated Successfully", Toast.LENGTH_LONG).show();
+                                Intent takeUserHome = new Intent(getActivity(), NavigationActivity.class);
+                                startActivity(takeUserHome);
+
+
+                                //ProgressDialog dialog = ProgressDialog.show(getActivity(), "Updating...", "Please wait...", true);
+                                // dialog.show();
+
+                            }
+
+
                         }
 
-
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        Log.w(TAG, "getUser:onCancelled", databaseError.toException());
-                    }
-                });
-        // [END single_value_read]
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            Log.w(TAG, "getUser:onCancelled", databaseError.toException());
+                        }
+                    });
+            // [END single_value_read]
 
 
+        } else {
 
+            // [START single_value_read]
+            final String userId = fragmentSupport.getUid();
+
+            mDatabase.child("users");
+            mDatabase.child(userId);
+
+            mDatabase.addListenerForSingleValueEvent(
+                    new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            // Get user value
+                            User user = dataSnapshot.getValue(User.class);
+
+                            // [START_EXCLUDE]
+                            if (user == null) {
+                                // User is null, error out
+                                Log.e(TAG, "User " + userId + " is unexpectedly null");
+                                Toast.makeText(getActivity(),
+                                        "Error: could not fetch user.",
+                                        Toast.LENGTH_SHORT).show();
+                            } else {
+                                // Update User Details
+                                writeToProfile(userId, sFirstName, sLastName, sDateOfBirth, sGender, sEmail, sUserName, uGPhoto);
+                                Toast.makeText(getActivity(), "Profile updated Successfully", Toast.LENGTH_LONG).show();
+                                Intent takeUserHome = new Intent(getActivity(), NavigationActivity.class);
+                                startActivity(takeUserHome);
+
+
+                                //ProgressDialog dialog = ProgressDialog.show(getActivity(), "Updating...", "Please wait...", true);
+                                // dialog.show();
+
+                            }
+
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            Log.w(TAG, "getUser:onCancelled", databaseError.toException());
+                        }
+                    });
+            // [END single_value_read]
+
+
+        }
 
     }
 

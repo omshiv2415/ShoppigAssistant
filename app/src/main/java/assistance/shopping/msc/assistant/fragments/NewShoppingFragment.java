@@ -95,9 +95,11 @@ public class NewShoppingFragment extends Fragment {
         final Double Lon = (-122.00);
 
         String SAPhoto = String.valueOf(mAuth.getCurrentUser().getPhotoUrl());
+        final String SAGPhoto = String.valueOf(mAuth.getCurrentUser().getPhotoUrl());
 
-        SAPhoto.equals(null);
-        SAPhoto = "https://lh5.googleusercontent.com/-GR9C2A9MSW4/AAAAAAAAAAI/AAAAAAAAAAA/YXsBkGA3iLc/s96-c/photo.jpg";
+        if (SAPhoto.equals(null)) {
+
+            SAPhoto = "https://lh3.googleusercontent.com/-et8-_Jd3MiY/AAAAAAAAAAI/AAAAAAAAAAs/9OWsA3w5ZGw/s96-c/photo.jpg";
 
         DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy EEE HH:mm:ss a");
         Date date = new Date();
@@ -151,6 +153,63 @@ public class NewShoppingFragment extends Fragment {
                     }
                 });
         // [END single_value_read]
+        } else {
+
+
+            DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy EEE HH:mm:ss a");
+            Date date = new Date();
+            final String createdAt = String.valueOf(dateFormat.format(date)).toUpperCase();
+
+            // Title is required
+            if (TextUtils.isEmpty(title)) {
+                mTitleField.setError(REQUIRED);
+                return;
+            }
+
+            // Body is required
+            if (TextUtils.isEmpty(body)) {
+                mBodyField.setError(REQUIRED);
+                return;
+            }
+
+            // [START single_value_read]
+            final String userId = baseActivity.getUid();
+
+            mDatabase.child("users").child(userId).addListenerForSingleValueEvent(
+                    new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            // Get user value
+                            User user = dataSnapshot.getValue(User.class);
+
+                            // [START_EXCLUDE]
+                            if (user == null) {
+                                // User is null, error out
+                                Log.e(TAG, "User " + userId + " is unexpectedly null");
+                                Toast.makeText(getActivity(),
+                                        "Error: could not fetch user.",
+                                        Toast.LENGTH_SHORT).show();
+                            } else {
+                                // Write new post
+                                writeNewPost(userId, user.UserName, title, body, Lat, Lon, createdAt, SAGPhoto);
+
+                                Intent takeUserHome = new Intent(getActivity(), NavigationActivity.class);
+                                startActivity(takeUserHome);
+                            }
+
+                            // Finish this Activity, back to the stream
+                            baseActivity.finish();
+                            // [END_EXCLUDE]
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            Log.w(TAG, "getUser:onCancelled", databaseError.toException());
+                        }
+                    });
+            // [END single_value_read]
+
+        }
     }
 
     // [START write_fan_out]

@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -28,6 +29,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import assistance.shopping.msc.assistant.R;
 import assistance.shopping.msc.assistant.model.Comment;
@@ -53,7 +55,7 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
     private EditText mCommentField;
     private Button mCommentButton;
     private RecyclerView mCommentsRecycler;
-
+    private TextToSpeech speech;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,15 +107,16 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
                 mBodyView.setText(shoppingBroadcast.body);
 
                 new DownloadImageTask((ImageView) findViewById(R.id.post_author_photo))
-                        .execute(String.valueOf(shoppingBroadcast.ShoppingAssistantPhoto.toString()));
+                        .execute(String.valueOf(shoppingBroadcast.ShoppingAssistantPhoto));
 
                 // mTimeView.setText(shoppingBroadcast.createdAt);
                 // [END_EXCLUDE]
-                if (mAuthorView.getText().toString().equals(shoppingBroadcast.author)) {
+                if (shoppingBroadcast.uid.equals(mAuth.getCurrentUser().getUid())) {
 
                     mCommentField.setHint("Respond to shopping request");
 
                 } else {
+
                     mCommentField.setHint("Request Shopping......");
                 }
             }
@@ -173,15 +176,41 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
                         String shoppingAssistantPhoto = mAuth.getCurrentUser().getPhotoUrl().toString();
 
 
+
                         // Create new comment object
                         String shoppingBroadcast = mCommentField.getText().toString();
-                        Comment comment = new Comment(uid, shoppingAssistantName, shoppingBroadcast, shoppingAssistantPhoto);
 
-                        // Push the comment, it will appear in the list
-                        mCommentsReference.push().setValue(comment);
+                        if (shoppingBroadcast.equals("")) {
 
-                        // Clear the field
-                        mCommentField.setText(null);
+                            speech = new TextToSpeech(ShoppingDetailActivity.this, new TextToSpeech.OnInitListener() {
+                                @Override
+                                public void onInit(int status) {
+                                    if (status != TextToSpeech.ERROR) {
+                                        speech.setLanguage(Locale.UK);
+                                        String toSpeak = ("Please add some request or response");
+                                        speech.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+                                        Toast.makeText(ShoppingDetailActivity.this, toSpeak,
+                                                Toast.LENGTH_SHORT).show();
+
+
+                                    }
+                                }
+                            });
+
+                        } else {
+
+                            Comment comment = new Comment(uid, shoppingAssistantName, shoppingBroadcast, shoppingAssistantPhoto);
+
+                            // Push the comment, it will appear in the list
+                            mCommentsReference.push().setValue(comment);
+
+                            // Clear the field
+                            mCommentField.setText(null);
+
+                        }
+
+
+
                     }
 
                     @Override

@@ -35,6 +35,7 @@
             android:layout_weight="0.05"
             android:background="@drawable/add_shopping_bag" />
 
+
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView

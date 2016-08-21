@@ -48,14 +48,15 @@
         android:layout_height="515dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_gravity="top|center_horizontal"
+        android:layout_gravity="top|right"
         android:layout_margin="16dp"
         android:layout_marginTop="50dp"
         android:src="@drawable/ic_image_edit"
-        app:backgroundTint="#80070708"
+        app:backgroundTint="@android:color/holo_green_light"
         app:layout_anchor="@+id/fragment_container"
 
-        app:layout_anchorGravity="bottom|left" />
+        app:layout_anchorGravity="bottom|left"
+        app:rippleColor="@android:color/holo_orange_dark" />
 
 
 </android.support.design.widget.CoordinatorLayout>
