@@ -1,6 +1,7 @@
 package assistance.shopping.msc.assistant.fragments;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -127,6 +128,8 @@ public abstract class ShoppingListFragment extends Fragment {
                 if (model.starCount.equals("Completed")) {
 
                     viewHolder.starView.setImageResource(R.drawable.confirm_shopping_basket);
+                    viewHolder.rel.setBackgroundColor(Color.parseColor("#CCC0C0C0"));
+
 
                 } else {
 

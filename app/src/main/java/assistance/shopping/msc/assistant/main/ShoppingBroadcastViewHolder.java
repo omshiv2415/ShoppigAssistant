@@ -3,6 +3,7 @@ package assistance.shopping.msc.assistant.main;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import assistance.shopping.msc.assistant.R;
@@ -18,6 +19,7 @@ public class ShoppingBroadcastViewHolder extends RecyclerView.ViewHolder {
     public TextView bodyView;
     public TextView timeView;
     public ImageView shoppingAssistantPhoto;
+    public RelativeLayout rel;
 
     public ShoppingBroadcastViewHolder(View itemView) {
         super(itemView);
@@ -29,6 +31,7 @@ public class ShoppingBroadcastViewHolder extends RecyclerView.ViewHolder {
         bodyView = (TextView) itemView.findViewById(R.id.post_body);
         timeView = (TextView) itemView.findViewById(R.id.timeStamp);
         shoppingAssistantPhoto = (ImageView) itemView.findViewById(R.id.post_author_photo);
+        rel = (RelativeLayout) itemView.findViewById(R.id.item_View);
     }
 
     public void bindToPost(ShoppingBroadcast shoppingBroadcast, View.OnClickListener starClickListener) {

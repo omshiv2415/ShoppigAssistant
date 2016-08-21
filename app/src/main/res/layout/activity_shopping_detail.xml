@@ -23,17 +23,17 @@
             android:id="@+id/field_comment_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.8"
+            android:layout_weight="0.93"
             android:hint="Request Shopping...."
             android:maxLines="1" />
 
         <Button
             android:id="@+id/button_post_comment"
             style="@style/Base.Widget.AppCompat.Button.Borderless"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.2"
-            android:text="Request" />
+            android:layout_width="32dp"
+            android:layout_height="50dp"
+            android:layout_weight="0.05"
+            android:background="@drawable/add_shopping_bag" />
 
     </LinearLayout>
 
