@@ -36,6 +36,8 @@ import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.Transaction;
 
+import java.util.Arrays;
+
 import assistance.shopping.msc.assistant.R;
 import assistance.shopping.msc.assistant.main.ShoppingBroadcastViewHolder;
 import assistance.shopping.msc.assistant.main.ShoppingDetailActivity;
@@ -160,7 +162,12 @@ public abstract class ShoppingListFragment extends Fragment {
 
 
                         if (model.starCount.equals("Completed")) {
+
                             Toast.makeText(getActivity(), "Transaction is Completed", Toast.LENGTH_LONG).show();
+
+                        } else if ((!model.uid.equals(FirebaseAuth.getInstance().getCurrentUser().getUid()))) {
+
+                            Toast.makeText(getActivity(), "This is not your shopping Broadcast", Toast.LENGTH_LONG).show();
 
                         } else {
 
@@ -169,22 +176,21 @@ public abstract class ShoppingListFragment extends Fragment {
                             final DatabaseReference userPostRef = mDatabase.child("user-shopping-broadcast").child(model.uid).child(postRef.getKey());
 
 
-                            final CharSequence[] items = {" Cash ", " Card ", "Android Pay ", " PayPal "};
+                            final CharSequence[] items = {" Cash ", " Card ", " Android Pay ", " PayPal "};
 
                             // Creating and Building the Dialog
-                            final AlertDialog.Builder builder = new AlertDialog.Builder(
-                                    new ContextThemeWrapper(getActivity(), Theme_Dialog));
+                            final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(getActivity(), Theme_Dialog));
                             builder.setTitle("Please confirmed payment type");
 
 
                             builder.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int item) {
+                                public void onClick(DialogInterface dialog, final int item) {
 
 
                                     switch (item) {
                                         case 0:
                                             // Run two transactions
-                                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                            final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
                                             builder.setTitle("Confirm");
                                             builder.setMessage("Are you sure?");
@@ -193,8 +199,10 @@ public abstract class ShoppingListFragment extends Fragment {
 
                                                 public void onClick(DialogInterface dialog, int which) {
                                                     // Do nothing but close the dialog
-                                                    onStarClicked(globalPostRef);
-                                                    onStarClicked(userPostRef);
+                                                    String indexYear1 = String.valueOf(Arrays.asList(items).get(0));
+
+                                                    onStarClicked(globalPostRef, indexYear1);
+                                                    onStarClicked(userPostRef, indexYear1);
                                                     dialog.dismiss();
                                                 }
                                             });
@@ -250,7 +258,7 @@ public abstract class ShoppingListFragment extends Fragment {
 
 
     // [START post_stars_transaction]
-    private void onStarClicked(DatabaseReference postRef) {
+    private void onStarClicked(DatabaseReference postRef, final String PaymentType) {
         postRef.runTransaction(new Transaction.Handler() {
             @Override
             public Transaction.Result doTransaction(MutableData mutableData) {
@@ -265,11 +273,13 @@ public abstract class ShoppingListFragment extends Fragment {
                         // Unstar the post and remove self from stars
                         p.starCount = "In Process";
                         p.stars.remove(getUid());
+
+
                     } else {
                         // Star the post and add self to stars
                         p.starCount = "Completed";
                         p.stars.put(getUid(), true);
-
+                        p.paymetType = PaymentType;
                     }
                 }
                 // Set value and report transaction success

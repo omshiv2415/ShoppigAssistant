@@ -19,6 +19,7 @@ public class ShoppingBroadcast {
     public String createdAt;
     public String ShoppingAssistantPhoto;
     public String starCount = "Processing";
+    public String paymetType = "Cash";
     public Map<String, Boolean> stars = new HashMap<>();
     private String photoUrl;
 
@@ -26,7 +27,9 @@ public class ShoppingBroadcast {
         // Default constructor required for calls to DataSnapshot.getValue(ShoppingBroadcast.class)
     }
 
-    public ShoppingBroadcast(String uid, String author, String title, String body, String createdAt, Double LocationLat, Double LocationLon, String ShoppingAssistantPhoto) {
+    public ShoppingBroadcast(String uid, String author, String title, String body, String createdAt,
+                             Double LocationLat, Double LocationLon, String ShoppingAssistantPhoto,
+                             String paymetType) {
         this.uid = uid;
         this.author = author;
         this.title = title;
@@ -35,6 +38,7 @@ public class ShoppingBroadcast {
         this.LocationLat = LocationLat;
         this.LocationLon = LocationLon;
         this.ShoppingAssistantPhoto = ShoppingAssistantPhoto;
+        this.paymetType = paymetType;
 
     }
 
@@ -52,6 +56,7 @@ public class ShoppingBroadcast {
         result.put("ShoppingAssistantPhoto", ShoppingAssistantPhoto);
         result.put("starCount", starCount);
         result.put("stars", stars);
+        result.put("paymentType", paymetType);
 
         return result;
     }

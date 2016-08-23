@@ -115,6 +115,7 @@ public class NewShoppingFragment extends Fragment {
         final String body = mBodyField.getText().toString();
         final Double Lat = (37.00);
         final Double Lon = (-122.00);
+        final String paymentType = "Cash";
 
         String SAPhoto = String.valueOf(mAuth.getCurrentUser().getPhotoUrl());
         final String SAGPhoto = String.valueOf(mAuth.getCurrentUser().getPhotoUrl());
@@ -158,7 +159,7 @@ public class NewShoppingFragment extends Fragment {
                                     Toast.LENGTH_SHORT).show();
                         } else {
                             // Write new post
-                            writeNewPost(userId, user.UserName, title, body, Lat, Lon, createdAt, finalSAPhoto);
+                            writeNewPost(userId, user.UserName, title, body, Lat, Lon, createdAt, finalSAPhoto, paymentType);
 
                             Intent takeUserHome = new Intent(getActivity(), NavigationActivity.class);
                             startActivity(takeUserHome);
@@ -216,14 +217,11 @@ public class NewShoppingFragment extends Fragment {
                                         Toast.LENGTH_SHORT).show();
                             } else {
                                 // Write new post
-                                writeNewPost(userId, user.UserName, title, body, Lat, Lon, createdAt, SAGPhoto);
+                                writeNewPost(userId, user.UserName, title, body, Lat, Lon, createdAt, SAGPhoto, paymentType);
                                 showSimpleNotification(body);
                                 Intent takeUserHome = new Intent(getActivity(), NavigationActivity.class);
                                 startActivity(takeUserHome);
                                 // sendNotificationToUser("shoppingassistantuk","please check new shopping assistant");
-
-
-
 
 
                             }
@@ -244,11 +242,12 @@ public class NewShoppingFragment extends Fragment {
     }
 
     // [START write_fan_out]
-    private void writeNewPost(String userId, String username, String title, String body, Double lat, Double lon, String createdAt, String sAPhoto) {
+    private void writeNewPost(String userId, String username, String title, String body, Double lat, Double lon,
+                              String createdAt, String sAPhoto, String paymentType) {
         // Create new shoppingBroadcast at /user-posts/$userid/$postid and at
         // /posts/$postid simultaneously
         String key = mDatabase.child("shopping-broadcast").push().getKey();
-        ShoppingBroadcast shoppingBroadcast = new ShoppingBroadcast(userId, username, title, body, createdAt, lat, lon, sAPhoto);
+        ShoppingBroadcast shoppingBroadcast = new ShoppingBroadcast(userId, username, title, body, createdAt, lat, lon, sAPhoto, paymentType);
         Map<String, Object> postValues = shoppingBroadcast.toMap();
 
         Map<String, Object> childUpdates = new HashMap<>();
