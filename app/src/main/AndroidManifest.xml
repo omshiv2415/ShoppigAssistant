@@ -9,7 +9,6 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
-
     <uses-permission android:name="android.permission.ACCESS_GPS" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -32,34 +31,30 @@
             </intent-filter>
         </activity>
 
-
-
-        <service
-            android:name=".support.MyFirebaseMessagingService">
+        <service android:name=".support.MyFirebaseMessagingService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
                 <action android:name=".LoginActivity" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-
         </service>
-
-        <service
-            android:name=".support.MyFirebaseInstanceIDService">
+        <service android:name=".support.MyFirebaseInstanceIDService">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-
 
         <activity android:name=".main.RegisterActivity" />
         <activity android:name=".main.PasswordResetActivity" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCYg4xgI4p6yEWRoGVbinrNUZ0-hEIwI7A"/>
+            android:value="AIzaSyCYg4xgI4p6yEWRoGVbinrNUZ0-hEIwI7A" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+
         <activity
             android:name=".main.NavigationActivity"
             android:label="@string/title_activity_navigation"
@@ -71,7 +66,7 @@
         <activity
             android:name=".main.ShoppingDetailActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-
+        <activity android:name=".main.NotificationActivity"></activity>
     </application>
 
 </manifest>

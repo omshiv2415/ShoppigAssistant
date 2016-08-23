@@ -18,6 +18,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.Locale;
 
@@ -144,7 +145,7 @@ public class RegisterActivity extends Activity {
         String username = usernameFromEmail(user.getEmail());
 
         // Write new user
-        writeNewUser(user.getUid(), username, user.getEmail());
+        writeNewUser(user.getUid(), username, user.getEmail(), FirebaseInstanceId.getInstance().getToken());
 
         // Go to MainActivity
         Toast.makeText(RegisterActivity.this, "Welcome to the Shopping Assistant", Toast.LENGTH_LONG).show();
@@ -164,8 +165,8 @@ public class RegisterActivity extends Activity {
     }
 
     // [START basic_write]
-    private void writeNewUser(String userId, String name, String email) {
-        User user = new User(name, email);
+    private void writeNewUser(String userId, String name, String email, String authentication) {
+        User user = new User(name, email, authentication);
 
         mDatabase.child("users").child(userId).setValue(user);
     }

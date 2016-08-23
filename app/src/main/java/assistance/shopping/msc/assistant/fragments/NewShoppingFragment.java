@@ -1,9 +1,17 @@
 package assistance.shopping.msc.assistant.fragments;
 
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.InflateException;
@@ -13,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.firebase.client.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -40,6 +49,8 @@ public class NewShoppingFragment extends Fragment {
 
     private static final String TAG = "NewPostActivity";
     private static final String REQUIRED = "Required";
+    private static final int TAG_SIMPLE_NOTIFICATION = 1;
+    private static final String FIREBASE_URL = "https://testing-2b3ba.firebaseio.com/";
     private static View view;
     BaseActivity baseActivity = new BaseActivity();
     // [END declare_database_ref]
@@ -51,6 +62,17 @@ public class NewShoppingFragment extends Fragment {
 
     public NewShoppingFragment() {
         // Required empty public constructor
+    }
+
+    public static void sendNotificationToUser(String user, final String message) {
+        Firebase ref = new Firebase(FIREBASE_URL);
+        final Firebase notifications = ref.child("notificationRequests");
+
+        Map notification = new HashMap<>();
+        notification.put("username", user);
+        notification.put("message", message);
+
+        notifications.push().setValue(notification);
     }
 
     @Override
@@ -140,6 +162,8 @@ public class NewShoppingFragment extends Fragment {
 
                             Intent takeUserHome = new Intent(getActivity(), NavigationActivity.class);
                             startActivity(takeUserHome);
+                            sendNotificationToUser("shoppingassistantuk", "please check new shopping assistant");
+
                         }
 
                         // Finish this Activity, back to the stream
@@ -175,6 +199,7 @@ public class NewShoppingFragment extends Fragment {
             // [START single_value_read]
             final String userId = baseActivity.getUid();
 
+
             mDatabase.child("users").child(userId).addListenerForSingleValueEvent(
                     new ValueEventListener() {
                         @Override
@@ -192,9 +217,15 @@ public class NewShoppingFragment extends Fragment {
                             } else {
                                 // Write new post
                                 writeNewPost(userId, user.UserName, title, body, Lat, Lon, createdAt, SAGPhoto);
-
+                                showSimpleNotification(body);
                                 Intent takeUserHome = new Intent(getActivity(), NavigationActivity.class);
                                 startActivity(takeUserHome);
+                                // sendNotificationToUser("shoppingassistantuk","please check new shopping assistant");
+
+
+
+
+
                             }
 
                             // Finish this Activity, back to the stream
@@ -226,6 +257,51 @@ public class NewShoppingFragment extends Fragment {
 
         mDatabase.updateChildren(childUpdates);
     }
+
+    private void showSimpleNotification(String shoppingBrodcastText) {
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        //Use the NotificationCompat compatibility library in order to get gingerbread support.
+        Notification notification = new NotificationCompat.Builder(getActivity())
+
+                //Title of the notification
+                .setContentTitle("Hello")
+                //Content of the notification once opened
+                .setContentText(shoppingBrodcastText)
+                //This bit will show up in the notification area in devices that support that
+                .setTicker(" I am Fine")
+                //Icon that shows up in the notification area
+                .setSmallIcon(R.drawable.shopping_assistant)
+                //Icon that shows up in the drawer
+                .setLargeIcon(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.shopping_assistant))
+                //Set the intent
+                .setContentIntent(pendingIntentForNotification())
+                //Build the notification with all the stuff you've just set.
+                .setSound(defaultSoundUri)
+                .build();
+
+        //Add the auto-cancel flag to make it dismiss when clicked on
+        //This is a bitmask value so you have to pipe-equals it.
+        notification.flags |= Notification.FLAG_AUTO_CANCEL;
+
+        //Grab the NotificationManager and post the notification
+        NotificationManager notificationManager = (NotificationManager)
+                getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+
+        //Set a tag so that the same notification doesn't get reposted over and over again and
+        //you can grab it again later if you need to.
+        notificationManager.notify(TAG_SIMPLE_NOTIFICATION, notification);
+    }
+
+    private PendingIntent pendingIntentForNotification() {
+        //Create the intent you want to show when the notification is clicked
+        Intent intent = new Intent(getActivity(), ShoppingListFragment.class);
+
+        //This will hold the intent you've created until the notification is tapped.
+        PendingIntent pendingIntent = PendingIntent.getActivity(getActivity(), 1, intent, 0);
+        return pendingIntent;
+    }
+
+
 }
 
 

@@ -1,10 +1,21 @@
 package assistance.shopping.msc.assistant.fragments;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -31,10 +42,13 @@ import assistance.shopping.msc.assistant.main.ShoppingDetailActivity;
 import assistance.shopping.msc.assistant.model.ShoppingBroadcast;
 import assistance.shopping.msc.assistant.support.FragmentSupport;
 
+import static android.R.style.Theme_Dialog;
+
 
 public abstract class ShoppingListFragment extends Fragment {
 
     private static final String TAG = "ShoppingListFragment";
+    private static final int TAG_SIMPLE_NOTIFICATION = 1;
     public ProgressBar Shopping;
     FragmentSupport fragmentSupport = new FragmentSupport();
     final String userId = fragmentSupport.getUid();
@@ -44,6 +58,7 @@ public abstract class ShoppingListFragment extends Fragment {
     private FirebaseRecyclerAdapter<ShoppingBroadcast, ShoppingBroadcastViewHolder> mAdapter;
     private RecyclerView mRecycler;
     private LinearLayoutManager mManager;
+
 
 
     public ShoppingListFragment() {
@@ -88,14 +103,14 @@ public abstract class ShoppingListFragment extends Fragment {
             protected void populateViewHolder(final ShoppingBroadcastViewHolder viewHolder, final ShoppingBroadcast model, final int position) {
                 final DatabaseReference postRef = getRef(position);
 
-
+                // showSimpleNotification(model.body);
                 // Set click listener for the whole post view
                 final String postKey = postRef.getKey();
                 viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
-                        if (model.starCount.toString().equals("Completed")) {
+                        if (model.starCount.equals("Completed")) {
 
                             Toast.makeText(getActivity(), "Transaction is Completed", Toast.LENGTH_LONG).show();
 
@@ -118,7 +133,7 @@ public abstract class ShoppingListFragment extends Fragment {
                                             R.drawable.profile));
                 } else {
                     Glide.with(getActivity())
-                            .load(model.ShoppingAssistantPhoto.toString())
+                            .load(model.ShoppingAssistantPhoto)
                             .into(viewHolder.shoppingAssistantPhoto);
                 }
 
@@ -142,19 +157,97 @@ public abstract class ShoppingListFragment extends Fragment {
                 viewHolder.bindToPost(model, new View.OnClickListener() {
                     @Override
                     public void onClick(View starView) {
-                        // Need to write to both places the post is stored
-                        DatabaseReference globalPostRef = mDatabase.child("shopping-broadcast").child(postRef.getKey());
-                        DatabaseReference userPostRef = mDatabase.child("user-shopping-broadcast").child(model.uid).child(postRef.getKey());
 
-                        // Run two transactions
-                        onStarClicked(globalPostRef);
-                        onStarClicked(userPostRef);
+
+                        if (model.starCount.equals("Completed")) {
+                            Toast.makeText(getActivity(), "Transaction is Completed", Toast.LENGTH_LONG).show();
+
+                        } else {
+
+                            // Need to write to both places the post is stored
+                            final DatabaseReference globalPostRef = mDatabase.child("shopping-broadcast").child(postRef.getKey());
+                            final DatabaseReference userPostRef = mDatabase.child("user-shopping-broadcast").child(model.uid).child(postRef.getKey());
+
+
+                            final CharSequence[] items = {" Cash ", " Card ", "Android Pay ", " PayPal "};
+
+                            // Creating and Building the Dialog
+                            final AlertDialog.Builder builder = new AlertDialog.Builder(
+                                    new ContextThemeWrapper(getActivity(), Theme_Dialog));
+                            builder.setTitle("Please confirmed payment type");
+
+
+                            builder.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int item) {
+
+
+                                    switch (item) {
+                                        case 0:
+                                            // Run two transactions
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+                                            builder.setTitle("Confirm");
+                                            builder.setMessage("Are you sure?");
+
+                                            builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    // Do nothing but close the dialog
+                                                    onStarClicked(globalPostRef);
+                                                    onStarClicked(userPostRef);
+                                                    dialog.dismiss();
+                                                }
+                                            });
+
+                                            builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+
+                                                    // Do nothing
+                                                    dialog.dismiss();
+                                                }
+                                            });
+
+                                            AlertDialog alert = builder.create();
+                                            alert.show();
+
+
+                                            break;
+                                        case 1:
+                                            // Run two transactions
+
+                                            Toast.makeText(getActivity(), "This Payment available very soon", Toast.LENGTH_LONG).show();
+
+                                            break;
+                                        case 2:
+
+                                            Toast.makeText(getActivity(), "This Payment available very soon", Toast.LENGTH_LONG).show();
+
+                                            break;
+                                        case 3:
+
+                                            Toast.makeText(getActivity(), "This Payment available very soon", Toast.LENGTH_LONG).show();
+                                            break;
+
+                                    }
+                                    dialog.dismiss();
+                                }
+                            });
+                            builder.create().show();
+
+                        }
+
+
+
                     }
                 });
             }
         };
         mRecycler.setAdapter(mAdapter);
+
     }
+
 
     // [START post_stars_transaction]
     private void onStarClicked(DatabaseReference postRef) {
@@ -207,5 +300,48 @@ public abstract class ShoppingListFragment extends Fragment {
     }
 
     public abstract Query getQuery(DatabaseReference databaseReference);
+
+    private void showSimpleNotification(String shoppingBrodcastText) {
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        //Use the NotificationCompat compatibility library in order to get gingerbread support.
+        Notification notification = new NotificationCompat.Builder(getActivity())
+
+                //Title of the notification
+                .setContentTitle("Hello")
+                //Content of the notification once opened
+                .setContentText(shoppingBrodcastText)
+                //This bit will show up in the notification area in devices that support that
+                .setTicker(" I am Fine")
+                //Icon that shows up in the notification area
+                .setSmallIcon(R.drawable.shopping_assistant)
+                //Icon that shows up in the drawer
+                .setLargeIcon(BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.shopping_assistant))
+                //Set the intent
+                .setContentIntent(pendingIntentForNotification())
+                //Build the notification with all the stuff you've just set.
+                .setSound(defaultSoundUri)
+                .build();
+
+        //Add the auto-cancel flag to make it dismiss when clicked on
+        //This is a bitmask value so you have to pipe-equals it.
+        notification.flags |= Notification.FLAG_AUTO_CANCEL;
+
+        //Grab the NotificationManager and post the notification
+        NotificationManager notificationManager = (NotificationManager)
+                getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+
+        //Set a tag so that the same notification doesn't get reposted over and over again and
+        //you can grab it again later if you need to.
+        notificationManager.notify(TAG_SIMPLE_NOTIFICATION, notification);
+    }
+
+    private PendingIntent pendingIntentForNotification() {
+        //Create the intent you want to show when the notification is clicked
+        Intent intent = new Intent(getActivity(), ShoppingListFragment.class);
+
+        //This will hold the intent you've created until the notification is tapped.
+        PendingIntent pendingIntent = PendingIntent.getActivity(getActivity(), 1, intent, 0);
+        return pendingIntent;
+    }
 
 }
