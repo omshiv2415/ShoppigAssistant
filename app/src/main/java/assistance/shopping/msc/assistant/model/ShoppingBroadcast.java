@@ -19,7 +19,9 @@ public class ShoppingBroadcast {
     public String createdAt;
     public String ShoppingAssistantPhoto;
     public String starCount = "Processing";
-    public String paymetType = "Cash";
+    public String paymentType = "Cash";
+    public String shoppingAssistantName;
+    public String paymentCompletedAt;
     public Map<String, Boolean> stars = new HashMap<>();
     private String photoUrl;
 
@@ -29,7 +31,7 @@ public class ShoppingBroadcast {
 
     public ShoppingBroadcast(String uid, String author, String title, String body, String createdAt,
                              Double LocationLat, Double LocationLon, String ShoppingAssistantPhoto,
-                             String paymetType) {
+                             String paymentType, String paymentCompletedAt, String shoppingAssistantName) {
         this.uid = uid;
         this.author = author;
         this.title = title;
@@ -38,7 +40,10 @@ public class ShoppingBroadcast {
         this.LocationLat = LocationLat;
         this.LocationLon = LocationLon;
         this.ShoppingAssistantPhoto = ShoppingAssistantPhoto;
-        this.paymetType = paymetType;
+        this.paymentType = paymentType;
+        this.paymentCompletedAt = paymentCompletedAt;
+        this.shoppingAssistantName = shoppingAssistantName;
+
 
     }
 
@@ -56,7 +61,7 @@ public class ShoppingBroadcast {
         result.put("ShoppingAssistantPhoto", ShoppingAssistantPhoto);
         result.put("starCount", starCount);
         result.put("stars", stars);
-        result.put("paymentType", paymetType);
+        result.put("paymentType", paymentType);
 
         return result;
     }

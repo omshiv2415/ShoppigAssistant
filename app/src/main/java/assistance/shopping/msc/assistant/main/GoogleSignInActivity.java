@@ -36,8 +36,11 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import assistance.shopping.msc.assistant.R;
@@ -53,17 +56,14 @@ public class GoogleSignInActivity extends BaseActivity implements
 
     private static final String TAG = "GoogleActivity";
     private static final int RC_SIGN_IN = 9001;
-
+    public DatabaseReference mDatabase;
+    // [END declare_auth]
     // [START declare_auth]
     private FirebaseAuth mAuth;
-    // [END declare_auth]
-
+    // [END declare_auth_listener]
     // [START declare_auth_listener]
     private FirebaseAuth.AuthStateListener mAuthListener;
-    // [END declare_auth_listener]
-
     private GoogleApiClient mGoogleApiClient;
-    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,26 +160,59 @@ public class GoogleSignInActivity extends BaseActivity implements
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
+                    public void onComplete(@NonNull final Task<AuthResult> task) {
 
                         Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
 
                         // If sign in fails, display a message to the user. If sign in succeeds
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
+                        final String userId = getUid();
+                        mDatabase.child("users").child(userId).addListenerForSingleValueEvent(
+                                new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        // Get user value
+                                        User user = dataSnapshot.getValue(User.class);
+                                        if (!user.PhotoUri.equals(mAuth.getCurrentUser().getPhotoUrl())) {
 
-                        if (task.isSuccessful()) {
-                            onAuthSuccess(task.getResult().getUser());
-                            Intent takeUserHome = new Intent(GoogleSignInActivity.this, NavigationActivity.class);
-                            startActivity(takeUserHome);
-                        }else if(!task.isSuccessful()){
+                                            if (task.isSuccessful()) {
 
-                            Log.w(TAG, "signInWithEmail", task.getException());
-                            Toast.makeText(GoogleSignInActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                            Intent takeUserHome = new Intent(GoogleSignInActivity.this, LoginActivity.class);
-                            startActivity(takeUserHome);
-                        }
+                                                onAuthSuccess(task.getResult().getUser());
+
+                                            } else if (!task.isSuccessful()) {
+
+                                                Log.w(TAG, "signInWithEmail", task.getException());
+                                                Toast.makeText(GoogleSignInActivity.this, "Authentication failed.",
+                                                        Toast.LENGTH_SHORT).show();
+                                                Intent takeUserHome = new Intent(GoogleSignInActivity.this, LoginActivity.class);
+                                                startActivity(takeUserHome);
+                                            }
+
+                                        } else {
+
+                                            // Go to MainActivity
+                                            Toast.makeText(GoogleSignInActivity.this, "Welcome to the Shopping Assistant", Toast.LENGTH_LONG).show();
+                                            Intent takeUserHome = new Intent(GoogleSignInActivity.this, NavigationActivity.class);
+                                            startActivity(takeUserHome);
+
+
+                                        }
+
+                                        // ...
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+                                        Log.w(TAG, "getUser:onCancelled", databaseError.toException());
+                                    }
+                                });
+
+
+
+
+
+
                         // [START_EXCLUDE]
                         hideProgressDialog();
                         // [END_EXCLUDE]
@@ -208,12 +241,18 @@ public class GoogleSignInActivity extends BaseActivity implements
 
     }
 
-    private void onAuthSuccess(FirebaseUser user) {
+    public void onAuthSuccess(FirebaseUser user) {
         String username = usernameFromEmail(user.getEmail());
+        String userFirstname = "ShoppingAssistant Update your name";
+        String userLastname = "ShoppingAssistant Update your name";
+        String userGender = "ShoppingAssistant Update your name";
+        String userphoto = "ShoppingAssistant Update your name";
+        String userDateofBirth = "ShoppingAssistant Update your name";
+        String uid = mAuth.getCurrentUser().getUid();
 
 
         // Write new user
-        writeNewUser(user.getUid(), username, user.getEmail(), FirebaseInstanceId.getInstance().getToken());
+        writeNewUser(user.getUid(), username, user.getEmail(), FirebaseInstanceId.getInstance().getToken(), userFirstname, userLastname, userGender, userDateofBirth, userphoto, uid);
 
         // Go to MainActivity
         Toast.makeText(GoogleSignInActivity.this, "Welcome to the Shopping Assistant", Toast.LENGTH_LONG).show();
@@ -234,8 +273,9 @@ public class GoogleSignInActivity extends BaseActivity implements
     }
 
     // [START basic_write]
-    private void writeNewUser(String userId, String name, String email, String authentication) {
-        User user = new User(name, email, authentication);
+    private void writeNewUser(String userId, String name, String email, String authentication, String FirstName, String LastName, String Gender, String DateOfBirth, String PhotoUri, String uid) {
+
+        User user = new User(name, email, authentication, FirstName, LastName, Gender, DateOfBirth, PhotoUri, uid);
 
         mDatabase.child("users").child(userId).setValue(user);
     }

@@ -36,7 +36,10 @@ import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.Transaction;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 
 import assistance.shopping.msc.assistant.R;
 import assistance.shopping.msc.assistant.main.ShoppingBroadcastViewHolder;
@@ -146,12 +149,16 @@ public abstract class ShoppingListFragment extends Fragment {
 
                     viewHolder.starView.setImageResource(R.drawable.confirm_shopping_basket);
                     viewHolder.rel.setBackgroundColor(Color.parseColor("#CCC0C0C0"));
+                    viewHolder.paymentTypeText.setText(model.paymentType);
+                    viewHolder.transactionCompletedRelativeLayout.setVisibility(View.VISIBLE);
 
 
                 } else {
 
-
                     viewHolder.starView.setImageResource(R.drawable.in_process_shopping);
+                    viewHolder.transactionCompletedRelativeLayout.destroyDrawingCache();
+                    viewHolder.rel.setBackgroundColor(Color.parseColor("#26ffffff"));
+                    viewHolder.transactionCompletedRelativeLayout.setVisibility(View.GONE);
                 }
 
 
@@ -259,6 +266,10 @@ public abstract class ShoppingListFragment extends Fragment {
 
     // [START post_stars_transaction]
     private void onStarClicked(DatabaseReference postRef, final String PaymentType) {
+
+        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy EEE HH:mm:ss a");
+        Date date = new Date();
+        final String transactionCompletedAt = String.valueOf(dateFormat.format(date)).toUpperCase();
         postRef.runTransaction(new Transaction.Handler() {
             @Override
             public Transaction.Result doTransaction(MutableData mutableData) {
@@ -279,7 +290,8 @@ public abstract class ShoppingListFragment extends Fragment {
                         // Star the post and add self to stars
                         p.starCount = "Completed";
                         p.stars.put(getUid(), true);
-                        p.paymetType = PaymentType;
+                        p.paymentType = PaymentType;
+                        p.paymentCompletedAt = transactionCompletedAt;
                     }
                 }
                 // Set value and report transaction success

@@ -9,17 +9,28 @@ public class User {
     public String UserName;
     public String email;
     public String authentication;
+    public String FirstName;
+    public String LastName;
+    public String Gender;
+    public String DateOfBirth;
+    public String PhotoUri;
+    public String uid;
 
 
     public User() {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    public User(String username, String email, String AuthenticationToken) {
+    public User(String username, String email, String AuthenticationToken, String FirstName, String LastName, String Gender, String DateOfBirth, String PhotoUri, String uid) {
         this.UserName = username;
         this.email = email;
         this.authentication = AuthenticationToken;
+        this.FirstName = FirstName;
+        this.LastName = LastName;
+        this.Gender = Gender;
+        this.DateOfBirth = DateOfBirth;
+        this.PhotoUri = PhotoUri;
+        this.uid = uid;
     }
 
 }
-// [END blog_user_class]

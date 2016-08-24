@@ -28,6 +28,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.io.InputStream;
 import java.util.Calendar;
@@ -38,6 +39,7 @@ import assistance.shopping.msc.assistant.R;
 import assistance.shopping.msc.assistant.main.NavigationActivity;
 import assistance.shopping.msc.assistant.model.MyDetails;
 import assistance.shopping.msc.assistant.model.User;
+import assistance.shopping.msc.assistant.support.BaseActivity;
 import assistance.shopping.msc.assistant.support.FragmentSupport;
 
 
@@ -51,10 +53,9 @@ public class MyProfileFragment extends Fragment  {
     private static final String TAG = "MyProfileFragment";
     private static final String REQUIRED = "Required";
     private static View view;
-
+    public BaseActivity baseActivity = new BaseActivity();
     FragmentSupport fragmentSupport = new FragmentSupport();
     final String userId = fragmentSupport.getUid();
-
     private DatabaseReference mDatabase;
     private DatabaseReference mUserFirstName;
     private DatabaseReference mUserLastName;
@@ -258,12 +259,10 @@ public class MyProfileFragment extends Fragment  {
         }
 
         final String sEmail = mAuth.getCurrentUser().getEmail();
-
         final String sUserName = usernameFromEmail(mAuth.getCurrentUser().getEmail());
-
-        String uPhoto = String.valueOf(mAuth.getCurrentUser().getPhotoUrl());
+        final String authentication = FirebaseInstanceId.getInstance().getToken();
         final String uGPhoto = String.valueOf(mAuth.getCurrentUser().getPhotoUrl());
-
+        String uPhoto = String.valueOf(mAuth.getCurrentUser().getPhotoUrl());
 
         if (uPhoto.equals(null)) {
 
@@ -290,7 +289,7 @@ public class MyProfileFragment extends Fragment  {
                                         Toast.LENGTH_SHORT).show();
                             } else {
                                 // Update User Details
-                                writeToProfile(userId, sFirstName, sLastName, sDateOfBirth, sGender, sEmail, sUserName, finalUPhoto1);
+                                writeToProfile(userId, sFirstName, sLastName, sDateOfBirth, sGender, sEmail, sUserName, finalUPhoto1, authentication);
                                 Toast.makeText(getActivity(), "Profile updated Successfully", Toast.LENGTH_LONG).show();
                                 Intent takeUserHome = new Intent(getActivity(), NavigationActivity.class);
                                 startActivity(takeUserHome);
@@ -336,7 +335,7 @@ public class MyProfileFragment extends Fragment  {
                                         Toast.LENGTH_SHORT).show();
                             } else {
                                 // Update User Details
-                                writeToProfile(userId, sFirstName, sLastName, sDateOfBirth, sGender, sEmail, sUserName, uGPhoto);
+                                writeToProfile(userId, sFirstName, sLastName, sDateOfBirth, sGender, sEmail, sUserName, uGPhoto, authentication);
                                 Toast.makeText(getActivity(), "Profile updated Successfully", Toast.LENGTH_LONG).show();
                                 Intent takeUserHome = new Intent(getActivity(), NavigationActivity.class);
                                 startActivity(takeUserHome);
@@ -372,11 +371,11 @@ public class MyProfileFragment extends Fragment  {
 
     }
 
-    private void writeToProfile(String userId, String firstname, String lastname, String dateofbirth, String gender
-            , String email, String username, String uPhoto) {
+    public void writeToProfile(String userId, String firstname, String lastname, String dateofbirth, String gender
+            , String email, String username, String uPhoto, String authentication) {
 
 
-        MyDetails myDetails = new MyDetails(userId, firstname, lastname, dateofbirth, gender, email, username, uPhoto);
+        MyDetails myDetails = new MyDetails(userId, firstname, lastname, dateofbirth, gender, email, username, uPhoto, authentication);
         Map<String, Object> myDetailsValues = myDetails.toMap();
 
         Map<String, Object> childUpdates  = new HashMap<>();
@@ -385,7 +384,6 @@ public class MyProfileFragment extends Fragment  {
 
         mDatabase.updateChildren(childUpdates);
     }
-
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         ImageView bmImage;
 

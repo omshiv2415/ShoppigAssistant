@@ -17,6 +17,7 @@ public class MyDetails {
     public String uUserName;
     public String uEmail;
     public String uPhoto;
+    public String uAuthentication;
 
 
 
@@ -27,7 +28,7 @@ public class MyDetails {
     }
 
     public MyDetails(String uid, String mFirstName, String mLastName, String mDateOfBirth, String mGender,
-                     String mEmail, String mUserName, String mPhoto) {
+                     String mEmail, String mUserName, String mPhoto, String uAuthentication) {
         this.uFirstName = mFirstName;
         this.uLastName = mLastName;
         this.uDateOfBirth = mDateOfBirth;
@@ -36,6 +37,7 @@ public class MyDetails {
         this.uEmail = mEmail;
         this.uUserName = mUserName;
         this.uPhoto = mPhoto;
+        this.uAuthentication = uAuthentication;
     }
 
     // [START post_to_map]
@@ -50,6 +52,7 @@ public class MyDetails {
         result.put("Email", uEmail);
         result.put("UserName", uUserName);
         result.put("UserPhoto", uPhoto);
+        result.put("authentication", uAuthentication);
 
 
         return result;

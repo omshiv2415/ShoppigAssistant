@@ -20,7 +20,8 @@ public class ShoppingBroadcastViewHolder extends RecyclerView.ViewHolder {
     public TextView timeView;
     public ImageView shoppingAssistantPhoto;
     public RelativeLayout rel;
-
+    public TextView paymentTypeText;
+    public RelativeLayout transactionCompletedRelativeLayout;
     public ShoppingBroadcastViewHolder(View itemView) {
         super(itemView);
 
@@ -32,6 +33,8 @@ public class ShoppingBroadcastViewHolder extends RecyclerView.ViewHolder {
         timeView = (TextView) itemView.findViewById(R.id.timeStamp);
         shoppingAssistantPhoto = (ImageView) itemView.findViewById(R.id.post_author_photo);
         rel = (RelativeLayout) itemView.findViewById(R.id.item_View);
+        paymentTypeText = (TextView) itemView.findViewById(R.id.paymentType);
+        transactionCompletedRelativeLayout = (RelativeLayout) itemView.findViewById(R.id.transaction_status);
     }
 
     public void bindToPost(ShoppingBroadcast shoppingBroadcast, View.OnClickListener starClickListener) {
@@ -40,6 +43,7 @@ public class ShoppingBroadcastViewHolder extends RecyclerView.ViewHolder {
         numStarsView.setText(String.valueOf(shoppingBroadcast.starCount));
         bodyView.setText(shoppingBroadcast.body);
         timeView.setText(shoppingBroadcast.createdAt);
+        paymentTypeText.setText(shoppingBroadcast.paymentType);
         starView.setOnClickListener(starClickListener);
 
     }

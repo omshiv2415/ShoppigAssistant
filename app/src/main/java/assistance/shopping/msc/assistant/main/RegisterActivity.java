@@ -141,11 +141,19 @@ public class RegisterActivity extends Activity {
 
         });}
 
-    private void onAuthSuccess(FirebaseUser user) {
+
+    public void onAuthSuccess(FirebaseUser user) {
         String username = usernameFromEmail(user.getEmail());
+        String userFirstname = "ShoppingAssistant Update your name";
+        String userLastname = "ShoppingAssistant Update your name";
+        String userGender = "ShoppingAssistant Update your name";
+        String userphoto = "ShoppingAssistant Update your name";
+        String userDateofBirth = "ShoppingAssistant Update your name";
+        String uid = mAuth.getCurrentUser().getUid();
+
 
         // Write new user
-        writeNewUser(user.getUid(), username, user.getEmail(), FirebaseInstanceId.getInstance().getToken());
+        writeNewUser(user.getUid(), username, user.getEmail(), FirebaseInstanceId.getInstance().getToken(), userFirstname, userLastname, userGender, userDateofBirth, userphoto, uid);
 
         // Go to MainActivity
         Toast.makeText(RegisterActivity.this, "Welcome to the Shopping Assistant", Toast.LENGTH_LONG).show();
@@ -153,8 +161,8 @@ public class RegisterActivity extends Activity {
         startActivity(takeUserHome);
         finish();
 
-    }
 
+    }
     private String usernameFromEmail(String email) {
         if (email.contains("@")) {
             return email.split("@")[0];
@@ -165,8 +173,9 @@ public class RegisterActivity extends Activity {
     }
 
     // [START basic_write]
-    private void writeNewUser(String userId, String name, String email, String authentication) {
-        User user = new User(name, email, authentication);
+    private void writeNewUser(String userId, String name, String email, String authentication, String FirstName, String LastName, String Gender, String DateOfBirth, String PhotoUri, String uid) {
+
+        User user = new User(name, email, authentication, FirstName, LastName, Gender, DateOfBirth, PhotoUri, uid);
 
         mDatabase.child("users").child(userId).setValue(user);
     }

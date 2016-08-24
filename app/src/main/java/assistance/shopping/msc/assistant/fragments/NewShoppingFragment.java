@@ -21,7 +21,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.firebase.client.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -64,16 +63,7 @@ public class NewShoppingFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static void sendNotificationToUser(String user, final String message) {
-        Firebase ref = new Firebase(FIREBASE_URL);
-        final Firebase notifications = ref.child("notificationRequests");
 
-        Map notification = new HashMap<>();
-        notification.put("username", user);
-        notification.put("message", message);
-
-        notifications.push().setValue(notification);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -116,6 +106,8 @@ public class NewShoppingFragment extends Fragment {
         final Double Lat = (37.00);
         final Double Lon = (-122.00);
         final String paymentType = "Cash";
+        final String tranCompletedAt = "";
+        final String userFirstName = "Viral";
 
         String SAPhoto = String.valueOf(mAuth.getCurrentUser().getPhotoUrl());
         final String SAGPhoto = String.valueOf(mAuth.getCurrentUser().getPhotoUrl());
@@ -159,11 +151,11 @@ public class NewShoppingFragment extends Fragment {
                                     Toast.LENGTH_SHORT).show();
                         } else {
                             // Write new post
-                            writeNewPost(userId, user.UserName, title, body, Lat, Lon, createdAt, finalSAPhoto, paymentType);
+                            writeNewPost(userId, user.UserName, title, body, Lat, Lon, createdAt, finalSAPhoto, paymentType, userFirstName, tranCompletedAt);
 
                             Intent takeUserHome = new Intent(getActivity(), NavigationActivity.class);
                             startActivity(takeUserHome);
-                            sendNotificationToUser("shoppingassistantuk", "please check new shopping assistant");
+
 
                         }
 
@@ -217,7 +209,7 @@ public class NewShoppingFragment extends Fragment {
                                         Toast.LENGTH_SHORT).show();
                             } else {
                                 // Write new post
-                                writeNewPost(userId, user.UserName, title, body, Lat, Lon, createdAt, SAGPhoto, paymentType);
+                                writeNewPost(userId, user.UserName, title, body, Lat, Lon, createdAt, SAGPhoto, paymentType, user.FirstName, tranCompletedAt);
                                 showSimpleNotification(body);
                                 Intent takeUserHome = new Intent(getActivity(), NavigationActivity.class);
                                 startActivity(takeUserHome);
@@ -243,11 +235,12 @@ public class NewShoppingFragment extends Fragment {
 
     // [START write_fan_out]
     private void writeNewPost(String userId, String username, String title, String body, Double lat, Double lon,
-                              String createdAt, String sAPhoto, String paymentType) {
+                              String createdAt, String sAPhoto, String paymentType, String shopAssName, String tranCompAt) {
         // Create new shoppingBroadcast at /user-posts/$userid/$postid and at
         // /posts/$postid simultaneously
         String key = mDatabase.child("shopping-broadcast").push().getKey();
-        ShoppingBroadcast shoppingBroadcast = new ShoppingBroadcast(userId, username, title, body, createdAt, lat, lon, sAPhoto, paymentType);
+        ShoppingBroadcast shoppingBroadcast = new ShoppingBroadcast(userId, username, title, body, createdAt, lat, lon,
+                sAPhoto, paymentType, shopAssName, tranCompAt);
         Map<String, Object> postValues = shoppingBroadcast.toMap();
 
         Map<String, Object> childUpdates = new HashMap<>();
