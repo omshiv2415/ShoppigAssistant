@@ -18,7 +18,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.Locale;
 
@@ -153,13 +152,17 @@ public class RegisterActivity extends Activity {
 
 
         // Write new user
-        writeNewUser(user.getUid(), username, user.getEmail(), FirebaseInstanceId.getInstance().getToken(), userFirstname, userLastname, userGender, userDateofBirth, userphoto, uid);
+        //writeNewUser(user.getUid(), username, user.getEmail(), FirebaseInstanceId.getInstance().getToken(), userFirstname, userLastname, userGender, userDateofBirth, userphoto, uid);
 
         // Go to MainActivity
         Toast.makeText(RegisterActivity.this, "Welcome to the Shopping Assistant", Toast.LENGTH_LONG).show();
         Intent takeUserHome = new Intent(RegisterActivity.this, NavigationActivity.class);
         startActivity(takeUserHome);
         finish();
+
+
+
+
 
 
     }

@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
 
 import assistance.shopping.msc.assistant.R;
 import assistance.shopping.msc.assistant.fragments.HistoryFragment;
@@ -32,8 +33,12 @@ import assistance.shopping.msc.assistant.fragments.StreetFragment;
 
 public class NavigationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    private static final String TAG = "Navigation";
+    public FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    public DatabaseReference mDatabase;
     private FragmentPagerAdapter mPagerAdapter;
     private ViewPager mViewPager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,7 +54,6 @@ public class NavigationActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
 
 
     }

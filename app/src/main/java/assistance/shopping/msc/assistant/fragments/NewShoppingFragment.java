@@ -146,9 +146,11 @@ public class NewShoppingFragment extends Fragment {
                         if (user == null) {
                             // User is null, error out
                             Log.e(TAG, "User " + userId + " is unexpectedly null");
-                            Toast.makeText(getActivity(),
-                                    "Error: could not fetch user.",
-                                    Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "Please Update your Profile", Toast.LENGTH_SHORT).show();
+                            MyProfileFragment fragment = new MyProfileFragment();
+                            android.support.v4.app.FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                            fragmentTransaction.replace(R.id.fragment_container, fragment);
+                            fragmentTransaction.commit();
                         } else {
                             // Write new post
                             writeNewPost(userId, user.UserName, title, body, Lat, Lon, createdAt, finalSAPhoto, paymentType, userFirstName, tranCompletedAt);
@@ -204,9 +206,11 @@ public class NewShoppingFragment extends Fragment {
                             if (user == null) {
                                 // User is null, error out
                                 Log.e(TAG, "User " + userId + " is unexpectedly null");
-                                Toast.makeText(getActivity(),
-                                        "Error: could not fetch user.",
-                                        Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), "Please Update your Profile", Toast.LENGTH_SHORT).show();
+                                MyProfileFragment fragment = new MyProfileFragment();
+                                android.support.v4.app.FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                                fragmentTransaction.replace(R.id.fragment_container, fragment);
+                                fragmentTransaction.commit();
                             } else {
                                 // Write new post
                                 writeNewPost(userId, user.UserName, title, body, Lat, Lon, createdAt, SAGPhoto, paymentType, user.FirstName, tranCompletedAt);
