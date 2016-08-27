@@ -1,64 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/transaction_status"
+
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginTop="10dp">
 
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_marginTop="10dp"
+        android:id="@+id/hideShoppingRequester"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/textView5"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:text="Transaction Type" />
+        android:layout_alignParentStart="true">
 
-    <TextView
-        android:id="@+id/paymentType"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="84dp"
-        android:layout_marginStart="84dp"
-        android:layout_toEndOf="@+id/textView"
-        android:layout_toRightOf="@+id/textView"
-        android:text="Cash" />
+        <TextView
+            android:id="@+id/paymentType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cash" />
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/textView"
-        android:text="Shopping Assistant Name:" />
+        <TextView
+            android:id="@+id/shoppingAssistantName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
 
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/textView3"
-        android:text="Completed At" />
+            android:text="Viral " />
 
-    <TextView
-        android:id="@+id/transactionCompletedAt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/shoppingAssistantName"
-        android:layout_alignStart="@+id/shoppingAssistantName"
-        android:layout_below="@+id/shoppingAssistantName"
-        android:text="24-08-2016 WED 00:33:45 AM" />
+        <TextView
+            android:id="@+id/transactionCompletedAt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="24-08-2016 WED 00:33:45 AM" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginBottom="2dp"
+            android:layout_marginTop="15dp"
+            android:background="@color/cardview_dark_background">
 
-    <TextView
-        android:id="@+id/shoppingAssistantName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/paymentType"
-        android:layout_alignStart="@+id/paymentType"
-        android:layout_below="@+id/paymentType"
-        android:text="Viral " />
+        </RelativeLayout>
+        <TextView
+            android:id="@+id/ShoppingRequestercurrentLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Shopping Assistant Broadcast Location"
+            android:textColor="@android:color/background_dark"
+            android:textSize="16sp"
+            android:textAlignment="center" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginBottom="3dp"
+            android:layout_marginTop="3dp"
+            android:background="@color/cardview_dark_background"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:id="@+id/topLine"
+            android:layout_height="2dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:background="@android:color/holo_orange_light">
+        </RelativeLayout>
+        <TextView
+            android:text="281 Thornton Road"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView2" />
+
+        <TextView
+            android:text="Croydon"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/shoppingRequesterCity" />
+
+        <TextView
+            android:text="CR0 3EW"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/shoppingRequesterPostcode" />
+        <TextView
+            android:text="Not Available "
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/shoppingDelivered" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:id="@+id/srbottomLine"
+            android:layout_height="2dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:background="@android:color/holo_orange_light">
+        </RelativeLayout>
+    </LinearLayout>
 </RelativeLayout>

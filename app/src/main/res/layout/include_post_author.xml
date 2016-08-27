@@ -12,8 +12,8 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:src="@drawable/profile"
-        app:civ_border_color="#8Cff8800"
-        app:civ_border_width="4dp" />
+        app:civ_border_color="@android:color/holo_orange_light"
+        app:civ_border_width="2dp" />
 
 
     <TextView

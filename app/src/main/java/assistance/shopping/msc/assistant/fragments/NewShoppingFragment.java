@@ -1,15 +1,22 @@
 package assistance.shopping.msc.assistant.fragments;
 
 
+import android.Manifest;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
@@ -28,10 +35,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import assistance.shopping.msc.assistant.R;
@@ -58,6 +68,7 @@ public class NewShoppingFragment extends Fragment {
     private EditText mTitleField;
     private EditText mBodyField;
     private FirebaseAuth mAuth;
+    private Location TODO = null;
 
     public NewShoppingFragment() {
         // Required empty public constructor
@@ -101,10 +112,13 @@ public class NewShoppingFragment extends Fragment {
     }
 
     private void submitPost() {
+
+        final UtilLocation uti = new UtilLocation();
+
+
+
         final String title = mTitleField.getText().toString();
         final String body = mBodyField.getText().toString();
-        final Double Lat = (37.00);
-        final Double Lon = (-122.00);
         final String paymentType = "Cash";
         final String tranCompletedAt = "";
         final String userFirstName = "Viral";
@@ -113,7 +127,6 @@ public class NewShoppingFragment extends Fragment {
         final String SAGPhoto = String.valueOf(mAuth.getCurrentUser().getPhotoUrl());
 
         if (SAPhoto.equals(null)) {
-
             SAPhoto = "https://lh3.googleusercontent.com/-et8-_Jd3MiY/AAAAAAAAAAI/AAAAAAAAAAs/9OWsA3w5ZGw/s96-c/photo.jpg";
 
         DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy EEE HH:mm:ss a");
@@ -153,10 +166,41 @@ public class NewShoppingFragment extends Fragment {
                             fragmentTransaction.commit();
                         } else {
                             // Write new post
-                            writeNewPost(userId, user.UserName, title, body, Lat, Lon, createdAt, finalSAPhoto, paymentType, userFirstName, tranCompletedAt);
+                            Double Lat = uti.getLastKnownLoaction(true, getContext()).getLatitude();
+                            Double Lon =  uti.getLastKnownLoaction(true, getContext()).getLongitude();
 
-                            Intent takeUserHome = new Intent(getActivity(), NavigationActivity.class);
-                            startActivity(takeUserHome);
+
+                            Geocoder gcd = new Geocoder(getContext(), Locale.getDefault());
+
+                            List<Address> addresses = null;
+                            try {
+                                addresses = gcd.getFromLocation(Lat,Lon, 1);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            if (addresses.size() > 0) {
+                                System.out.println(addresses.get(0).getLocality());
+
+                                String City = addresses.get(0).getLocality();
+                                String PostCode = addresses.get(0).getPostalCode();
+                                String firstLineOfAddress = addresses.get(0).getAddressLine(0);
+
+                                writeNewPost(userId, user.UserName, title, body, createdAt, SAGPhoto, paymentType, tranCompletedAt,
+                                        user.FirstName, firstLineOfAddress, City, PostCode );
+                                showSimpleNotification(body);
+                                Intent takeUserHome = new Intent(getActivity(), NavigationActivity.class);
+                                startActivity(takeUserHome);
+
+
+                            }else{
+
+                                Toast.makeText(getActivity(), "Please Update your Profile", Toast.LENGTH_SHORT).show();
+
+                                Intent takeUserHome = new Intent(getActivity(), NavigationActivity.class);
+                                startActivity(takeUserHome);
+
+
+                            }
 
 
                         }
@@ -213,12 +257,42 @@ public class NewShoppingFragment extends Fragment {
                                 fragmentTransaction.commit();
                             } else {
                                 // Write new post
-                                writeNewPost(userId, user.UserName, title, body, Lat, Lon, createdAt, SAGPhoto, paymentType, user.FirstName, tranCompletedAt);
-                                showSimpleNotification(body);
-                                Intent takeUserHome = new Intent(getActivity(), NavigationActivity.class);
-                                startActivity(takeUserHome);
-                                // sendNotificationToUser("shoppingassistantuk","please check new shopping assistant");
 
+                                Double Lat = uti.getLastKnownLoaction(true, getContext()).getLatitude();
+                                Double Lon =  uti.getLastKnownLoaction(true, getContext()).getLongitude();
+
+
+                                Geocoder gcd = new Geocoder(getContext(), Locale.getDefault());
+
+                                List<Address> addresses = null;
+                                try {
+                                    addresses = gcd.getFromLocation(Lat,Lon, 1);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                if (addresses.size() > 0) {
+                                    System.out.println(addresses.get(0).getLocality());
+
+                                    String City = addresses.get(0).getLocality();
+                                    String PostCode = addresses.get(0).getPostalCode();
+                                    String firstLineOfAddress = addresses.get(0).getAddressLine(0);
+
+                                    writeNewPost(userId, user.UserName, title, body, createdAt, SAGPhoto, paymentType, tranCompletedAt,
+                                           user.FirstName, firstLineOfAddress, City, PostCode );
+                                    showSimpleNotification(body);
+                                    Intent takeUserHome = new Intent(getActivity(), NavigationActivity.class);
+                                    startActivity(takeUserHome);
+
+
+                                }else{
+
+                                    Toast.makeText(getActivity(), "Please Update your Profile", Toast.LENGTH_SHORT).show();
+
+                                    Intent takeUserHome = new Intent(getActivity(), NavigationActivity.class);
+                                    startActivity(takeUserHome);
+
+
+                                }
 
                             }
 
@@ -237,14 +311,15 @@ public class NewShoppingFragment extends Fragment {
         }
     }
 
+
     // [START write_fan_out]
-    private void writeNewPost(String userId, String username, String title, String body, Double lat, Double lon,
-                              String createdAt, String sAPhoto, String paymentType, String shopAssName, String tranCompAt) {
+    private void writeNewPost(String userId, String shoppingAssistant, String title, String body, String createdAt, String ShoppingAssistantPhoto, String paymentType,
+                              String paymentCompletedAt, String shoppingAssistantName, String saFirstLineAddress, String saCity, String saPostCode) {
         // Create new shoppingBroadcast at /user-posts/$userid/$postid and at
         // /posts/$postid simultaneously
         String key = mDatabase.child("shopping-broadcast").push().getKey();
-        ShoppingBroadcast shoppingBroadcast = new ShoppingBroadcast(userId, username, title, body, createdAt, lat, lon,
-                sAPhoto, paymentType, shopAssName, tranCompAt);
+        ShoppingBroadcast shoppingBroadcast = new ShoppingBroadcast(userId, shoppingAssistant, title, body, createdAt, ShoppingAssistantPhoto, paymentType,
+                paymentCompletedAt,  shoppingAssistantName, saFirstLineAddress, saCity, saPostCode);
         Map<String, Object> postValues = shoppingBroadcast.toMap();
 
         Map<String, Object> childUpdates = new HashMap<>();
@@ -297,7 +372,30 @@ public class NewShoppingFragment extends Fragment {
         return pendingIntent;
     }
 
+    public class UtilLocation {
+        public Location getLastKnownLoaction(boolean enabledProvidersOnly, Context context) {
+            LocationManager manager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+            Location utilLocation = null;
+            List<String> providers = manager.getProviders(enabledProvidersOnly);
+            for (String provider : providers) {
 
+                if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(),
+                        Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return TODO;
+                }
+                utilLocation = manager.getLastKnownLocation(provider);
+                if(utilLocation != null) return utilLocation;
+            }
+            return null;
+        }
+    }
 }
 
 

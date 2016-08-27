@@ -150,15 +150,15 @@ public abstract class ShoppingListFragment extends Fragment {
                     viewHolder.starView.setImageResource(R.drawable.confirm_shopping_basket);
                     viewHolder.rel.setBackgroundColor(Color.parseColor("#CCC0C0C0"));
                     viewHolder.paymentTypeText.setText(model.paymentType);
-                    viewHolder.transactionCompletedRelativeLayout.setVisibility(View.VISIBLE);
+                    viewHolder.hide.setVisibility(View.VISIBLE);
 
 
                 } else {
 
                     viewHolder.starView.setImageResource(R.drawable.in_process_shopping);
-                    viewHolder.transactionCompletedRelativeLayout.destroyDrawingCache();
+                    viewHolder.hide.setVisibility(View.GONE);
                     viewHolder.rel.setBackgroundColor(Color.parseColor("#26ffffff"));
-                    viewHolder.transactionCompletedRelativeLayout.setVisibility(View.GONE);
+
                 }
 
 
@@ -183,7 +183,7 @@ public abstract class ShoppingListFragment extends Fragment {
                             final DatabaseReference userPostRef = mDatabase.child("user-shopping-broadcast").child(model.uid).child(postRef.getKey());
 
 
-                            final CharSequence[] items = {" Cash ", " Card ", " Android Pay ", " PayPal "};
+                            final CharSequence[] items = {"Cash", " Card ", " Android Pay ", " PayPal "};
 
                             // Creating and Building the Dialog
                             final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(getActivity(), Theme_Dialog));

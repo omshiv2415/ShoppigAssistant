@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/shoppingAssistantLocation"
+    android:id="@+id/srshoppingAssistantLocation"
     android:layout_marginTop="5dp"
     android:orientation="vertical">
     <RelativeLayout
@@ -13,7 +13,7 @@
 
     </RelativeLayout>
     <TextView
-        android:id="@+id/currentLocation"
+        android:id="@+id/srcurrentLocation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Shopping Assistant Broadcast Location"
@@ -29,30 +29,30 @@
 
     </RelativeLayout>
     <TextView
-        android:id="@+id/firstLine"
+        android:id="@+id/srfirstLine"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Not Available" />
     <TextView
-        android:id="@+id/city"
+        android:id="@+id/srcity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Not Available" />
     <TextView
-        android:id="@+id/postCode"
+        android:id="@+id/srpostCode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Not Available" />
 
     <TextView
-        android:id="@+id/timeStamp"
+        android:id="@+id/srtimeStamp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Not Available" />
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:id="@+id/bottomLine"
+        android:id="@+id/srbottomLine"
         android:layout_height="2dp"
         android:layout_marginTop="3dp"
         android:layout_marginBottom="3dp"

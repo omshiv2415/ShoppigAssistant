@@ -102,7 +102,7 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
 
                 ShoppingBroadcast shoppingBroadcast = dataSnapshot.getValue(ShoppingBroadcast.class);
                 // [START_EXCLUDE]
-                mAuthorView.setText(shoppingBroadcast.author);
+                mAuthorView.setText(shoppingBroadcast.shoppingAssistant);
                 mTitleView.setText(shoppingBroadcast.title);
                 mBodyView.setText(shoppingBroadcast.body);
 

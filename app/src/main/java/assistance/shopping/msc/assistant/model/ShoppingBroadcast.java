@@ -11,17 +11,19 @@ import java.util.Map;
 public class ShoppingBroadcast {
 
     public String uid;
-    public String author;
+    public String shoppingAssistant;
     public String title;
     public String body;
-    public Double LocationLat;
-    public Double LocationLon;
     public String createdAt;
     public String ShoppingAssistantPhoto;
     public String starCount = "Processing";
     public String paymentType = "Cash";
     public String shoppingAssistantName;
     public String paymentCompletedAt;
+    public String saFirstLineAddress;
+    public String saCity;
+    public String saPostCode;
+
     public Map<String, Boolean> stars = new HashMap<>();
     private String photoUrl;
 
@@ -29,20 +31,20 @@ public class ShoppingBroadcast {
         // Default constructor required for calls to DataSnapshot.getValue(ShoppingBroadcast.class)
     }
 
-    public ShoppingBroadcast(String uid, String author, String title, String body, String createdAt,
-                             Double LocationLat, Double LocationLon, String ShoppingAssistantPhoto,
-                             String paymentType, String paymentCompletedAt, String shoppingAssistantName) {
+    public ShoppingBroadcast(String uid, String shoppingAssistant, String title, String body, String createdAt, String ShoppingAssistantPhoto, String paymentType,
+                             String paymentCompletedAt, String shoppingAssistantName, String saFirstLineAddress, String saCity, String saPostCode) {
         this.uid = uid;
-        this.author = author;
+        this.shoppingAssistant = shoppingAssistant;
         this.title = title;
         this.body = body;
         this.createdAt = createdAt;
-        this.LocationLat = LocationLat;
-        this.LocationLon = LocationLon;
         this.ShoppingAssistantPhoto = ShoppingAssistantPhoto;
         this.paymentType = paymentType;
         this.paymentCompletedAt = paymentCompletedAt;
         this.shoppingAssistantName = shoppingAssistantName;
+        this.saFirstLineAddress = saFirstLineAddress;
+        this.saCity = saCity;
+        this.saPostCode = saPostCode;
 
 
     }
@@ -52,16 +54,20 @@ public class ShoppingBroadcast {
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
         result.put("uid", uid);
-        result.put("author", author);
+        result.put("shoppingAssistant", shoppingAssistant);
         result.put("title", title);
         result.put("body", body);
-        result.put("Location Lat", LocationLat);
-        result.put("Location Lon", LocationLon);
         result.put("createdAt", createdAt);
         result.put("ShoppingAssistantPhoto", ShoppingAssistantPhoto);
+        result.put("paymentType", paymentType);
+        result.put("transactionCompletedAt",paymentCompletedAt);
         result.put("starCount", starCount);
         result.put("stars", stars);
-        result.put("paymentType", paymentType);
+        result.put("shoppingAssistantName", shoppingAssistantName);
+        result.put("saFirstLineAddress", saFirstLineAddress);
+        result.put("saCity", saCity);
+        result.put("saPostCode",saPostCode);
+
 
         return result;
     }
