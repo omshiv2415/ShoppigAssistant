@@ -35,14 +35,14 @@ import assistance.shopping.msc.assistant.fragments.RecentShoppingBroadcastFragme
 import assistance.shopping.msc.assistant.fragments.ShoppingPointFragment;
 import assistance.shopping.msc.assistant.fragments.StreetFragment;
 
-public class NavigationActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class NavigationActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "Navigation";
     public FirebaseAuth mAuth = FirebaseAuth.getInstance();
     public DatabaseReference mDatabase;
     private FragmentPagerAdapter mPagerAdapter;
     private ViewPager mViewPager;
     public FirebaseAuth.AuthStateListener mAuthListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -192,7 +192,7 @@ public class NavigationActivity extends AppCompatActivity
                     new MyCompletedShoppingBroadcastFragment()
             };
             private final String[] mFragmentNames = new String[] {
-                    "Shopping Help Available",
+                    "Shopping Assistant",
                     "My Shopping Broadcast",
                     "Completed Shopping"
             };

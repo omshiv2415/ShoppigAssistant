@@ -50,8 +50,7 @@ import assistance.shopping.msc.assistant.support.BaseActivity;
 /**
  * Demonstrate Firebase Authentication using a Google ID Token.
  */
-public class GoogleSignInActivity extends BaseActivity implements
-        GoogleApiClient.OnConnectionFailedListener,
+public class GoogleSignInActivity extends BaseActivity implements GoogleApiClient.OnConnectionFailedListener,
         View.OnClickListener {
 
     private static final String TAG = "GoogleActivity";
@@ -250,8 +249,6 @@ public class GoogleSignInActivity extends BaseActivity implements
 
             }
         });
-
-
 
     }
 

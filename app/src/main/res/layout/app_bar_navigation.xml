@@ -30,11 +30,14 @@
 
             <android.support.design.widget.TabLayout
                 android:id="@+id/tabs"
-                android:theme="@style/Base.Animation.AppCompat.Dialog"
+                android:theme="@style/Base.CardView"
                 android:background="@android:color/holo_blue_light"
-                app:tabTextAppearance="@style/TextAppearance.StatusBar.EventContent.Line2"
+                app:tabTextAppearance="@style/TextAppearance.StatusBar.EventContent.Time"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                app:tabSelectedTextColor="?android:attr/textColorPrimary"
+                app:layout_behavior="com.adammcneilly.fabscrollsample.FABScrollBehavior"
+                app:tabIndicatorColor="@android:color/holo_green_dark" />
 
             <android.support.v4.view.ViewPager
                 android:id="@+id/container"
@@ -56,9 +59,9 @@
         android:src="@drawable/ic_image_edit"
         app:backgroundTint="@android:color/holo_green_light"
         app:layout_anchor="@+id/fragment_container"
-
         app:layout_anchorGravity="bottom|left"
-        app:rippleColor="@android:color/holo_orange_dark" />
+        app:rippleColor="@android:color/holo_orange_dark"
+        app:layout_behavior="assistance.shopping.msc.assistant.main.FABScrollBehavior" />
 
 
 </android.support.design.widget.CoordinatorLayout>
