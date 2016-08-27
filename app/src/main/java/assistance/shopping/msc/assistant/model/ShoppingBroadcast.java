@@ -23,6 +23,10 @@ public class ShoppingBroadcast {
     public String saFirstLineAddress;
     public String saCity;
     public String saPostCode;
+    public String srFirstLineAddress;
+    public String srCity;
+    public String srPostCode;
+
 
     public Map<String, Boolean> stars = new HashMap<>();
     private String photoUrl;
@@ -32,7 +36,8 @@ public class ShoppingBroadcast {
     }
 
     public ShoppingBroadcast(String uid, String shoppingAssistant, String title, String body, String createdAt, String ShoppingAssistantPhoto, String paymentType,
-                             String paymentCompletedAt, String shoppingAssistantName, String saFirstLineAddress, String saCity, String saPostCode) {
+                             String paymentCompletedAt, String shoppingAssistantName, String saFirstLineAddress, String saCity, String saPostCode, String srFirstLineAddress,
+                             String srCity, String srPostCode) {
         this.uid = uid;
         this.shoppingAssistant = shoppingAssistant;
         this.title = title;
@@ -45,6 +50,9 @@ public class ShoppingBroadcast {
         this.saFirstLineAddress = saFirstLineAddress;
         this.saCity = saCity;
         this.saPostCode = saPostCode;
+        this.srFirstLineAddress = srFirstLineAddress;
+        this.srCity = srCity;
+        this.srPostCode = srPostCode;
 
 
     }
@@ -67,6 +75,9 @@ public class ShoppingBroadcast {
         result.put("saFirstLineAddress", saFirstLineAddress);
         result.put("saCity", saCity);
         result.put("saPostCode",saPostCode);
+        result.put("srFirstLineAddress", srFirstLineAddress);
+        result.put("srCity",srCity);
+        result.put("srPostcode",srPostCode);
 
 
         return result;

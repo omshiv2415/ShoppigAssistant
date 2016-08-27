@@ -52,15 +52,6 @@
 
         </LinearLayout>
 
-        <include
-            android:id="@+id/include2"
-            layout="@layout/include_post_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/post_author_layout" />
-
 
         <include
             android:id="@+id/post_author_layout"
@@ -80,6 +71,12 @@
             android:layout_alignParentStart="true"
             android:id="@+id/include7" />
 
+        <include
+            android:id="@+id/include2"
+            layout="@layout/include_post_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/star_layout" />
 
 
     </RelativeLayout>

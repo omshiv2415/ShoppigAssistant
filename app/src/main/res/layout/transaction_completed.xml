@@ -3,7 +3,7 @@
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="10dp">
+    android:layout_marginTop="5dp">
 
     <LinearLayout
         android:orientation="vertical"
@@ -14,7 +14,26 @@
         android:layout_below="@+id/textView5"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginBottom="2dp"
+            android:background="@color/cardview_dark_background">
+        </RelativeLayout>
 
+        <TextView
+            android:id="@+id/Shopping"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Shopping Transaction"
+            android:textColor="@android:color/background_dark"
+            android:textSize="16sp" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginBottom="3dp"
+            android:layout_marginTop="3dp"
+            android:background="@color/cardview_dark_background"/>
         <TextView
             android:id="@+id/paymentType"
             android:layout_width="wrap_content"
@@ -25,7 +44,6 @@
             android:id="@+id/shoppingAssistantName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:text="Viral " />
 
         <TextView
@@ -33,22 +51,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="24-08-2016 WED 00:33:45 AM" />
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="2dp"
             android:layout_marginBottom="2dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="5dp"
             android:background="@color/cardview_dark_background">
 
         </RelativeLayout>
+
         <TextView
             android:id="@+id/ShoppingRequestercurrentLocation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Shopping Assistant Broadcast Location"
+            android:text="Shopping Delivered Location"
             android:textColor="@android:color/background_dark"
-            android:textSize="16sp"
-            android:textAlignment="center" />
+            android:textSize="16sp" />
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="2dp"
@@ -56,19 +75,12 @@
             android:layout_marginTop="3dp"
             android:background="@color/cardview_dark_background"/>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:id="@+id/topLine"
-            android:layout_height="2dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:background="@android:color/holo_orange_light">
-        </RelativeLayout>
+
         <TextView
             android:text="281 Thornton Road"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/textView2" />
+            android:id="@+id/srFirstLineOfAddress" />
 
         <TextView
             android:text="Croydon"
@@ -81,18 +93,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/shoppingRequesterPostcode" />
+
         <TextView
             android:text="Not Available "
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/shoppingDelivered" />
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:id="@+id/srbottomLine"
-            android:layout_height="2dp"
-            android:layout_marginTop="5dp"
             android:layout_marginBottom="5dp"
-            android:background="@android:color/holo_orange_light">
-        </RelativeLayout>
+            android:id="@+id/shoppingDeliveredTime" />
+
     </LinearLayout>
 </RelativeLayout>

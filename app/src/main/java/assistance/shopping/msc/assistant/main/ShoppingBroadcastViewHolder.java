@@ -27,6 +27,11 @@ public class ShoppingBroadcastViewHolder extends RecyclerView.ViewHolder {
     public TextView saPostcode;
     public TextView SaName;
     public LinearLayout hide;
+    public RelativeLayout topline;
+    public TextView srfirstline;
+    public TextView srcity;
+    public TextView srpostcode;
+    public TextView spdeliveredtime;
     public ShoppingBroadcastViewHolder(View itemView) {
         super(itemView);
 
@@ -39,12 +44,16 @@ public class ShoppingBroadcastViewHolder extends RecyclerView.ViewHolder {
         shoppingAssistantPhoto = (ImageView) itemView.findViewById(R.id.post_author_photo);
         rel = (RelativeLayout) itemView.findViewById(R.id.item_View);
         paymentTypeText = (TextView) itemView.findViewById(R.id.paymentType);
-
+        topline = (RelativeLayout) itemView.findViewById(R.id.bottomLine);
         hide = (LinearLayout) itemView.findViewById(R.id.hideShoppingRequester);
         saAddressfirstline = (TextView)itemView.findViewById(R.id.firstLine);
         sacity = (TextView)itemView.findViewById(R.id.city);
         saPostcode = (TextView)itemView.findViewById(R.id.postCode);
         SaName = (TextView)itemView.findViewById(R.id.shoppingAssistantName);
+        srfirstline = (TextView)itemView.findViewById(R.id.srFirstLineOfAddress);
+        srcity = (TextView)itemView.findViewById(R.id.shoppingRequesterCity);
+        srpostcode = (TextView)itemView.findViewById(R.id.shoppingRequesterPostcode);
+        spdeliveredtime = (TextView)itemView.findViewById(R.id.shoppingDeliveredTime);
     }
 
     public void bindToPost(ShoppingBroadcast shoppingBroadcast, View.OnClickListener starClickListener) {
@@ -59,6 +68,10 @@ public class ShoppingBroadcastViewHolder extends RecyclerView.ViewHolder {
         sacity.setText(shoppingBroadcast.saCity);
         saPostcode.setText(shoppingBroadcast.saPostCode);
         SaName.setText(shoppingBroadcast.shoppingAssistantName);
+        srfirstline.setText(shoppingBroadcast.srFirstLineAddress);
+        srcity.setText(shoppingBroadcast.srCity);
+        srpostcode.setText(shoppingBroadcast.srPostCode);
+        spdeliveredtime.setText(shoppingBroadcast.paymentCompletedAt);
 
 
     }

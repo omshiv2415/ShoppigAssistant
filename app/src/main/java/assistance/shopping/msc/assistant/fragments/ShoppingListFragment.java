@@ -1,16 +1,25 @@
 package assistance.shopping.msc.assistant.fragments;
 
+import android.Manifest;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
@@ -22,6 +31,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -36,18 +46,23 @@ import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.Transaction;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 import assistance.shopping.msc.assistant.R;
+import assistance.shopping.msc.assistant.main.NavigationActivity;
 import assistance.shopping.msc.assistant.main.ShoppingBroadcastViewHolder;
 import assistance.shopping.msc.assistant.main.ShoppingDetailActivity;
 import assistance.shopping.msc.assistant.model.ShoppingBroadcast;
 import assistance.shopping.msc.assistant.support.FragmentSupport;
 
 import static android.R.style.Theme_Dialog;
+import static assistance.shopping.msc.assistant.R.id.fab_new_post;
 
 
 public abstract class ShoppingListFragment extends Fragment {
@@ -63,8 +78,8 @@ public abstract class ShoppingListFragment extends Fragment {
     private FirebaseRecyclerAdapter<ShoppingBroadcast, ShoppingBroadcastViewHolder> mAdapter;
     private RecyclerView mRecycler;
     private LinearLayoutManager mManager;
-
-
+    private Location TODO = null;
+    public FloatingActionButton fab;
 
     public ShoppingListFragment() {
     }
@@ -82,7 +97,7 @@ public abstract class ShoppingListFragment extends Fragment {
 
         mRecycler = (RecyclerView) rootView.findViewById(R.id.messages_list);
         mRecycler.setHasFixedSize(true);
-
+        fab = (FloatingActionButton) rootView.findViewById(R.id.fab_new_post);
 
         return rootView;
     }
@@ -157,6 +172,7 @@ public abstract class ShoppingListFragment extends Fragment {
 
                     viewHolder.starView.setImageResource(R.drawable.in_process_shopping);
                     viewHolder.hide.setVisibility(View.GONE);
+                    viewHolder.topline.setVisibility(View.GONE);
                     viewHolder.rel.setBackgroundColor(Color.parseColor("#26ffffff"));
 
                 }
@@ -166,7 +182,14 @@ public abstract class ShoppingListFragment extends Fragment {
                 viewHolder.bindToPost(model, new View.OnClickListener() {
                     @Override
                     public void onClick(View starView) {
+                        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+                        if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                            //All location services are disabled
+                            Toast.makeText(getActivity(), "Please turn on Location and press bacck button", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            startActivity(intent);
 
+                        } else {
 
                         if (model.starCount.equals("Completed")) {
 
@@ -251,10 +274,10 @@ public abstract class ShoppingListFragment extends Fragment {
                             });
                             builder.create().show();
 
+                          }
+
+
                         }
-
-
-
                     }
                 });
             }
@@ -270,6 +293,8 @@ public abstract class ShoppingListFragment extends Fragment {
         DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy EEE HH:mm:ss a");
         Date date = new Date();
         final String transactionCompletedAt = String.valueOf(dateFormat.format(date)).toUpperCase();
+
+
         postRef.runTransaction(new Transaction.Handler() {
             @Override
             public Transaction.Result doTransaction(MutableData mutableData) {
@@ -288,11 +313,52 @@ public abstract class ShoppingListFragment extends Fragment {
 
                     } else {
                         // Star the post and add self to stars
-                        p.starCount = "Completed";
-                        p.stars.put(getUid(), true);
-                        p.paymentType = PaymentType;
-                        p.paymentCompletedAt = transactionCompletedAt;
+                        UtilLocation uti = new UtilLocation();
+                        Double Lat = uti.getLastKnownLoaction(true, getContext()).getLatitude();
+                        Double Lon = uti.getLastKnownLoaction(true, getContext()).getLongitude();
+
+
+                        Geocoder gcd = new Geocoder(getContext(), Locale.getDefault());
+
+                        List<Address> addresses = null;
+                        try {
+                            addresses = gcd.getFromLocation(Lat, Lon, 1);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        if (addresses.size() > 0) {
+                            System.out.println(addresses.get(0).getLocality());
+
+                            String City = addresses.get(0).getLocality();
+                            String PostCode = addresses.get(0).getPostalCode();
+                            String firstLineOfAddress = addresses.get(0).getAddressLine(0);
+
+                            p.starCount = "Completed";
+                            p.stars.put(getUid(), true);
+                            p.paymentType = PaymentType;
+                            p.paymentCompletedAt = transactionCompletedAt;
+                            p.srPostCode= PostCode;
+                            p.srCity = City;
+                            p.srFirstLineAddress = firstLineOfAddress;
+                        } else {
+
+                            String City = addresses.get(0).getLocality();
+                            String PostCode = addresses.get(0).getPostalCode();
+                            String firstLineOfAddress = addresses.get(0).getAddressLine(0);
+
+                            p.starCount = "Completed";
+                            p.stars.put(getUid(), true);
+                            p.paymentType = PaymentType;
+                            p.paymentCompletedAt = transactionCompletedAt;
+                            p.srPostCode = PostCode;
+                            p.srCity = City;
+                            p.srFirstLineAddress = firstLineOfAddress;
+
+                        }
+
+
                     }
+
                 }
                 // Set value and report transaction success
                 mutableData.setValue(p);
@@ -365,5 +431,28 @@ public abstract class ShoppingListFragment extends Fragment {
         PendingIntent pendingIntent = PendingIntent.getActivity(getActivity(), 1, intent, 0);
         return pendingIntent;
     }
+    public class UtilLocation {
+        public Location getLastKnownLoaction(boolean enabledProvidersOnly, Context context) {
+            LocationManager manager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+            Location utilLocation = null;
+            List<String> providers = manager.getProviders(enabledProvidersOnly);
+            for (String provider : providers) {
 
+                if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(),
+                        Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return TODO;
+                }
+                utilLocation = manager.getLastKnownLocation(provider);
+                if(utilLocation != null) return utilLocation;
+            }
+            return null;
+        }
+    }
 }

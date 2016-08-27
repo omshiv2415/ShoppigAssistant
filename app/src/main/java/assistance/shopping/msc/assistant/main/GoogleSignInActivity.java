@@ -36,8 +36,12 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import assistance.shopping.msc.assistant.R;
 import assistance.shopping.msc.assistant.model.User;
@@ -65,6 +69,8 @@ public class GoogleSignInActivity extends BaseActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_google);
+
+
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
         // [START config_signin]
@@ -206,40 +212,44 @@ public class GoogleSignInActivity extends BaseActivity implements
 
     }
 
-    public void onAuthSuccess(FirebaseUser user) {
+    public void onAuthSuccess(final FirebaseUser user) {
 
-        String username = usernameFromEmail(user.getEmail());
-        String userFirstname = "Update Your Name";
-        String userLastname = "Update Your Last Name";
-        String userGender = "Male";
-        String userphoto = "https://lh3.googleusercontent.com/-et8-_Jd3MiY/AAAAAAAAAAI/AAAAAAAAAAs/9OWsA3w5ZGw/s96-c/photo.jpg";
-        String userDateofBirth = "16/10/1981";
-        String uid = mAuth.getCurrentUser().getUid();
+        final String username = usernameFromEmail(user.getEmail());
+        final String userFirstname = "Update Your Name";
+        final String userLastname = "Update Your Last Name";
+        final String userGender = "Male";
+        final String userphoto = "https://lh3.googleusercontent.com/-et8-_Jd3MiY/AAAAAAAAAAI/AAAAAAAAAAs/9OWsA3w5ZGw/s96-c/photo.jpg";
+        final String userDateofBirth = "16/10/1981";
+        final String uid = mAuth.getCurrentUser().getUid();
 
+        mDatabase.child("users").child(uid).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
 
-        if (mAuth.getCurrentUser().getPhotoUrl().equals("")) {
-            // Write new user
-            // writeNewUser(user.getUid(), username, user.getEmail(), FirebaseInstanceId.getInstance().getToken(), userFirstname, userLastname, userGender, userDateofBirth, userphoto, uid);
+               if(dataSnapshot.child(uid).getKey().isEmpty()){
+                    writeNewUser(user.getUid(), username, user.getEmail(), FirebaseInstanceId.getInstance().getToken(), userFirstname, userLastname, userGender, userDateofBirth, userphoto, uid);
+                    // Go to MainActivity
+                    Toast.makeText(GoogleSignInActivity.this, "Welcome to the Shopping Assistant", Toast.LENGTH_LONG).show();
+                    Intent takeUserHome = new Intent(GoogleSignInActivity.this, NavigationActivity.class);
+                    startActivity(takeUserHome);
+                    finish();
 
-            // Go to MainActivity
-            Toast.makeText(GoogleSignInActivity.this, "Welcome to the Shopping Assistant", Toast.LENGTH_LONG).show();
-            Intent takeUserHome = new Intent(GoogleSignInActivity.this, NavigationActivity.class);
-            startActivity(takeUserHome);
-            finish();
+                }else{
 
-        } else {
+                   Toast.makeText(GoogleSignInActivity.this, "Welcome to the Shopping Assistant", Toast.LENGTH_LONG).show();
+                   Intent takeUserHome = new Intent(GoogleSignInActivity.this, NavigationActivity.class);
+                   startActivity(takeUserHome);
+                   finish();
 
-            Toast.makeText(GoogleSignInActivity.this, "Welcome to the Shopping Assistant", Toast.LENGTH_LONG).show();
-            Intent takeUserHome = new Intent(GoogleSignInActivity.this, NavigationActivity.class);
-            startActivity(takeUserHome);
-            finish();
+               }
 
+            }
 
-        }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
-
-
-
+            }
+        });
 
 
 

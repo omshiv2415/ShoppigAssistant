@@ -1,14 +1,19 @@
 package assistance.shopping.msc.assistant.main;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +37,7 @@ import java.util.List;
 import java.util.Locale;
 
 import assistance.shopping.msc.assistant.R;
+import assistance.shopping.msc.assistant.fragments.ShoppingListFragment;
 import assistance.shopping.msc.assistant.model.Comment;
 import assistance.shopping.msc.assistant.model.ShoppingBroadcast;
 import assistance.shopping.msc.assistant.model.User;
@@ -56,6 +62,8 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
     private Button mCommentButton;
     private RecyclerView mCommentsRecycler;
     private TextToSpeech speech;
+    public DatabaseReference mUserPostReference;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +78,8 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
         // Initialize Database
         mPostReference = FirebaseDatabase.getInstance().getReference()
                 .child("shopping-broadcast").child(mPostKey);
+        mUserPostReference = FirebaseDatabase.getInstance().getReference()
+                .child("user-shopping-broadcast").child(mPostKey);
         mCommentsReference = FirebaseDatabase.getInstance().getReference()
                 .child("shopping-broadcast-comments").child(mPostKey);
 
@@ -87,6 +97,8 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
         mAuth = FirebaseAuth.getInstance();
 
 
+
+
     }
 
     @Override
@@ -95,12 +107,14 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
 
         // Add value event listener to the post
         // [START post_value_event_listener]
+
+
         ValueEventListener postListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Get ShoppingBroadcast object and use the values to update the UI
 
-                ShoppingBroadcast shoppingBroadcast = dataSnapshot.getValue(ShoppingBroadcast.class);
+                final ShoppingBroadcast shoppingBroadcast = dataSnapshot.getValue(ShoppingBroadcast.class);
                 // [START_EXCLUDE]
                 mAuthorView.setText(shoppingBroadcast.shoppingAssistant);
                 mTitleView.setText(shoppingBroadcast.title);
@@ -112,13 +126,122 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
                 // mTimeView.setText(shoppingBroadcast.createdAt);
                 // [END_EXCLUDE]
                 if (shoppingBroadcast.uid.equals(mAuth.getCurrentUser().getUid())) {
-
+                    mTitleView.setText(shoppingBroadcast.title + ".......");
+                    mBodyView.setText(shoppingBroadcast.body + ".......");
                     mCommentField.setHint("Respond to shopping request");
+                    mTitleView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.edit_icon, 0);
+                    mBodyView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.edit_icon, 0);
+
+                    mTitleView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            // Add value event listener to the post
+                            // [START post_value_event_listener]
+                            AlertDialog.Builder alert = new AlertDialog.Builder(ShoppingDetailActivity.this);
+
+                            final EditText edittext = new EditText(ShoppingDetailActivity.this);
+                            edittext.setText(shoppingBroadcast.title);
+                            alert.setMessage(shoppingBroadcast.body);
+                            alert.setTitle(shoppingBroadcast.title);
+                            alert.setView(edittext);
+
+                            alert.setPositiveButton("Done", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+
+
+                                    final String YouEditTextValue = edittext.getText().toString();
+
+                                    mPostReference.addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                            mPostReference.child("title").setValue(YouEditTextValue);
+                                            mUserPostReference.child("title").setValue(YouEditTextValue);
+
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+
+                                        }
+                                    });
+
+
+                                }
+                            });
+
+                            alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    // what ever you want to do with No option.
+
+
+
+                                }
+                            });
+
+                            alert.show();
+
+
+                        }
+                    });
+                    mBodyView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            // Add value event listener to the post
+                            // [START post_value_event_listener]
+                            AlertDialog.Builder alert = new AlertDialog.Builder(ShoppingDetailActivity.this);
+
+                            final EditText edittext = new EditText(ShoppingDetailActivity.this);
+                            alert.setMessage(shoppingBroadcast.body);
+                            alert.setTitle(shoppingBroadcast.title);
+
+                            alert.setView(edittext);
+
+                            alert.setPositiveButton("Yes Option", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    //What ever you want to do with the value
+
+                                    //OR
+                                    final String YouEditTextValue = edittext.getText().toString();
+
+                                    mPostReference.addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                            mPostReference.child("body").setValue(YouEditTextValue);
+                                            mUserPostReference.child("body").setValue(YouEditTextValue);
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+
+                                        }
+                                    });
+
+
+                                }
+                            });
+
+                            alert.setNegativeButton("No Option", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    // what ever you want to do with No option.
+                                }
+                            });
+
+                            alert.show();
+
+
+
+                        }
+                    });
+
 
                 } else {
 
                     mCommentField.setHint("Request Shopping......");
                 }
+
+
             }
 
             @Override
@@ -174,7 +297,6 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
                         User user = dataSnapshot.getValue(User.class);
                         String shoppingAssistantName = user.UserName;
                         String shoppingAssistantPhoto = mAuth.getCurrentUser().getPhotoUrl().toString();
-
 
 
                         // Create new comment object

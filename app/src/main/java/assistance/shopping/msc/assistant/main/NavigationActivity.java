@@ -1,7 +1,10 @@
 package assistance.shopping.msc.assistant.main;
 
+import android.content.Context;
 import android.content.Intent;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -15,6 +18,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -38,7 +42,7 @@ public class NavigationActivity extends AppCompatActivity
     public DatabaseReference mDatabase;
     private FragmentPagerAdapter mPagerAdapter;
     private ViewPager mViewPager;
-
+    public FirebaseAuth.AuthStateListener mAuthListener;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,6 +93,7 @@ public class NavigationActivity extends AppCompatActivity
         if (id == R.id.action_logout) {
 
             FirebaseAuth.getInstance().signOut();
+            mAuth.removeAuthStateListener(mAuthListener);
             Intent takeUserHome = new Intent(NavigationActivity.this, LoginActivity.class);
             startActivity(takeUserHome);
 
@@ -218,13 +223,19 @@ public class NavigationActivity extends AppCompatActivity
         findViewById(R.id.fab_new_post).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                    //All location services are disabled
+                    Toast.makeText(NavigationActivity.this, "Please turn on Location and press bacck button", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    startActivity(intent);
+                }else{
                 NewShoppingFragment fragment = new NewShoppingFragment();
                 android.support.v4.app.FragmentTransaction fragmentTransaction =
                         getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_container, fragment);
                 fragmentTransaction.commit();
-            }
+            }}
         });
 
     }

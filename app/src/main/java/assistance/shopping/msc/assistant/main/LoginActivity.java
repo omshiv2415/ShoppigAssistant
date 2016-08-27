@@ -64,17 +64,6 @@ public class LoginActivity extends Activity implements GoogleApiClient.OnConnect
         mGoogleSignIn = (Button) findViewById(R.id.sign_in_button_by_Google);
         mAuth = FirebaseAuth.getInstance();
 
-        // Load the ImageView that will host the animation and
-        // set its background to our AnimationDrawable XML resource.
-        //ImageView img = (ImageView)findViewById(R.id.magicKingdom);
-
-        //img.setBackgroundResource(R.drawable.magicplace);
-       // // Get the background, which has been compiled to an AnimationDrawable object.
-       // AnimationDrawable frameAnimation = (AnimationDrawable) img.getBackground();
-
-        /// Start the animation (looped playback by default).
-        //frameAnimation.start();
-
         Log.d(TAG, "InstanceID token: " + FirebaseInstanceId.getInstance().getToken());
 
         // [START config_signin]
@@ -118,9 +107,6 @@ public class LoginActivity extends Activity implements GoogleApiClient.OnConnect
                Intent takeUserPasswordReset = new Intent(LoginActivity.this, PasswordResetActivity.class);
                startActivity(takeUserPasswordReset);
 
-
-
-
             }
         });
 
@@ -142,7 +128,6 @@ public class LoginActivity extends Activity implements GoogleApiClient.OnConnect
                                 speech.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
                                 Toast.makeText(LoginActivity.this, toSpeak,
                                         Toast.LENGTH_SHORT).show();
-
 
                             }
                         }
@@ -210,8 +195,6 @@ public class LoginActivity extends Activity implements GoogleApiClient.OnConnect
             startActivity(new Intent(LoginActivity.this, NavigationActivity.class));
             finish();
 
-
-
         }
 
 
@@ -227,66 +210,12 @@ public class LoginActivity extends Activity implements GoogleApiClient.OnConnect
 
     }
 
-    // [START onactivityresult]
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
 
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-        if (requestCode == RC_SIGN_IN) {
-            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            if (result.isSuccess()) {
-                // Google Sign In was successful, authenticate with Firebase
-                GoogleSignInAccount account = result.getSignInAccount();
-                firebaseAuthWithGoogle(account);
-            } else {
-                // Google Sign In failed, update UI appropriately
-                // [START_EXCLUDE]
-
-                // [END_EXCLUDE]
-            }
-        }
-    }
     // [END onactivityresult]
 
     // [START auth_with_google]
-    private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
-        Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
-        // [START_EXCLUDE silent]
-        // showProgressDialog();
-        // [END_EXCLUDE]
 
-        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
 
-                        Intent takeUserResetPassword = new Intent(LoginActivity.this, LoginActivity.class);
-                        startActivity(takeUserResetPassword);
-
-                        // If sign in fails, display a message to the user. If sign in succeeds
-                        // the auth state listener will be notified and logic to handle the
-                        // signed in user can be handled in the listener.
-                        if (!task.isSuccessful()) {
-                            Log.w(TAG, "signInWithCredential", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                        // [START_EXCLUDE]
-                        // hideProgressDialog();
-                        // [END_EXCLUDE]
-                    }
-                });
-    }
-    // [END auth_with_google]
-
-    // [START signin]
-    private void signIn() {
-        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-        startActivityForResult(signInIntent, RC_SIGN_IN);
-    }
 
     /**
      * Called when a view has been clicked.

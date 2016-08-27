@@ -121,12 +121,15 @@ public class NewShoppingFragment extends Fragment {
         final String body = mBodyField.getText().toString();
         final String paymentType = "Cash";
         final String tranCompletedAt = "";
-        final String userFirstName = "Viral";
+        final String srfirstlineofAddress = "Not Available";
+        final String srcity = "Not Available";
+        final String srpostcode = "Not Available";
 
         String SAPhoto = String.valueOf(mAuth.getCurrentUser().getPhotoUrl());
         final String SAGPhoto = String.valueOf(mAuth.getCurrentUser().getPhotoUrl());
 
-        if (SAPhoto.equals(null)) {
+        if (!SAPhoto.equals(mAuth.getCurrentUser().getPhotoUrl())) {
+
             SAPhoto = "https://lh3.googleusercontent.com/-et8-_Jd3MiY/AAAAAAAAAAI/AAAAAAAAAAs/9OWsA3w5ZGw/s96-c/photo.jpg";
 
         DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy EEE HH:mm:ss a");
@@ -147,8 +150,8 @@ public class NewShoppingFragment extends Fragment {
 
         // [START single_value_read]
         final String userId = baseActivity.getUid();
-        final String finalSAPhoto = SAPhoto;
-        mDatabase.child("users").child(userId).addListenerForSingleValueEvent(
+            final String finalSAPhoto = SAPhoto;
+            mDatabase.child("users").child(userId).addListenerForSingleValueEvent(
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -185,8 +188,8 @@ public class NewShoppingFragment extends Fragment {
                                 String PostCode = addresses.get(0).getPostalCode();
                                 String firstLineOfAddress = addresses.get(0).getAddressLine(0);
 
-                                writeNewPost(userId, user.UserName, title, body, createdAt, SAGPhoto, paymentType, tranCompletedAt,
-                                        user.FirstName, firstLineOfAddress, City, PostCode );
+                                writeNewPost(userId, user.UserName, title, body, createdAt, finalSAPhoto, paymentType, tranCompletedAt,
+                                        user.FirstName, firstLineOfAddress, City, PostCode, srfirstlineofAddress,srcity,srpostcode );
                                 showSimpleNotification(body);
                                 Intent takeUserHome = new Intent(getActivity(), NavigationActivity.class);
                                 startActivity(takeUserHome);
@@ -278,7 +281,7 @@ public class NewShoppingFragment extends Fragment {
                                     String firstLineOfAddress = addresses.get(0).getAddressLine(0);
 
                                     writeNewPost(userId, user.UserName, title, body, createdAt, SAGPhoto, paymentType, tranCompletedAt,
-                                           user.FirstName, firstLineOfAddress, City, PostCode );
+                                            user.FirstName, firstLineOfAddress, City, PostCode, srfirstlineofAddress,srcity,srpostcode );
                                     showSimpleNotification(body);
                                     Intent takeUserHome = new Intent(getActivity(), NavigationActivity.class);
                                     startActivity(takeUserHome);
@@ -314,12 +317,13 @@ public class NewShoppingFragment extends Fragment {
 
     // [START write_fan_out]
     private void writeNewPost(String userId, String shoppingAssistant, String title, String body, String createdAt, String ShoppingAssistantPhoto, String paymentType,
-                              String paymentCompletedAt, String shoppingAssistantName, String saFirstLineAddress, String saCity, String saPostCode) {
+                              String paymentCompletedAt, String shoppingAssistantName, String saFirstLineAddress, String saCity, String saPostCode, String srFirstLineAddress,
+                              String srCity, String srPostCode) {
         // Create new shoppingBroadcast at /user-posts/$userid/$postid and at
         // /posts/$postid simultaneously
         String key = mDatabase.child("shopping-broadcast").push().getKey();
         ShoppingBroadcast shoppingBroadcast = new ShoppingBroadcast(userId, shoppingAssistant, title, body, createdAt, ShoppingAssistantPhoto, paymentType,
-                paymentCompletedAt,  shoppingAssistantName, saFirstLineAddress, saCity, saPostCode);
+                paymentCompletedAt,  shoppingAssistantName, saFirstLineAddress, saCity, saPostCode, srFirstLineAddress,srCity,srPostCode);
         Map<String, Object> postValues = shoppingBroadcast.toMap();
 
         Map<String, Object> childUpdates = new HashMap<>();
