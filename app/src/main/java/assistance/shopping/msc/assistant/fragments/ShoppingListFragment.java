@@ -163,9 +163,30 @@ public abstract class ShoppingListFragment extends Fragment {
                 if (model.starCount.equals("Completed")) {
 
                     viewHolder.starView.setImageResource(R.drawable.confirm_shopping_basket);
-                    viewHolder.rel.setBackgroundColor(Color.parseColor("#CCC0C0C0"));
+                    viewHolder.rel.setBackgroundColor(Color.parseColor("#ff99cc00"));
                     viewHolder.paymentTypeText.setText(model.paymentType);
                     viewHolder.hide.setVisibility(View.VISIBLE);
+                    viewHolder.srcity.setTextColor(Color.parseColor("#FFFFFFFF"));
+                    viewHolder.srfirstline.setTextColor(Color.parseColor("#FFFFFFFF"));
+                    viewHolder.srpostcode.setTextColor(Color.parseColor("#FFFFFFFF"));
+                    viewHolder.spdeliveredtime.setTextColor(Color.parseColor("#FFFFFFFF"));
+
+                    viewHolder.paymentTypeText.setTextColor(Color.parseColor("#FFFFFFFF"));
+                    viewHolder.SaName.setTextColor(Color.parseColor("#FFFFFFFF"));
+                    viewHolder.transactioncompletedat.setTextColor(Color.parseColor("#FFFFFFFF"));
+
+                    viewHolder.saAddressfirstline.setTextColor(Color.parseColor("#FFFFFFFF"));
+                    viewHolder.sacity.setTextColor(Color.parseColor("#FFFFFFFF"));
+                    viewHolder.saPostcode.setTextColor(Color.parseColor("#FFFFFFFF"));
+                    viewHolder.timeView.setTextColor(Color.parseColor("#FFFFFFFF"));
+
+                    viewHolder.titleView.setTextColor(Color.parseColor("#FFFFFFFF"));
+                    viewHolder.bodyView.setTextColor(Color.parseColor("#FFFFFFFF"));
+
+                    viewHolder.authorView.setTextColor(Color.parseColor("#FFFFFFFF"));
+                    viewHolder.bodyView.setTextColor(Color.parseColor("#FFFFFFFF"));
+
+
 
 
                 } else {
@@ -174,6 +195,7 @@ public abstract class ShoppingListFragment extends Fragment {
                     viewHolder.hide.setVisibility(View.GONE);
                     viewHolder.topline.setVisibility(View.GONE);
                     viewHolder.rel.setBackgroundColor(Color.parseColor("#26ffffff"));
+
 
                 }
 

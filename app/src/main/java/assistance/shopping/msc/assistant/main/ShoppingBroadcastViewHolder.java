@@ -32,6 +32,7 @@ public class ShoppingBroadcastViewHolder extends RecyclerView.ViewHolder {
     public TextView srcity;
     public TextView srpostcode;
     public TextView spdeliveredtime;
+    public TextView transactioncompletedat;
     public ShoppingBroadcastViewHolder(View itemView) {
         super(itemView);
 
@@ -54,6 +55,7 @@ public class ShoppingBroadcastViewHolder extends RecyclerView.ViewHolder {
         srcity = (TextView)itemView.findViewById(R.id.shoppingRequesterCity);
         srpostcode = (TextView)itemView.findViewById(R.id.shoppingRequesterPostcode);
         spdeliveredtime = (TextView)itemView.findViewById(R.id.shoppingDeliveredTime);
+        transactioncompletedat = (TextView)itemView.findViewById(R.id.transactionCompletedAt);
     }
 
     public void bindToPost(ShoppingBroadcast shoppingBroadcast, View.OnClickListener starClickListener) {
@@ -72,6 +74,7 @@ public class ShoppingBroadcastViewHolder extends RecyclerView.ViewHolder {
         srcity.setText(shoppingBroadcast.srCity);
         srpostcode.setText(shoppingBroadcast.srPostCode);
         spdeliveredtime.setText(shoppingBroadcast.paymentCompletedAt);
+        transactioncompletedat.setText(shoppingBroadcast.paymentCompletedAt);
 
 
     }
