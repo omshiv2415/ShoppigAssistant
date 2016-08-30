@@ -45,19 +45,24 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.Transaction;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import assistance.shopping.msc.assistant.R;
 import assistance.shopping.msc.assistant.main.ShoppingBroadcastViewHolder;
 import assistance.shopping.msc.assistant.main.ShoppingDetailActivity;
 import assistance.shopping.msc.assistant.model.ShoppingBroadcast;
+import assistance.shopping.msc.assistant.model.ShoppingPoints;
+import assistance.shopping.msc.assistant.model.User;
 import assistance.shopping.msc.assistant.support.FragmentSupport;
 
 import static android.R.style.Theme_Dialog;
@@ -68,6 +73,8 @@ public abstract class ShoppingListFragment extends Fragment {
     private static final String TAG = "ShoppingListFragment";
     private static final int TAG_SIMPLE_NOTIFICATION = 1;
     public ProgressBar Shopping;
+    public DatabaseReference mShoppingPoint;
+    public FloatingActionButton fab;
     FragmentSupport fragmentSupport = new FragmentSupport();
     final String userId = fragmentSupport.getUid();
     // [END define_database_reference]
@@ -77,7 +84,6 @@ public abstract class ShoppingListFragment extends Fragment {
     private RecyclerView mRecycler;
     private LinearLayoutManager mManager;
     private Location TODO = null;
-    public FloatingActionButton fab;
 
     public ShoppingListFragment() {
     }
@@ -215,14 +221,6 @@ public abstract class ShoppingListFragment extends Fragment {
                                     // Use the address as needed
                                     String message = String.format("Latitude: %f, Longitude: %f", address.getLatitude(), address.getLongitude());
                                     Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-                                  //  Intent intent = new Intent();
-                                   // intent.setAction(Intent.ACTION_VIEW);
-                                   // String data = String.format("geo:%s,%s", address.getLatitude(),address.getLongitude());
-
-                                  //  data = String.format("%s?z=%s", data, 10);
-
-                                  //  intent.setData(Uri.parse(data));
-                                  //  startActivity(intent);
 
 
                                     Double sendLat = address.getLatitude();
@@ -233,8 +231,8 @@ public abstract class ShoppingListFragment extends Fragment {
 
                                     Bundle args = new Bundle();
 
-                                    args.putDouble( "Lat", sendLat);
-                                    args.putDouble( "Lon", sendLon);
+                                    args.putDouble("Lat", sendLat);
+                                    args.putDouble("Lon", sendLon);
 
                                     sendLatLangToMap.setArguments(args);
 
@@ -269,7 +267,7 @@ public abstract class ShoppingListFragment extends Fragment {
                     @Override
                     public void onClick(View starView) {
                         LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-                        if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
                             //All location services are disabled
                             Toast.makeText(getActivity(), "Please turn on Location and press back Button", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
@@ -277,90 +275,90 @@ public abstract class ShoppingListFragment extends Fragment {
 
                         } else {
 
-                        if (model.starCount.equals("Completed")) {
+                            if (model.starCount.equals("Completed")) {
 
-                            Toast.makeText(getActivity(), "Shopping Assistant is not Available", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getActivity(), "Shopping Assistant is not Available", Toast.LENGTH_LONG).show();
 
-                        } else if ((!model.uid.equals(FirebaseAuth.getInstance().getCurrentUser().getUid()))) {
+                            } else if ((!model.uid.equals(FirebaseAuth.getInstance().getCurrentUser().getUid()))) {
 
-                            Toast.makeText(getActivity(), "This is not your shopping Broadcast", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getActivity(), "This is not your shopping Broadcast", Toast.LENGTH_LONG).show();
 
-                        } else {
+                            } else {
 
-                            // Need to write to both places the post is stored
-                            final DatabaseReference globalPostRef = mDatabase.child("shopping-broadcast").child(postRef.getKey());
-                            final DatabaseReference userPostRef = mDatabase.child("user-shopping-broadcast").child(model.uid).child(postRef.getKey());
-
-
-                            final CharSequence[] items = {"Cash", " Card ", " Android Pay ", " PayPal "};
-
-                            // Creating and Building the Dialog
-                            final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(getActivity(), Theme_Dialog));
-                            builder.setTitle("Please confirmed payment type");
+                                // Need to write to both places the post is stored
+                                final DatabaseReference globalPostRef = mDatabase.child("shopping-broadcast").child(postRef.getKey());
+                                final DatabaseReference userPostRef = mDatabase.child("user-shopping-broadcast").child(model.uid).child(postRef.getKey());
 
 
-                            builder.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, final int item) {
+                                final CharSequence[] items = {"Cash", " Card ", " Android Pay ", " PayPal "};
+
+                                // Creating and Building the Dialog
+                                final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(getActivity(), Theme_Dialog));
+                                builder.setTitle("Please confirmed payment type");
 
 
-                                    switch (item) {
-                                        case 0:
-                                            // Run two transactions
-                                            final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
-                                            builder.setTitle("Confirm");
-                                            builder.setMessage("Are you sure?");
-
-                                            builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    // Do nothing but close the dialog
-                                                    String indexYear1 = String.valueOf(Arrays.asList(items).get(0));
-
-                                                    onStarClicked(globalPostRef, indexYear1);
-                                                    onStarClicked(userPostRef, indexYear1);
-                                                    dialog.dismiss();
-                                                }
-                                            });
-
-                                            builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-
-                                                    // Do nothing
-                                                    dialog.dismiss();
-                                                }
-                                            });
-
-                                            AlertDialog alert = builder.create();
-                                            alert.show();
+                                builder.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, final int item) {
 
 
-                                            break;
-                                        case 1:
-                                            // Run two transactions
+                                        switch (item) {
+                                            case 0:
+                                                // Run two transactions
+                                                final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-                                            Toast.makeText(getActivity(), "This Payment will be available very soon", Toast.LENGTH_LONG).show();
+                                                builder.setTitle("Confirm");
+                                                builder.setMessage("Are you sure?");
 
-                                            break;
-                                        case 2:
+                                                builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
 
-                                            Toast.makeText(getActivity(), "This Payment will be available very soon", Toast.LENGTH_LONG).show();
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        // Do nothing but close the dialog
+                                                        String indexYear1 = String.valueOf(Arrays.asList(items).get(0));
 
-                                            break;
-                                        case 3:
+                                                        onStarClicked(globalPostRef, indexYear1);
+                                                        onStarClicked(userPostRef, indexYear1);
+                                                        dialog.dismiss();
+                                                    }
+                                                });
 
-                                            Toast.makeText(getActivity(), "This Payment will be available very soon", Toast.LENGTH_LONG).show();
-                                            break;
+                                                builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
 
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+
+                                                        // Do nothing
+                                                        dialog.dismiss();
+                                                    }
+                                                });
+
+                                                AlertDialog alert = builder.create();
+                                                alert.show();
+
+
+                                                break;
+                                            case 1:
+                                                // Run two transactions
+
+                                                Toast.makeText(getActivity(), "This Payment will be available very soon", Toast.LENGTH_LONG).show();
+
+                                                break;
+                                            case 2:
+
+                                                Toast.makeText(getActivity(), "This Payment will be available very soon", Toast.LENGTH_LONG).show();
+
+                                                break;
+                                            case 3:
+
+                                                Toast.makeText(getActivity(), "This Payment will be available very soon", Toast.LENGTH_LONG).show();
+                                                break;
+
+                                        }
+                                        dialog.dismiss();
                                     }
-                                    dialog.dismiss();
-                                }
-                            });
-                            builder.create().show();
+                                });
+                                builder.create().show();
 
-                          }
+                            }
 
 
                         }
@@ -384,7 +382,7 @@ public abstract class ShoppingListFragment extends Fragment {
         postRef.runTransaction(new Transaction.Handler() {
             @Override
             public Transaction.Result doTransaction(MutableData mutableData) {
-                ShoppingBroadcast p = mutableData.getValue(ShoppingBroadcast.class);
+                final ShoppingBroadcast p = mutableData.getValue(ShoppingBroadcast.class);
                 if (p == null) {
                     return Transaction.success(mutableData);
                 }
@@ -393,7 +391,7 @@ public abstract class ShoppingListFragment extends Fragment {
 
                     if (p.stars.containsKey(getUid())) {
                         // Unstar the post and remove self from stars
-                        p.starCount = "In Process";
+                        p.starCount = "Processing";
                         p.stars.remove(getUid());
 
 
@@ -413,19 +411,19 @@ public abstract class ShoppingListFragment extends Fragment {
                             e.printStackTrace();
                         }
                         if (addresses.size() > 0) {
-                            System.out.println(addresses.get(0).getLocality());
+
 
                             String City = addresses.get(0).getLocality();
                             String PostCode = addresses.get(0).getPostalCode();
                             String firstLineOfAddress = addresses.get(0).getAddressLine(0);
-
                             p.starCount = "Completed";
                             p.stars.put(getUid(), true);
                             p.paymentType = PaymentType;
                             p.paymentCompletedAt = transactionCompletedAt;
-                            p.srPostCode= PostCode;
+                            p.srPostCode = PostCode;
                             p.srCity = City;
                             p.srFirstLineAddress = firstLineOfAddress;
+
 
                         } else {
 
@@ -441,7 +439,41 @@ public abstract class ShoppingListFragment extends Fragment {
                             p.srCity = City;
                             p.srFirstLineAddress = firstLineOfAddress;
 
+
                         }
+                        mShoppingPoint = FirebaseDatabase.getInstance().getReference().child("users").child(userId);
+
+                        mShoppingPoint.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                                User point = dataSnapshot.getValue(User.class);
+
+                                // [START_EXCLUDE]
+                                if (point == null) {
+                                    // User is null, error out
+                                    Log.e(TAG, "User " + userId + " is unexpectedly null");
+                                    Toast.makeText(getActivity(),
+                                            "Error: could not fetch user.",
+                                            Toast.LENGTH_SHORT).show();
+                                } else {
+
+                                    Double earnedShopPoints = 50.00;
+                                    Double totalShopPoint = point.TotalshoppingPoints + earnedShopPoints;
+                                    mShoppingPoint.child("TotalshoppingPoints").setValue(totalShopPoint);
+                                    writeNewShoppingPoint(p.uid, p.shoppingAssistantName, p.createdAt, p.paymentCompletedAt, totalShopPoint, earnedShopPoints);
+
+
+                                }
+
+
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
 
 
                     }
@@ -470,9 +502,30 @@ public abstract class ShoppingListFragment extends Fragment {
         }
     }
 
+
     public String getUid() {
         return FirebaseAuth.getInstance().getCurrentUser().getUid();
     }
+
+
+    // [START write_fan_out]
+    private void writeNewShoppingPoint(String userId, String shoppingAssistantName, String createdAt, String paymentCompletedAt, Double totalShoppingPoints,
+                                       Double earnedShoppingPoints) {
+
+        String key = mDatabase.child("shopping-broadcast").push().getKey();
+
+
+        ShoppingPoints shoppingPoints = new ShoppingPoints(userId, shoppingAssistantName, createdAt, paymentCompletedAt, totalShoppingPoints,
+                earnedShoppingPoints);
+
+        Map<String, Object> postValues = shoppingPoints.toMap();
+
+        Map<String, Object> childUpdates = new HashMap<>();
+        childUpdates.put("/user-shopping-points/" + userId + "/" + key, postValues);
+
+        mDatabase.updateChildren(childUpdates);
+    }
+
 
     public abstract Query getQuery(DatabaseReference databaseReference);
 
@@ -518,6 +571,7 @@ public abstract class ShoppingListFragment extends Fragment {
         PendingIntent pendingIntent = PendingIntent.getActivity(getActivity(), 1, intent, 0);
         return pendingIntent;
     }
+
     public class UtilLocation {
         public Location getLastKnownLocation(boolean enabledProvidersOnly, Context context) {
             LocationManager manager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
@@ -537,7 +591,7 @@ public abstract class ShoppingListFragment extends Fragment {
                     return TODO;
                 }
                 utilLocation = manager.getLastKnownLocation(provider);
-                if(utilLocation != null) return utilLocation;
+                if (utilLocation != null) return utilLocation;
             }
             return null;
         }

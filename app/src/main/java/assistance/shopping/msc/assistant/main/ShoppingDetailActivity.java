@@ -84,7 +84,7 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
         mPostReference = FirebaseDatabase.getInstance().getReference()
                 .child("shopping-broadcast").child(mPostKey);
         mUserPostReference = FirebaseDatabase.getInstance().getReference()
-                .child("user-shopping-broadcast").child(mPostKey);
+                .child("user-shopping-broadcast").child(getUid()).child(mPostKey);
         mCommentsReference = FirebaseDatabase.getInstance().getReference()
                 .child("shopping-broadcast-comments").child(mPostKey);
 
@@ -161,7 +161,7 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
                                         public void onDataChange(DataSnapshot dataSnapshot) {
 
                                             mPostReference.child("title").setValue(YouEditTextValue);
-                                            mUserPostReference.child("title").setValue(YouEditTextValue);
+
 
                                         }
 
@@ -170,7 +170,20 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
 
                                         }
                                     });
+                                    mUserPostReference.addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
 
+                                            mUserPostReference.child("title").setValue(YouEditTextValue);
+
+
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+
+                                        }
+                                    });
 
                                 }
                             });
@@ -214,7 +227,7 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
                                         public void onDataChange(DataSnapshot dataSnapshot) {
 
                                             mPostReference.child("body").setValue(YouEditTextValue);
-                                            mUserPostReference.child("body").setValue(YouEditTextValue);
+
                                         }
 
                                         @Override
@@ -222,7 +235,20 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
 
                                         }
                                     });
+                                    mUserPostReference.addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
 
+                                            mUserPostReference.child("body").setValue(YouEditTextValue);
+
+
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+
+                                        }
+                                    });
 
                                 }
                             });

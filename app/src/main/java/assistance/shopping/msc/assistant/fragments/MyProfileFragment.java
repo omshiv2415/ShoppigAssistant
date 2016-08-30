@@ -271,6 +271,7 @@ public class MyProfileFragment extends Fragment  {
 
             mDatabase.child("users");
             mDatabase.child(userId);
+            final Double TotalshoppingPoints = 00.00;
 
             final String finalUPhoto1 = uPhoto;
             mDatabase.addListenerForSingleValueEvent(
@@ -289,7 +290,8 @@ public class MyProfileFragment extends Fragment  {
                                         Toast.LENGTH_SHORT).show();
                             } else {
                                 // Update User Details
-                                writeToProfile(userId, sFirstName, sLastName, sDateOfBirth, sGender, sEmail, sUserName, finalUPhoto1, authentication);
+                                final Double TotalshoppingPoints = 00.00;
+                                writeToProfile(userId, sFirstName, sLastName, sDateOfBirth, sGender, sEmail, sUserName, finalUPhoto1, authentication, TotalshoppingPoints);
                                 Toast.makeText(getActivity(), "Profile updated Successfully", Toast.LENGTH_LONG).show();
                                 Intent takeUserHome = new Intent(getActivity(), NavigationActivity.class);
                                 startActivity(takeUserHome);
@@ -335,7 +337,8 @@ public class MyProfileFragment extends Fragment  {
                                         Toast.LENGTH_SHORT).show();
                             } else {
                                 // Update User Details
-                                writeToProfile(userId, sFirstName, sLastName, sDateOfBirth, sGender, sEmail, sUserName, uGPhoto, authentication);
+                                final Double TotalshoppingPoints = 00.00;
+                                writeToProfile(userId, sFirstName, sLastName, sDateOfBirth, sGender, sEmail, sUserName, uGPhoto, authentication, TotalshoppingPoints);
                                 Toast.makeText(getActivity(), "Profile updated Successfully", Toast.LENGTH_LONG).show();
                                 Intent takeUserHome = new Intent(getActivity(), NavigationActivity.class);
                                 startActivity(takeUserHome);
@@ -372,10 +375,10 @@ public class MyProfileFragment extends Fragment  {
     }
 
     public void writeToProfile(String userId, String firstname, String lastname, String dateofbirth, String gender
-            , String email, String username, String uPhoto, String authentication) {
+            , String email, String username, String uPhoto, String authentication, Double TotalshoppingPoints) {
 
 
-        MyDetails myDetails = new MyDetails(userId, firstname, lastname, dateofbirth, gender, email, username, uPhoto, authentication);
+        MyDetails myDetails = new MyDetails(userId, firstname, lastname, dateofbirth, gender, email, username, uPhoto, authentication,TotalshoppingPoints);
         Map<String, Object> myDetailsValues = myDetails.toMap();
 
         Map<String, Object> childUpdates  = new HashMap<>();

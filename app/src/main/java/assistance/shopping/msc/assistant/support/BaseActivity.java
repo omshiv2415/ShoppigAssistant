@@ -50,20 +50,7 @@ public class BaseActivity extends AppCompatActivity {
     }
 
 
-    private String usernameFromEmail(String email) {
-        if (email.contains("@")) {
-            return email.split("@")[0];
-        } else {
-            return email;
-        }
 
-    }
 
-    // [START basic_write]
-    private void writeNewUser(String userId, String name, String email, String authentication, String FirstName, String LastName, String Gender, String DateOfBirth, String PhotoUri, String uid) {
 
-        User user = new User(name, email, authentication, FirstName, LastName, Gender, DateOfBirth, PhotoUri, uid);
-
-        mDatabase.child("users").child(userId).setValue(user);
-    }
 }

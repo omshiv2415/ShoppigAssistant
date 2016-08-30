@@ -150,9 +150,10 @@ public class RegisterActivity extends Activity {
         String userphoto = "ShoppingAssistant Update your name";
         String userDateofBirth = "ShoppingAssistant Update your name";
         String uid = mAuth.getCurrentUser().getUid();
-
+        Double TotalshoppingPoints = 00.00;
         // Write new user
-        writeNewUser(user.getUid(), username, user.getEmail(), FirebaseInstanceId.getInstance().getToken(), userFirstname, userLastname, userGender, userDateofBirth, userphoto, uid);
+        writeNewUser(user.getUid(), username, user.getEmail(), FirebaseInstanceId.getInstance().getToken(), userFirstname, userLastname, userGender,
+                userDateofBirth, userphoto, uid, TotalshoppingPoints);
 
         // Go to MainActivity
         Toast.makeText(RegisterActivity.this, "Welcome to the Shopping Assistant", Toast.LENGTH_LONG).show();
@@ -173,9 +174,10 @@ public class RegisterActivity extends Activity {
     }
 
     // [START basic_write]
-    private void writeNewUser(String userId, String name, String email, String authentication, String FirstName, String LastName, String Gender, String DateOfBirth, String PhotoUri, String uid) {
+    private void writeNewUser(String userId, String name, String email, String authentication, String FirstName, String LastName, String Gender, String DateOfBirth,
+                              String PhotoUri, String uid, Double TotalshoppingPoints) {
 
-        User user = new User(name, email, authentication, FirstName, LastName, Gender, DateOfBirth, PhotoUri, uid);
+        User user = new User(name, email, authentication, FirstName, LastName, Gender, DateOfBirth, PhotoUri, uid, TotalshoppingPoints);
 
         mDatabase.child("users").child(userId).setValue(user);
     }

@@ -124,6 +124,7 @@ public class NewShoppingFragment extends Fragment {
         final String srfirstlineofAddress = "Not Available";
         final String srcity = "Not Available";
         final String srpostcode = "Not Available";
+        final Double setTotalPoints = 0.00;
 
         String SAPhoto = String.valueOf(mAuth.getCurrentUser().getPhotoUrl());
         final String SAGPhoto = String.valueOf(mAuth.getCurrentUser().getPhotoUrl());
@@ -188,8 +189,8 @@ public class NewShoppingFragment extends Fragment {
                                 String firstLineOfAddress = addresses.get(0).getAddressLine(0);
 
                                 writeNewPost(userId, user.UserName, title, body, createdAt, finalSAPhoto, paymentType, tranCompletedAt,
-                                        user.FirstName, firstLineOfAddress, City, PostCode, srfirstlineofAddress,srcity,srpostcode );
-                                showSimpleNotification(body);
+                                        user.FirstName, firstLineOfAddress, City, PostCode, srfirstlineofAddress,srcity,srpostcode, setTotalPoints );
+                                //showSimpleNotification(body);
                                 Intent takeUserHome = new Intent(getActivity(), NavigationActivity.class);
                                 startActivity(takeUserHome);
 
@@ -280,15 +281,15 @@ public class NewShoppingFragment extends Fragment {
                                     String firstLineOfAddress = addresses.get(0).getAddressLine(0);
 
                                     writeNewPost(userId, user.UserName, title, body, createdAt, SAGPhoto, paymentType, tranCompletedAt,
-                                            user.FirstName, firstLineOfAddress, City, PostCode, srfirstlineofAddress,srcity,srpostcode );
-                                    showSimpleNotification(body);
+                                            user.FirstName, firstLineOfAddress, City, PostCode, srfirstlineofAddress,srcity,srpostcode, setTotalPoints);
+                                    //showSimpleNotification(body);
                                     Intent takeUserHome = new Intent(getActivity(), NavigationActivity.class);
                                     startActivity(takeUserHome);
 
 
                                 }else{
 
-                                    Toast.makeText(getActivity(), "Please Update your Profile", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getActivity(), "Please try later no location available", Toast.LENGTH_SHORT).show();
 
                                     Intent takeUserHome = new Intent(getActivity(), NavigationActivity.class);
                                     startActivity(takeUserHome);
@@ -317,12 +318,12 @@ public class NewShoppingFragment extends Fragment {
     // [START write_fan_out]
     private void writeNewPost(String userId, String shoppingAssistant, String title, String body, String createdAt, String ShoppingAssistantPhoto, String paymentType,
                               String paymentCompletedAt, String shoppingAssistantName, String saFirstLineAddress, String saCity, String saPostCode, String srFirstLineAddress,
-                              String srCity, String srPostCode) {
+                              String srCity, String srPostCode, Double setShoppingPoints) {
         // Create new shoppingBroadcast at /user-posts/$userid/$postid and at
         // /posts/$postid simultaneously
         String key = mDatabase.child("shopping-broadcast").push().getKey();
         ShoppingBroadcast shoppingBroadcast = new ShoppingBroadcast(userId, shoppingAssistant, title, body, createdAt, ShoppingAssistantPhoto, paymentType,
-                paymentCompletedAt,  shoppingAssistantName, saFirstLineAddress, saCity, saPostCode, srFirstLineAddress,srCity,srPostCode);
+                paymentCompletedAt,  shoppingAssistantName, saFirstLineAddress, saCity, saPostCode, srFirstLineAddress,srCity,srPostCode, setShoppingPoints);
         Map<String, Object> postValues = shoppingBroadcast.toMap();
 
         Map<String, Object> childUpdates = new HashMap<>();
