@@ -128,13 +128,12 @@ public class NewShoppingFragment extends Fragment {
         String SAPhoto = String.valueOf(mAuth.getCurrentUser().getPhotoUrl());
         final String SAGPhoto = String.valueOf(mAuth.getCurrentUser().getPhotoUrl());
 
-        if (!SAPhoto.equals(mAuth.getCurrentUser().getPhotoUrl())) {
+        if (SAPhoto.isEmpty()) {
 
             SAPhoto = "https://lh3.googleusercontent.com/-et8-_Jd3MiY/AAAAAAAAAAI/AAAAAAAAAAs/9OWsA3w5ZGw/s96-c/photo.jpg";
-
-        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy EEE HH:mm:ss a");
-        Date date = new Date();
-        final String createdAt = String.valueOf(dateFormat.format(date)).toUpperCase();
+            DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy EEE HH:mm:ss a");
+            Date date = new Date();
+            final String createdAt = String.valueOf(dateFormat.format(date)).toUpperCase();
 
         // Title is required
         if (TextUtils.isEmpty(title)) {

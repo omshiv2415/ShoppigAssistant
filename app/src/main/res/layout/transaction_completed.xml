@@ -25,9 +25,10 @@
             android:id="@+id/Shopping"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Shopping Transaction"
-            android:textColor="@android:color/background_dark"
+            android:text="Payment Details"
+            android:textColor="@android:color/holo_blue_dark"
             android:textSize="16sp" />
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="2dp"
@@ -50,7 +51,8 @@
             android:id="@+id/transactionCompletedAt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="24-08-2016 WED 00:33:45 AM" />
+            android:text="24-08-2016 WED 00:33:45 AM"
+            android:textColor="?android:attr/textColorTertiary" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -65,8 +67,8 @@
             android:id="@+id/ShoppingRequestercurrentLocation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Shopping Delivered Location"
-            android:textColor="@android:color/background_dark"
+            android:text="Shopping Delivered Location and Time"
+            android:textColor="@android:color/holo_blue_dark"
             android:textSize="16sp" />
         <RelativeLayout
             android:layout_width="match_parent"

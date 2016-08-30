@@ -29,7 +29,7 @@
         android:layout_marginTop="5dp"
         android:hint="Description..."
         android:inputType="textMultiLine"
-        android:maxLines="10"
+        android:maxLines="50"
         android:scrollHorizontally="false" />
 
     <android.support.design.widget.FloatingActionButton

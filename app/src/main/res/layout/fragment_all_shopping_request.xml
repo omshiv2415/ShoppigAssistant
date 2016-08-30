@@ -11,7 +11,7 @@
         android:layout_alignParentTop="true"
         android:background="@color/cardview_light_background"
         android:clipToPadding="false"
-        android:padding="10dp"
+        android:padding="5dp"
         android:scrollbars="vertical"
         tools:listitem="@layout/item_post" />
 

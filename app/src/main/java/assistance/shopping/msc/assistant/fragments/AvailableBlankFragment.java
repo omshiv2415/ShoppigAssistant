@@ -15,24 +15,23 @@ import assistance.shopping.msc.assistant.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class HistoryFragment extends ShoppingListFragment {
+public class AvailableBlankFragment extends ShoppingListFragment {
 
 
-    public HistoryFragment() {
+    public AvailableBlankFragment() {
         // Required empty public constructor
     }
 
 
     @Override
     public Query getQuery(DatabaseReference databaseReference) {
-
-
         // All my posts
-
         String myUserId = getUid();
-        return databaseReference.child("user-shopping-broadcast").child(myUserId)
-                .orderByChild("starCount").equalTo("Completed");
+        Query myCompletedShoppingQuery = databaseReference.child("user-shopping-broadcast")
+                .orderByChild("starCount").equalTo("Processing");
+        // [END my_top_posts_query]
+
+        return myCompletedShoppingQuery;
+
     }
-
-
 }

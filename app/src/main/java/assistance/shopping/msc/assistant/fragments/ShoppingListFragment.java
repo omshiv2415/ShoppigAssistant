@@ -21,6 +21,7 @@ import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -31,7 +32,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -55,14 +55,12 @@ import java.util.List;
 import java.util.Locale;
 
 import assistance.shopping.msc.assistant.R;
-import assistance.shopping.msc.assistant.main.NavigationActivity;
 import assistance.shopping.msc.assistant.main.ShoppingBroadcastViewHolder;
 import assistance.shopping.msc.assistant.main.ShoppingDetailActivity;
 import assistance.shopping.msc.assistant.model.ShoppingBroadcast;
 import assistance.shopping.msc.assistant.support.FragmentSupport;
 
 import static android.R.style.Theme_Dialog;
-import static assistance.shopping.msc.assistant.R.id.fab_new_post;
 
 
 public abstract class ShoppingListFragment extends Fragment {
@@ -140,7 +138,6 @@ public abstract class ShoppingListFragment extends Fragment {
                             intent.putExtra(ShoppingDetailActivity.EXTRA_POST_KEY, postKey);
                             startActivity(intent);
 
-
                         }
 
                     }
@@ -163,7 +160,7 @@ public abstract class ShoppingListFragment extends Fragment {
                 if (model.starCount.equals("Completed")) {
 
                     viewHolder.starView.setImageResource(R.drawable.confirm_shopping_basket);
-                    viewHolder.rel.setBackgroundColor(Color.parseColor("#ff99cc00"));
+                    viewHolder.rel.setBackgroundColor(Color.parseColor("#B399cc00"));
                     viewHolder.paymentTypeText.setText(model.paymentType);
                     viewHolder.hide.setVisibility(View.VISIBLE);
                     viewHolder.srcity.setTextColor(Color.parseColor("#FFFFFFFF"));
@@ -187,15 +184,82 @@ public abstract class ShoppingListFragment extends Fragment {
                     viewHolder.bodyView.setTextColor(Color.parseColor("#FFFFFFFF"));
 
 
-
-
                 } else {
 
                     viewHolder.starView.setImageResource(R.drawable.in_process_shopping);
                     viewHolder.hide.setVisibility(View.GONE);
                     viewHolder.topline.setVisibility(View.GONE);
-                    viewHolder.rel.setBackgroundColor(Color.parseColor("#26ffffff"));
+                    viewHolder.rel.setBackgroundColor(Color.parseColor("#ffffffff"));
 
+                    viewHolder.saAddressfirstline.setTextColor(Color.parseColor("#000000"));
+                    viewHolder.sacity.setTextColor(Color.parseColor("#000000"));
+                    viewHolder.saPostcode.setTextColor(Color.parseColor("#000000"));
+                    viewHolder.timeView.setTextColor(Color.parseColor("#000000"));
+
+                    viewHolder.titleView.setTextColor(Color.parseColor("#000000"));
+                    viewHolder.bodyView.setTextColor(Color.parseColor("#000000"));
+
+                    viewHolder.authorView.setTextColor(Color.parseColor("#000000"));
+                    viewHolder.bodyView.setTextColor(Color.parseColor("#000000"));
+
+
+                    viewHolder.saPostcode.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            final Geocoder geocoder = new Geocoder(getContext());
+                            final String zip = viewHolder.saPostcode.getText().toString();
+                            try {
+                                List<Address> addresses = geocoder.getFromLocationName(zip, 1);
+                                if (addresses != null && !addresses.isEmpty()) {
+                                    Address address = addresses.get(0);
+                                    // Use the address as needed
+                                    String message = String.format("Latitude: %f, Longitude: %f", address.getLatitude(), address.getLongitude());
+                                    Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                                  //  Intent intent = new Intent();
+                                   // intent.setAction(Intent.ACTION_VIEW);
+                                   // String data = String.format("geo:%s,%s", address.getLatitude(),address.getLongitude());
+
+                                  //  data = String.format("%s?z=%s", data, 10);
+
+                                  //  intent.setData(Uri.parse(data));
+                                  //  startActivity(intent);
+
+
+                                    Double sendLat = address.getLatitude();
+                                    Double sendLon = address.getLongitude();
+
+                                    // Create fragment and give it an argument for the selected article
+                                    MapFragment sendLatLangToMap = new MapFragment();
+
+                                    Bundle args = new Bundle();
+
+                                    args.putDouble( "Lat", sendLat);
+                                    args.putDouble( "Lon", sendLon);
+
+                                    sendLatLangToMap.setArguments(args);
+
+                                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+
+                                    // Replace whatever is in the fragment_container view with this fragment,
+                                    // and add the transaction to the back stack so the user can navigate back
+                                    transaction.replace(R.id.fragment_container, sendLatLangToMap);
+                                    transaction.addToBackStack(null);
+
+                                    // Commit the transaction
+                                    transaction.commit();
+
+
+                                } else {
+                                    // Display appropriate message when Geocoder services are not available
+                                    Toast.makeText(getActivity(), "Unable to geocode zipcode", Toast.LENGTH_LONG).show();
+                                }
+                            } catch (IOException e) {
+                                // handle exception
+                            }
+
+
+                        }
+                    });
 
                 }
 
@@ -207,7 +271,7 @@ public abstract class ShoppingListFragment extends Fragment {
                         LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
                         if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
                             //All location services are disabled
-                            Toast.makeText(getActivity(), "Please turn on Location and press bacck button", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "Please turn on Location and press back Button", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                             startActivity(intent);
 
@@ -215,7 +279,7 @@ public abstract class ShoppingListFragment extends Fragment {
 
                         if (model.starCount.equals("Completed")) {
 
-                            Toast.makeText(getActivity(), "Transaction is Completed", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), "Shopping Assistant is not Available", Toast.LENGTH_LONG).show();
 
                         } else if ((!model.uid.equals(FirebaseAuth.getInstance().getCurrentUser().getUid()))) {
 
@@ -277,17 +341,17 @@ public abstract class ShoppingListFragment extends Fragment {
                                         case 1:
                                             // Run two transactions
 
-                                            Toast.makeText(getActivity(), "This Payment available very soon", Toast.LENGTH_LONG).show();
+                                            Toast.makeText(getActivity(), "This Payment will be available very soon", Toast.LENGTH_LONG).show();
 
                                             break;
                                         case 2:
 
-                                            Toast.makeText(getActivity(), "This Payment available very soon", Toast.LENGTH_LONG).show();
+                                            Toast.makeText(getActivity(), "This Payment will be available very soon", Toast.LENGTH_LONG).show();
 
                                             break;
                                         case 3:
 
-                                            Toast.makeText(getActivity(), "This Payment available very soon", Toast.LENGTH_LONG).show();
+                                            Toast.makeText(getActivity(), "This Payment will be available very soon", Toast.LENGTH_LONG).show();
                                             break;
 
                                     }
@@ -336,8 +400,8 @@ public abstract class ShoppingListFragment extends Fragment {
                     } else {
                         // Star the post and add self to stars
                         UtilLocation uti = new UtilLocation();
-                        Double Lat = uti.getLastKnownLoaction(true, getContext()).getLatitude();
-                        Double Lon = uti.getLastKnownLoaction(true, getContext()).getLongitude();
+                        Double Lat = uti.getLastKnownLocation(true, getContext()).getLatitude();
+                        Double Lon = uti.getLastKnownLocation(true, getContext()).getLongitude();
 
 
                         Geocoder gcd = new Geocoder(getContext(), Locale.getDefault());
@@ -362,6 +426,7 @@ public abstract class ShoppingListFragment extends Fragment {
                             p.srPostCode= PostCode;
                             p.srCity = City;
                             p.srFirstLineAddress = firstLineOfAddress;
+
                         } else {
 
                             String City = addresses.get(0).getLocality();
@@ -411,7 +476,7 @@ public abstract class ShoppingListFragment extends Fragment {
 
     public abstract Query getQuery(DatabaseReference databaseReference);
 
-    private void showSimpleNotification(String shoppingBrodcastText) {
+    private void showSimpleNotification(String shoppingBroadcastText) {
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         //Use the NotificationCompat compatibility library in order to get gingerbread support.
         Notification notification = new NotificationCompat.Builder(getActivity())
@@ -419,7 +484,7 @@ public abstract class ShoppingListFragment extends Fragment {
                 //Title of the notification
                 .setContentTitle("Hello")
                 //Content of the notification once opened
-                .setContentText(shoppingBrodcastText)
+                .setContentText(shoppingBroadcastText)
                 //This bit will show up in the notification area in devices that support that
                 .setTicker(" I am Fine")
                 //Icon that shows up in the notification area
@@ -454,7 +519,7 @@ public abstract class ShoppingListFragment extends Fragment {
         return pendingIntent;
     }
     public class UtilLocation {
-        public Location getLastKnownLoaction(boolean enabledProvidersOnly, Context context) {
+        public Location getLastKnownLocation(boolean enabledProvidersOnly, Context context) {
             LocationManager manager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
             Location utilLocation = null;
             List<String> providers = manager.getProviders(enabledProvidersOnly);

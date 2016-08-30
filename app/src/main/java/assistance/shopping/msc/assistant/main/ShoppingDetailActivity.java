@@ -46,12 +46,15 @@ import assistance.shopping.msc.assistant.support.BaseActivity;
 public class ShoppingDetailActivity extends BaseActivity implements View.OnClickListener {
 
     public static final String EXTRA_POST_KEY = "post_key";
+    public static final String LATITUDES = "Lat";
+    public static final String LOGNITUDES = "Lon";
     private static final String TAG = "ShoppingDetailActivity";
     ShoppingBroadcast model = new ShoppingBroadcast();
     private DatabaseReference mPostReference;
     private DatabaseReference mCommentsReference;
     private ValueEventListener mPostListener;
     private String mPostKey;
+
     private CommentAdapter mAdapter;
     private FirebaseAuth mAuth;
     private TextView mAuthorView;
@@ -74,6 +77,8 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
         if (mPostKey == null) {
             throw new IllegalArgumentException("Must pass EXTRA_POST_KEY");
         }
+
+
 
         // Initialize Database
         mPostReference = FirebaseDatabase.getInstance().getReference()

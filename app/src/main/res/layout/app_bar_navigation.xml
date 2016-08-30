@@ -29,21 +29,25 @@
         android:layout_marginTop="55dp"
         tools:context=".MainActivity">
 
-            <android.support.design.widget.TabLayout
-                android:id="@+id/tabs"
-                android:theme="@style/Base.CardView"
-                android:background="@color/cardview_light_background"
-                app:tabTextAppearance="@style/TextAppearance.StatusBar.EventContent.Time"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:tabSelectedTextColor="@android:color/holo_green_light"
-                app:tabIndicatorColor="@android:color/holo_green_light" />
-
-            <android.support.v4.view.ViewPager
+        <android.support.v4.view.ViewPager
                 android:id="@+id/container"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="50dp" />
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tabs"
+            android:theme="@style/Base.CardView"
+            android:background="@color/cardview_light_background"
+            app:tabTextAppearance="@style/TextAppearance.StatusBar.EventContent.Time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:tabSelectedTextColor="@android:color/holo_green_light"
+            app:tabIndicatorColor="@android:color/holo_green_light"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            app:tabMode="scrollable" />
 
     </RelativeLayout>
 
@@ -57,10 +61,10 @@
         android:layout_margin="16dp"
         android:layout_marginTop="50dp"
         android:src="@drawable/ic_image_edit"
-        app:backgroundTint="@android:color/holo_green_light"
+        app:backgroundTint="@android:color/holo_orange_light"
         app:layout_anchor="@+id/fragment_container"
         app:layout_anchorGravity="bottom|left"
-        app:rippleColor="@android:color/holo_orange_dark"
+        app:rippleColor="@android:color/holo_blue_bright"
         app:layout_behavior="assistance.shopping.msc.assistant.main.FABScrollBehavior" />
 
 

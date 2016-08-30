@@ -13,8 +13,10 @@ public class RecentShoppingBroadcastFragment extends ShoppingListFragment {
         // [START recent_posts_query]
         // Last 100 posts, these are automatically the 100 most recent
         // due to sorting by push() keys
+        //Query recentShoppingQuery = databaseReference.child("shopping-broadcast").limitToFirst(100);
         Query recentShoppingQuery = databaseReference.child("shopping-broadcast")
-                .limitToFirst(100);
+                .orderByChild("starCount").equalTo("Processing");
+
         // [END recent_posts_query]
 
         return recentShoppingQuery;

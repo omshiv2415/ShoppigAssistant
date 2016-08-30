@@ -14,6 +14,7 @@ import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -24,6 +25,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import assistance.shopping.msc.assistant.R;
 
+import static android.content.Context.DOWNLOAD_SERVICE;
 import static android.content.Context.LOCATION_SERVICE;
 
 
@@ -32,10 +34,11 @@ import static android.content.Context.LOCATION_SERVICE;
  */
 public class MapFragment extends Fragment {
 
-
-    private static final View TODO = null;
     private static View view;
-    GoogleMap map;
+    private static final View TODO = null;
+
+    private Double mLat;
+    private Double mLon;
     public MapFragment() {
         // Required empty public constructor
     }
@@ -49,18 +52,33 @@ public class MapFragment extends Fragment {
                 parent.removeView(view);
         }
         try {
+
+            // Get post key from intent
+
+            mLat = getArguments().getDouble("Lat");
+            mLon = getArguments().getDouble("Lon");
+
+            Toast.makeText(getActivity(), "Transaction is Completed" + mLat.doubleValue(), Toast.LENGTH_LONG).show();
+
+            if (mLat == null) {
+                throw new IllegalArgumentException("Must pass EXTRA_POST_KEY");
+            }
+
+            if (mLon == null) {
+                throw new IllegalArgumentException("Must pass EXTRA_POST_KEY");
+            }
+
+            final Double setLat = Double.valueOf(mLat);
+            final Double setLon = Double.valueOf(mLon);
             view = inflater.inflate(R.layout.fragment_map, container, false);
-            ((SupportMapFragment) getChildFragmentManager()
-                    .findFragmentById(R.id.map)).getMapAsync(new OnMapReadyCallback() {
+
+            ((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map)).getMapAsync(new OnMapReadyCallback() {
                 @Override
-                public void onMapReady(GoogleMap googleMap) {
+                public void onMapReady(final GoogleMap googleMap) {
 
-                    final LocationManager locationManager = (LocationManager) getContext().getSystemService(LOCATION_SERVICE);
-
-                    // Creating a criteria object to retrieve provider
-                    Criteria criteria = new Criteria();
-                    final String provider = locationManager.getBestProvider(criteria, true);
-
+                    final LocationManager locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
+                    googleMap.addMarker(new MarkerOptions().position(new LatLng(setLat, setLon)).title("You are Here"));
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(setLat, setLon), 14.0f));
                     locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 0, new android.location.LocationListener() {
                         /**
                          * Called when the location has changed.
@@ -84,12 +102,13 @@ public class MapFragment extends Fragment {
                                 // for ActivityCompat#requestPermissions for more details.
                                 return;
                             }
-                            map.setMyLocationEnabled(true);
-                            map.getUiSettings().setMyLocationButtonEnabled(true);
-                            map.getUiSettings().setMapToolbarEnabled(true);
-                            map.getUiSettings().setAllGesturesEnabled(true);
-                            map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 16.0f));
-                            map.addMarker(new MarkerOptions()
+
+                            googleMap.setMyLocationEnabled(true);
+                            googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+                            googleMap.getUiSettings().setMapToolbarEnabled(true);
+                            googleMap.getUiSettings().setAllGesturesEnabled(true);
+                            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 16.0f));
+                            googleMap.addMarker(new MarkerOptions()
                                     .position(new LatLng(location.getLatitude(), location.getLongitude()))
                                     .title("You are Here"));
                         }

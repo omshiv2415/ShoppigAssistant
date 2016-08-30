@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/shopping_assistant_back_seven"
-    tools:context="assistance.shopping.msc.assistant.main.MainActivity">
+    tools:context="assistance.shopping.msc.assistant.main.LoginActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -13,7 +13,7 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
-        android:background="@color/grey_back_one"
+        android:background="#9925a8d7"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
@@ -119,7 +119,7 @@
             android:textColor="@color/bright_foreground_inverse_material_light"
             android:layout_below="@+id/textInputLayout4"
             android:layout_centerHorizontal="true" />
-
-
     </RelativeLayout>
+
+
 </RelativeLayout>
