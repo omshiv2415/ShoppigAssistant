@@ -461,7 +461,8 @@ public abstract class ShoppingListFragment extends Fragment {
                                     Double earnedShopPoints = 50.00;
                                     Double totalShopPoint = point.TotalshoppingPoints + earnedShopPoints;
                                     mShoppingPoint.child("TotalshoppingPoints").setValue(totalShopPoint);
-                                    writeNewShoppingPoint(p.uid, p.shoppingAssistantName, p.createdAt, p.paymentCompletedAt, totalShopPoint, earnedShopPoints);
+                                    writeNewShoppingPoint(p.uid, p.shoppingAssistantName, p.createdAt, p.paymentCompletedAt,
+                                            totalShopPoint, earnedShopPoints, p.ShoppingAssistantPhoto, FirebaseAuth.getInstance().getCurrentUser().getEmail());
 
 
                                 }
@@ -510,13 +511,13 @@ public abstract class ShoppingListFragment extends Fragment {
 
     // [START write_fan_out]
     private void writeNewShoppingPoint(String userId, String shoppingAssistantName, String createdAt, String paymentCompletedAt, Double totalShoppingPoints,
-                                       Double earnedShoppingPoints) {
+                                       Double earnedShoppingPoints, String sAPhotoUrl, String sAEmail) {
 
         String key = mDatabase.child("shopping-broadcast").push().getKey();
 
 
         ShoppingPoints shoppingPoints = new ShoppingPoints(userId, shoppingAssistantName, createdAt, paymentCompletedAt, totalShoppingPoints,
-                earnedShoppingPoints);
+                earnedShoppingPoints, sAPhotoUrl, sAEmail);
 
         Map<String, Object> postValues = shoppingPoints.toMap();
 

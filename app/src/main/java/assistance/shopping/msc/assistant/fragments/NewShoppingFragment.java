@@ -126,10 +126,10 @@ public class NewShoppingFragment extends Fragment {
         final String srpostcode = "Not Available";
         final Double setTotalPoints = 0.00;
 
-        String SAPhoto = String.valueOf(mAuth.getCurrentUser().getPhotoUrl());
+        String SAPhoto;
         final String SAGPhoto = String.valueOf(mAuth.getCurrentUser().getPhotoUrl());
 
-        if (SAPhoto.isEmpty()) {
+        if (mAuth.getCurrentUser().getProviders().contains("password")) {
 
             SAPhoto = "https://lh3.googleusercontent.com/-et8-_Jd3MiY/AAAAAAAAAAI/AAAAAAAAAAs/9OWsA3w5ZGw/s96-c/photo.jpg";
             DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy EEE HH:mm:ss a");
@@ -251,6 +251,7 @@ public class NewShoppingFragment extends Fragment {
 
                             // [START_EXCLUDE]
                             if (user == null) {
+
                                 // User is null, error out
                                 Log.e(TAG, "User " + userId + " is unexpectedly null");
                                 Toast.makeText(getActivity(), "Please Update your Profile", Toast.LENGTH_SHORT).show();
@@ -258,6 +259,7 @@ public class NewShoppingFragment extends Fragment {
                                 android.support.v4.app.FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
                                 fragmentTransaction.replace(R.id.fragment_container, fragment);
                                 fragmentTransaction.commit();
+
                             } else {
                                 // Write new post
 
@@ -319,8 +321,7 @@ public class NewShoppingFragment extends Fragment {
     private void writeNewPost(String userId, String shoppingAssistant, String title, String body, String createdAt, String ShoppingAssistantPhoto, String paymentType,
                               String paymentCompletedAt, String shoppingAssistantName, String saFirstLineAddress, String saCity, String saPostCode, String srFirstLineAddress,
                               String srCity, String srPostCode, Double setShoppingPoints) {
-        // Create new shoppingBroadcast at /user-posts/$userid/$postid and at
-        // /posts/$postid simultaneously
+
         String key = mDatabase.child("shopping-broadcast").push().getKey();
         ShoppingBroadcast shoppingBroadcast = new ShoppingBroadcast(userId, shoppingAssistant, title, body, createdAt, ShoppingAssistantPhoto, paymentType,
                 paymentCompletedAt,  shoppingAssistantName, saFirstLineAddress, saCity, saPostCode, srFirstLineAddress,srCity,srPostCode, setShoppingPoints);

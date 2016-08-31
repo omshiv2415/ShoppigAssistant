@@ -39,9 +39,9 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
     private static final String TAG = "Navigation";
     public FirebaseAuth mAuth = FirebaseAuth.getInstance();
     public DatabaseReference mDatabase;
+    public FirebaseAuth.AuthStateListener mAuthListener;
     private FragmentPagerAdapter mPagerAdapter;
     private ViewPager mViewPager;
-    public FirebaseAuth.AuthStateListener mAuthListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -225,7 +225,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
                 LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
                 if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
                     //All location services are disabled
-                    Toast.makeText(NavigationActivity.this, "Please turn on Location and press bacck button", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(NavigationActivity.this, "Please turn on Location and press back button", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                     startActivity(intent);
                 }else{

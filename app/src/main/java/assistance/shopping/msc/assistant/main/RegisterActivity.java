@@ -150,7 +150,7 @@ public class RegisterActivity extends Activity {
         String userphoto = "ShoppingAssistant Update your name";
         String userDateofBirth = "ShoppingAssistant Update your name";
         String uid = mAuth.getCurrentUser().getUid();
-        Double TotalshoppingPoints = 00.00;
+        Double TotalshoppingPoints = 50.00;
         // Write new user
         writeNewUser(user.getUid(), username, user.getEmail(), FirebaseInstanceId.getInstance().getToken(), userFirstname, userLastname, userGender,
                 userDateofBirth, userphoto, uid, TotalshoppingPoints);

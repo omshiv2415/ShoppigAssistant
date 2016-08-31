@@ -225,9 +225,9 @@ public class GoogleSignInActivity extends BaseActivity implements GoogleApiClien
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-               if(dataSnapshot.child(uid).getKey().isEmpty()){
+                if (!dataSnapshot.exists()) {
                     writeNewUser(user.getUid(), username, user.getEmail(), FirebaseInstanceId.getInstance().getToken(), userFirstname,
-                                userLastname, userGender, userDateofBirth, userphoto, uid, 00.00);
+                            userLastname, userGender, userDateofBirth, userphoto, uid, 50.00);
                     // Go to MainActivity
                     Toast.makeText(GoogleSignInActivity.this, "Welcome to the Shopping Assistant", Toast.LENGTH_LONG).show();
                     Intent takeUserHome = new Intent(GoogleSignInActivity.this, NavigationActivity.class);

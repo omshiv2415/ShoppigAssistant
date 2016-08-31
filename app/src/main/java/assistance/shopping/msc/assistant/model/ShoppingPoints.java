@@ -16,20 +16,28 @@ public class ShoppingPoints {
         public String uid;
         public String shoppingAssistantName;
         public String createdAt;
-        public String paymentCompletedAt;
+    public String transactionCompletedAt;
         public Double totalShoppingPoints;
         public Double earnedShoppingPoints;
+    public String sAPhotoUrl;
+    public String sAEmail;
 
-        public Map<String, Boolean> stars = new HashMap<>();
+    public ShoppingPoints() {
 
-        public ShoppingPoints(String uid, String shoppingAssistantName, String createdAt, String paymentCompletedAt, Double totalShoppingPoints,
-                              Double earnedShoppingPoints) {
+        // Default Constructor
+    }
+
+
+    public ShoppingPoints(String uid, String shoppingAssistantName, String createdAt, String transactionCompletedAt, Double totalShoppingPoints,
+                          Double earnedShoppingPoints, String sAPhotoUrl, String sAEmail) {
             this.uid = uid;
             this.shoppingAssistantName = shoppingAssistantName;
             this.createdAt = createdAt;
-            this.paymentCompletedAt = paymentCompletedAt;
+        this.transactionCompletedAt = transactionCompletedAt;
             this.totalShoppingPoints = totalShoppingPoints;
             this.earnedShoppingPoints = earnedShoppingPoints;
+        this.sAPhotoUrl = sAPhotoUrl;
+        this.sAEmail = sAEmail;
 
         }
 
@@ -40,10 +48,11 @@ public class ShoppingPoints {
             result.put("uid", uid);
             result.put("shoppingAssistantName", shoppingAssistantName);
             result.put("createdAt", createdAt);
-            result.put("transactionCompletedAt",paymentCompletedAt);
+            result.put("transactionCompletedAt", transactionCompletedAt);
             result.put("totalShoppingPoints", totalShoppingPoints);
             result.put("earnedShoppingPoints", earnedShoppingPoints);
-
+            result.put("sAPhotoUrl", sAPhotoUrl);
+            result.put("sAEmail", sAEmail);
 
             return result;
         }

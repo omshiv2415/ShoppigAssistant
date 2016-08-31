@@ -262,16 +262,15 @@ public class MyProfileFragment extends Fragment  {
         final String sUserName = usernameFromEmail(mAuth.getCurrentUser().getEmail());
         final String authentication = FirebaseInstanceId.getInstance().getToken();
         final String uGPhoto = String.valueOf(mAuth.getCurrentUser().getPhotoUrl());
-        String uPhoto = String.valueOf(mAuth.getCurrentUser().getPhotoUrl());
+        String uPhoto;
 
-        if (uPhoto.equals(null)) {
+        if (mAuth.getCurrentUser().getProviders().contains("password")) {
 
             uPhoto = "https://lh3.googleusercontent.com/-et8-_Jd3MiY/AAAAAAAAAAI/AAAAAAAAAAs/9OWsA3w5ZGw/s96-c/photo.jpg";
             final String userId = fragmentSupport.getUid();
 
             mDatabase.child("users");
             mDatabase.child(userId);
-            final Double TotalshoppingPoints = 00.00;
 
             final String finalUPhoto1 = uPhoto;
             mDatabase.addListenerForSingleValueEvent(
@@ -291,15 +290,24 @@ public class MyProfileFragment extends Fragment  {
                             } else {
                                 // Update User Details
                                 final Double TotalshoppingPoints = 00.00;
-                                writeToProfile(userId, sFirstName, sLastName, sDateOfBirth, sGender, sEmail, sUserName, finalUPhoto1, authentication, TotalshoppingPoints);
-                                Toast.makeText(getActivity(), "Profile updated Successfully", Toast.LENGTH_LONG).show();
-                                Intent takeUserHome = new Intent(getActivity(), NavigationActivity.class);
-                                startActivity(takeUserHome);
+
+                                if (user.TotalshoppingPoints.equals(null)) {
+
+                                    writeToProfile(userId, sFirstName, sLastName, sDateOfBirth, sGender, sEmail, sUserName, finalUPhoto1, authentication, TotalshoppingPoints);
+                                    Toast.makeText(getActivity(), "Profile updated Successfully", Toast.LENGTH_LONG).show();
+                                    Intent takeUserHome = new Intent(getActivity(), NavigationActivity.class);
+                                    startActivity(takeUserHome);
 
 
-                                //ProgressDialog dialog = ProgressDialog.show(getActivity(), "Updating...", "Please wait...", true);
-                                // dialog.show();
+                                } else {
 
+                                    writeToProfile(userId, sFirstName, sLastName, sDateOfBirth, sGender, sEmail, sUserName, finalUPhoto1, authentication, user.TotalshoppingPoints);
+                                    Toast.makeText(getActivity(), "Profile updated Successfully", Toast.LENGTH_LONG).show();
+                                    Intent takeUserHome = new Intent(getActivity(), NavigationActivity.class);
+                                    startActivity(takeUserHome);
+
+
+                                }
                             }
 
 
@@ -336,16 +344,14 @@ public class MyProfileFragment extends Fragment  {
                                         "Error: could not fetch user.",
                                         Toast.LENGTH_SHORT).show();
                             } else {
-                                // Update User Details
                                 final Double TotalshoppingPoints = 00.00;
-                                writeToProfile(userId, sFirstName, sLastName, sDateOfBirth, sGender, sEmail, sUserName, uGPhoto, authentication, TotalshoppingPoints);
+
+
+                                writeToProfile(userId, sFirstName, sLastName, sDateOfBirth, sGender, sEmail, sUserName, uGPhoto, authentication, user.TotalshoppingPoints);
                                 Toast.makeText(getActivity(), "Profile updated Successfully", Toast.LENGTH_LONG).show();
                                 Intent takeUserHome = new Intent(getActivity(), NavigationActivity.class);
                                 startActivity(takeUserHome);
 
-
-                                //ProgressDialog dialog = ProgressDialog.show(getActivity(), "Updating...", "Please wait...", true);
-                                // dialog.show();
 
                             }
 

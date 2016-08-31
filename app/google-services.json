@@ -103,6 +103,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "33342368256-garbc2l5k8ppn06ito470jvc91t6rsau.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "assistance.shopping.msc.assistant",
+            "certificate_hash": "14CA37D2C8898438F56043AA2CB5CF48F75AE1E4"
+          }
+        },
+        {
           "client_id": "33342368256-4ka8hgnomr89fmakod0gc3soar225cvh.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -159,6 +167,50 @@
           "client_type": 1,
           "android_info": {
             "package_name": "com.google.firebase.quickstart.database",
+            "certificate_hash": "B6FE66890B0183F452899CF3E69370947D212347"
+          }
+        },
+        {
+          "client_id": "33342368256-di6csm3qev5nervvos4j88n3tk55fv22.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBNV8jbGk9XzuG8UA7ZcIjMaZ-Qnhm9Dbw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "33342368256-di6csm3qev5nervvos4j88n3tk55fv22.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:33342368256:android:10ad2120d7004c4b",
+        "android_client_info": {
+          "package_name": "com.udacity.firebase.shoppinglistplusplus"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "33342368256-j3r24eie9r3jfhr61ovu5c5hih5a3hcl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.udacity.firebase.shoppinglistplusplus",
             "certificate_hash": "B6FE66890B0183F452899CF3E69370947D212347"
           }
         },

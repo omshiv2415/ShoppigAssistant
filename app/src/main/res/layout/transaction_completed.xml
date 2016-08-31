@@ -6,14 +6,13 @@
     android:layout_marginTop="5dp">
 
     <LinearLayout
-        android:orientation="vertical"
-        android:layout_marginTop="10dp"
         android:id="@+id/hideShoppingRequester"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView5"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="2dp"
@@ -79,29 +78,29 @@
 
 
         <TextView
-            android:text="281 Thornton Road"
+            android:id="@+id/srFirstLineOfAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/srFirstLineOfAddress" />
+            android:text="281 Thornton Road" />
 
         <TextView
-            android:text="Croydon"
+            android:id="@+id/shoppingRequesterCity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/shoppingRequesterCity" />
+            android:text="Croydon" />
 
         <TextView
-            android:text="CR0 3EW"
+            android:id="@+id/shoppingRequesterPostcode"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/shoppingRequesterPostcode" />
+            android:text="CR0 3EW" />
 
         <TextView
-            android:text="Not Available "
+            android:id="@+id/shoppingDeliveredTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
-            android:id="@+id/shoppingDeliveredTime" />
+            android:text="Not Available " />
 
     </LinearLayout>
 </RelativeLayout>
