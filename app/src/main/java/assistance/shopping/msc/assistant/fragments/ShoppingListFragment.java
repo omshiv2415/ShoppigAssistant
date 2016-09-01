@@ -11,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.location.Address;
+import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
@@ -188,6 +189,7 @@ public abstract class ShoppingListFragment extends Fragment {
 
                     viewHolder.authorView.setTextColor(Color.parseColor("#FFFFFFFF"));
                     viewHolder.bodyView.setTextColor(Color.parseColor("#FFFFFFFF"));
+                    viewHolder.dotProgressBar.setVisibility(View.GONE);
 
 
                 } else {
@@ -208,6 +210,7 @@ public abstract class ShoppingListFragment extends Fragment {
                     viewHolder.authorView.setTextColor(Color.parseColor("#000000"));
                     viewHolder.bodyView.setTextColor(Color.parseColor("#000000"));
 
+                    viewHolder.dotProgressBar.startProgress();
 
                     viewHolder.saPostcode.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -397,9 +400,25 @@ public abstract class ShoppingListFragment extends Fragment {
 
                     } else {
                         // Star the post and add self to stars
-                        UtilLocation uti = new UtilLocation();
-                        Double Lat = uti.getLastKnownLocation(true, getContext()).getLatitude();
-                        Double Lon = uti.getLastKnownLocation(true, getContext()).getLongitude();
+
+                        Criteria criteria = new Criteria();
+                        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+                        String provider = locationManager.getBestProvider(criteria, false);
+                        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                                && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                            // TODO: Consider calling
+                            //    ActivityCompat#requestPermissions
+                            // here to request the missing permissions, and then overriding
+                            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                            //                                          int[] grantResults)
+                            // to handle the case where the user grants the permission. See the documentation
+                            // for ActivityCompat#requestPermissions for more details.
+
+                        }
+                        Location location = locationManager.getLastKnownLocation(provider);
+
+                        Double Lat = location.getLatitude();
+                        Double Lon = location.getLongitude();
 
 
                         Geocoder gcd = new Geocoder(getContext(), Locale.getDefault());
@@ -530,17 +549,16 @@ public abstract class ShoppingListFragment extends Fragment {
 
     public abstract Query getQuery(DatabaseReference databaseReference);
 
-    private void showSimpleNotification(String shoppingBroadcastText) {
+    private void showSimpleNotification(String shoppingBrodcastText, String Name) {
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         //Use the NotificationCompat compatibility library in order to get gingerbread support.
         Notification notification = new NotificationCompat.Builder(getActivity())
 
                 //Title of the notification
-                .setContentTitle("Hello")
+                .setContentTitle(Name)
                 //Content of the notification once opened
-                .setContentText(shoppingBroadcastText)
+                .setContentText(shoppingBrodcastText)
                 //This bit will show up in the notification area in devices that support that
-                .setTicker(" I am Fine")
                 //Icon that shows up in the notification area
                 .setSmallIcon(R.drawable.shopping_assistant)
                 //Icon that shows up in the drawer
@@ -573,28 +591,8 @@ public abstract class ShoppingListFragment extends Fragment {
         return pendingIntent;
     }
 
-    public class UtilLocation {
-        public Location getLastKnownLocation(boolean enabledProvidersOnly, Context context) {
-            LocationManager manager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-            Location utilLocation = null;
-            List<String> providers = manager.getProviders(enabledProvidersOnly);
-            for (String provider : providers) {
+    public void UtilLocation() {
 
-                if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(),
-                        Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    return TODO;
-                }
-                utilLocation = manager.getLastKnownLocation(provider);
-                if (utilLocation != null) return utilLocation;
-            }
-            return null;
-        }
+
     }
 }

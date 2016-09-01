@@ -190,7 +190,7 @@ public class NewShoppingFragment extends Fragment {
 
                                 writeNewPost(userId, user.UserName, title, body, createdAt, finalSAPhoto, paymentType, tranCompletedAt,
                                         user.FirstName, firstLineOfAddress, City, PostCode, srfirstlineofAddress,srcity,srpostcode, setTotalPoints );
-                                //showSimpleNotification(body);
+
                                 Intent takeUserHome = new Intent(getActivity(), NavigationActivity.class);
                                 startActivity(takeUserHome);
 
@@ -284,7 +284,7 @@ public class NewShoppingFragment extends Fragment {
 
                                     writeNewPost(userId, user.UserName, title, body, createdAt, SAGPhoto, paymentType, tranCompletedAt,
                                             user.FirstName, firstLineOfAddress, City, PostCode, srfirstlineofAddress,srcity,srpostcode, setTotalPoints);
-                                    //showSimpleNotification(body);
+
                                     Intent takeUserHome = new Intent(getActivity(), NavigationActivity.class);
                                     startActivity(takeUserHome);
 
@@ -334,17 +334,16 @@ public class NewShoppingFragment extends Fragment {
         mDatabase.updateChildren(childUpdates);
     }
 
-    private void showSimpleNotification(String shoppingBrodcastText) {
+    private void showSimpleNotification(String shoppingBrodcastText, String Name) {
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         //Use the NotificationCompat compatibility library in order to get gingerbread support.
         Notification notification = new NotificationCompat.Builder(getActivity())
 
                 //Title of the notification
-                .setContentTitle("Hello")
+                .setContentTitle(Name)
                 //Content of the notification once opened
                 .setContentText(shoppingBrodcastText)
                 //This bit will show up in the notification area in devices that support that
-                .setTicker(" I am Fine")
                 //Icon that shows up in the notification area
                 .setSmallIcon(R.drawable.shopping_assistant)
                 //Icon that shows up in the drawer

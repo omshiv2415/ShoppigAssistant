@@ -7,6 +7,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.trncic.library.DottedProgressBar;
+
 import assistance.shopping.msc.assistant.R;
 import assistance.shopping.msc.assistant.model.ShoppingBroadcast;
 
@@ -33,6 +35,7 @@ public class ShoppingBroadcastViewHolder extends RecyclerView.ViewHolder {
     public TextView srpostcode;
     public TextView spdeliveredtime;
     public TextView transactioncompletedat;
+    public DottedProgressBar dotProgressBar;
     public ShoppingBroadcastViewHolder(View itemView) {
         super(itemView);
 
@@ -56,6 +59,7 @@ public class ShoppingBroadcastViewHolder extends RecyclerView.ViewHolder {
         srpostcode = (TextView)itemView.findViewById(R.id.shoppingRequesterPostcode);
         spdeliveredtime = (TextView)itemView.findViewById(R.id.shoppingDeliveredTime);
         transactioncompletedat = (TextView)itemView.findViewById(R.id.transactionCompletedAt);
+        dotProgressBar = (DottedProgressBar) itemView.findViewById(R.id.dot_progress);
     }
 
     public void bindToPost(ShoppingBroadcast shoppingBroadcast, View.OnClickListener starClickListener) {
