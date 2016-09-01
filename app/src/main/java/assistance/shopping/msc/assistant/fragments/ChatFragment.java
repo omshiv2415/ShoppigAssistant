@@ -14,10 +14,10 @@ import assistance.shopping.msc.assistant.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PaymentFragment extends Fragment {
+public class ChatFragment extends Fragment {
     DottedProgressBar progressBar;
 
-    public PaymentFragment() {
+    public ChatFragment() {
         // Required empty public constructor
     }
 
@@ -26,10 +26,11 @@ public class PaymentFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_payment, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_chat, container, false);
 
         progressBar = (DottedProgressBar) rootView.findViewById(R.id.chat_dot_progress);
         progressBar.startProgress();
+
 
         return rootView;
     }
@@ -45,5 +46,4 @@ public class PaymentFragment extends Fragment {
         super.onDestroy();
         progressBar.stopProgress();
     }
-
 }

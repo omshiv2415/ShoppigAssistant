@@ -3,7 +3,6 @@ package assistance.shopping.msc.assistant.fragments;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.location.LocationProvider;
@@ -25,21 +24,20 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import assistance.shopping.msc.assistant.R;
 
-import static android.content.Context.DOWNLOAD_SERVICE;
 import static android.content.Context.LOCATION_SERVICE;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MapFragment extends Fragment {
+public class MapFragmentView extends Fragment {
 
-    private static View view;
     private static final View TODO = null;
-
+    private static View view;
     public Double mLat;
     public Double mLon;
-    public MapFragment() {
+
+    public MapFragmentView() {
         // Required empty public constructor
     }
 
@@ -167,8 +165,6 @@ public class MapFragment extends Fragment {
                 mLat = getArguments().getDouble("Lat");
                 mLon= getArguments().getDouble("Lon");
 
-
-
                 if (mLat == null || mLon == null) {
 
                     Toast.makeText(getActivity(), " Sorry Location is not available for this postcode" , Toast.LENGTH_LONG).show();
@@ -290,6 +286,7 @@ public class MapFragment extends Fragment {
         return view;
       }
 
-    }
+
+}
 
 

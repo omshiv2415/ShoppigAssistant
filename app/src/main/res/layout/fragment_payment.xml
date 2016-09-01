@@ -1,4 +1,5 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,9 +8,47 @@
 
     <!-- TODO: Update blank fragment layout -->
     <RelativeLayout
-        android:layout_marginTop="55dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginTop="55dp">
+
+        <com.trncic.library.DottedProgressBar
+            android:id="@+id/chat_dot_progress"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_above="@+id/textView3"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:padding="30dp"
+            app:activeDot="@drawable/active_dot"
+            app:dotSize="29dp"
+            app:inactiveDot="@drawable/inactive_dot"
+            app:jumpingSpeed="670"
+            app:spacing="15dp" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="216dp"
+            android:text="Shopping Assistant Accept Cash On Deliver Only"
+            android:textAlignment="center"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/chat_dot_progress"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="77dp"
+            android:text="Payment Type such as Android Pay, Card Pay, Apple Pay, PayPal will be available very soon......"
+            android:textAlignment="center"
+            android:textSize="14sp" />
+
     </RelativeLayout>
 
 </FrameLayout>

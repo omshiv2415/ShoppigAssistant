@@ -96,6 +96,14 @@ public class NewShoppingFragment extends Fragment {
             mTitleField = (EditText) view.findViewById(R.id.field_title);
             mBodyField = (EditText) view.findViewById(R.id.field_body);
 
+            mBodyField.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+
+                }
+            });
+
             view.findViewById(R.id.fab_submit_post).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

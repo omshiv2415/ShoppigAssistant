@@ -19,12 +19,12 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="start"
+            android:background="#259ED7"
+            android:backgroundTint="#D9259ED7"
+            android:clickable="true"
             android:fitsSystemWindows="true"
-            app:itemTextColor="#F5F5F5"
-            android:backgroundTint="#99259ED7"
             app:headerLayout="@layout/nav_header_navigation"
+            app:itemTextColor="#F5F5F5"
             app:menu="@menu/activity_navigation_drawer" />
-
-
 
 </android.support.v4.widget.DrawerLayout>

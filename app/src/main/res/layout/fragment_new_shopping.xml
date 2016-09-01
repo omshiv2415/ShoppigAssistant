@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:clickable="true"
     tools:context="assistance.shopping.msc.assistant.fragments.NewShoppingFragment">
 
     <RelativeLayout
@@ -39,9 +40,10 @@
             android:id="@+id/fab_submit_post"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/field_body"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_margin="16dp"
+            android:layout_alignRight="@+id/field_body"
+            android:layout_marginBottom="17dp"
             android:src="@drawable/ic_navigation_check_24"
             app:backgroundTint="@android:color/holo_orange_light"
             app:rippleColor="@android:color/holo_green_light" />

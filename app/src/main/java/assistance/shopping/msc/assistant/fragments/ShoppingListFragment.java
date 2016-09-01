@@ -230,7 +230,7 @@ public abstract class ShoppingListFragment extends Fragment {
                                     Double sendLon = address.getLongitude();
 
                                     // Create fragment and give it an argument for the selected article
-                                    MapFragment sendLatLangToMap = new MapFragment();
+                                    MapFragmentView sendLatLangToMap = new MapFragmentView();
 
                                     Bundle args = new Bundle();
 
@@ -248,6 +248,7 @@ public abstract class ShoppingListFragment extends Fragment {
 
                                     // Commit the transaction
                                     transaction.commit();
+
 
 
                                 } else {
@@ -293,7 +294,7 @@ public abstract class ShoppingListFragment extends Fragment {
                                 final DatabaseReference userPostRef = mDatabase.child("user-shopping-broadcast").child(model.uid).child(postRef.getKey());
 
 
-                                final CharSequence[] items = {"Cash", " Card ", " Android Pay ", " PayPal "};
+                                final CharSequence[] items = {"Cash", "Apple Pay", "Android Pay", "Debit or Credit Card", "PayPal"};
 
                                 // Creating and Building the Dialog
                                 final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(getActivity(), Theme_Dialog));
@@ -351,6 +352,10 @@ public abstract class ShoppingListFragment extends Fragment {
 
                                                 break;
                                             case 3:
+
+                                                Toast.makeText(getActivity(), "This Payment will be available very soon", Toast.LENGTH_LONG).show();
+                                                break;
+                                            case 4:
 
                                                 Toast.makeText(getActivity(), "This Payment will be available very soon", Toast.LENGTH_LONG).show();
                                                 break;
@@ -591,8 +596,6 @@ public abstract class ShoppingListFragment extends Fragment {
         return pendingIntent;
     }
 
-    public void UtilLocation() {
 
 
-    }
 }

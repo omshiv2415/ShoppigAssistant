@@ -2,9 +2,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:clickable="true"
     android:background="@color/common_plus_signin_btn_text_dark_focused"
-    tools:context="assistance.shopping.msc.assistant.fragments.MapFragment">
+    android:clickable="true"
+    tools:context="assistance.shopping.msc.assistant.fragments.MapFragmentView">
 
     <!-- TODO: Update blank fragment layout -->
 

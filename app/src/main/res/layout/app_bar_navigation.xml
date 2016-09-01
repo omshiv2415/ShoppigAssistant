@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     android:background="@color/cardview_light_background"
+    android:fitsSystemWindows="true"
     tools:context="assistance.shopping.msc.assistant.main.NavigationActivity">
 
     <android.support.design.widget.AppBarLayout
@@ -37,17 +37,17 @@
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tabs"
-            android:theme="@style/Base.CardView"
-            android:background="@color/cardview_light_background"
-            app:tabTextAppearance="@style/TextAppearance.StatusBar.EventContent.Time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:tabSelectedTextColor="@android:color/holo_green_light"
-            app:tabIndicatorColor="@android:color/holo_green_light"
-            android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            app:tabMode="scrollable" />
+            android:layout_alignParentTop="true"
+            android:background="@color/cardview_light_background"
+            android:theme="@style/Base.CardView"
+            app:tabIndicatorColor="@android:color/holo_green_light"
+            app:tabMode="scrollable"
+            app:tabSelectedTextColor="@android:color/holo_green_light"
+            app:tabTextAppearance="@style/TextAppearance.StatusBar.EventContent.Time" />
 
     </RelativeLayout>
 
@@ -59,13 +59,14 @@
         android:layout_alignParentRight="true"
         android:layout_gravity="top|right"
         android:layout_margin="16dp"
+        android:layout_marginBottom="17dp"
         android:layout_marginTop="50dp"
         android:src="@drawable/ic_image_edit"
         app:backgroundTint="@android:color/holo_orange_light"
         app:layout_anchor="@+id/fragment_container"
         app:layout_anchorGravity="bottom|left"
-        app:rippleColor="@android:color/holo_blue_bright"
-        app:layout_behavior="assistance.shopping.msc.assistant.main.FABScrollBehavior" />
+        app:layout_behavior="assistance.shopping.msc.assistant.main.FABScrollBehavior"
+        app:rippleColor="@android:color/holo_blue_bright" />
 
 
 </android.support.design.widget.CoordinatorLayout>

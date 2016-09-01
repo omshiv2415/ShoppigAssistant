@@ -2,18 +2,18 @@ package assistance.shopping.msc.assistant.main;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,13 +31,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import assistance.shopping.msc.assistant.R;
-import assistance.shopping.msc.assistant.fragments.ShoppingListFragment;
 import assistance.shopping.msc.assistant.model.Comment;
 import assistance.shopping.msc.assistant.model.ShoppingBroadcast;
 import assistance.shopping.msc.assistant.model.User;
@@ -49,12 +49,12 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
     public static final String LATITUDES = "Lat";
     public static final String LOGNITUDES = "Lon";
     private static final String TAG = "ShoppingDetailActivity";
+    public DatabaseReference mUserPostReference;
     ShoppingBroadcast model = new ShoppingBroadcast();
     private DatabaseReference mPostReference;
     private DatabaseReference mCommentsReference;
     private ValueEventListener mPostListener;
     private String mPostKey;
-
     private CommentAdapter mAdapter;
     private FirebaseAuth mAuth;
     private TextView mAuthorView;
@@ -65,7 +65,6 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
     private Button mCommentButton;
     private RecyclerView mCommentsRecycler;
     private TextToSpeech speech;
-    public DatabaseReference mUserPostReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,8 +102,8 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
 
 
 
-
     }
+
 
     @Override
     public void onStart() {
@@ -391,7 +390,32 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
         }
     }
 
-    private static class CommentAdapter extends RecyclerView.Adapter<CommentViewHolder> {
+    private static class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+        ImageView bmImage;
+
+        public DownloadImageTask(ImageView bmImage) {
+            this.bmImage = bmImage;
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap mIcon11 = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                mIcon11 = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+            return mIcon11;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            bmImage.setImageBitmap(result);
+        }
+    }
+
+    private class CommentAdapter extends RecyclerView.Adapter<CommentViewHolder> {
 
         private Context mContext;
         private DatabaseReference mDatabaseReference;
@@ -504,12 +528,65 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
         }
 
         @Override
-        public void onBindViewHolder(CommentViewHolder holder, int position) {
+        public void onBindViewHolder(final CommentViewHolder holder, int position) {
             Comment comment = mComments.get(position);
 
             holder.authorView.setText(comment.author);
             holder.bodyView.setText(comment.text);
+
+            final String PostCode = holder.bodyView.getText().toString();
+
             new DownloadImageTask((holder.shoppingRequestPhoto)).execute(comment.ShoppingAssistantPhoto);
+            // Toast.makeText(ShoppingDetailActivity.this, "Welcome to the Shopping Assistant", Toast.LENGTH_LONG).show();
+
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    String checkReg = "^(([gG][iI][rR] {0,}0[aA]{2})|((([a-pr-uwyzA-PR-UWYZ][a-hk-yA-HK-Y]?[0-9][0-9]?)|(([a-pr-uwyzA-PR-UWYZ][0-9][a-hjkstuwA-HJKSTUW])|" +
+                            "([a-pr-uwyzA-PR-UWYZ][a-hk-yA-HK-Y][0-9][abehmnprv-yABEHMNPRV-Y]))) {0,}[0-9][abd-hjlnp-uw-zABD-HJLNP-UW-Z]{2}))$";
+
+                    if (PostCode.matches(checkReg)) {
+
+                        final Geocoder geocoder = new Geocoder(ShoppingDetailActivity.this, Locale.getDefault());
+                        final String zip = PostCode;
+                        try {
+                            List<Address> addresses = geocoder.getFromLocationName(zip, 1);
+                            if (addresses != null && !addresses.isEmpty()) {
+                                Address address = addresses.get(0);
+                                // Use the address as needed
+                                String message = String.format("Latitude: %f, Longitude: %f", address.getLatitude(), address.getLongitude());
+                                Toast.makeText(ShoppingDetailActivity.this, message, Toast.LENGTH_LONG).show();
+
+                                Double sendLat = address.getLatitude();
+                                Double sendLon = address.getLongitude();
+
+
+                                Intent mIntent = new Intent(ShoppingDetailActivity.this, NavigationActivity.class);
+
+                                mIntent.putExtra("Lat", sendLat);
+                                mIntent.putExtra("Lon", sendLon);
+
+                                startActivity(mIntent);
+                                ShoppingDetailActivity.this.finish();
+
+                            } else {
+                                // Display appropriate message when Geocoder services are not available
+                                Toast.makeText(ShoppingDetailActivity.this, "Sorry unable to find location", Toast.LENGTH_LONG).show();
+                            }
+                        } catch (IOException e) {
+                            // handle exception
+                        }
+
+
+                    } else {
+                        // Display appropriate message when Geocoder services are not available
+                        Toast.makeText(ShoppingDetailActivity.this, "Sorry unable to find location", Toast.LENGTH_LONG).show();
+                    }
+
+
+                }
+            });
 
         }
 
@@ -524,30 +601,5 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
             }
         }
 
-    }
-
-    private static class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-        ImageView bmImage;
-
-        public DownloadImageTask(ImageView bmImage) {
-            this.bmImage = bmImage;
-        }
-
-        protected Bitmap doInBackground(String... urls) {
-            String urldisplay = urls[0];
-            Bitmap mIcon11 = null;
-            try {
-                InputStream in = new java.net.URL(urldisplay).openStream();
-                mIcon11 = BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                Log.e("Error", e.getMessage());
-                e.printStackTrace();
-            }
-            return mIcon11;
-        }
-
-        protected void onPostExecute(Bitmap result) {
-            bmImage.setImageBitmap(result);
-        }
     }
 }
