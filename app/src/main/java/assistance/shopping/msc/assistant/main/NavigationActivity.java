@@ -261,8 +261,8 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
             };
             private final String[] mFragmentNames = new String[] {
                     "Shopping Assistant",
-                    "My Current Shopping Broadcast",
-                    "My Completed Shopping"
+                    "Shopping Broadcast",
+                    "Completed Shopping"
             };
             @Override
             public Fragment getItem(int position) {

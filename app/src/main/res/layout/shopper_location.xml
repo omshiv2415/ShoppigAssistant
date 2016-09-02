@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/shoppingAssistantLocation"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/shoppingAssistantLocation"
     android:layout_marginTop="5dp"
     android:orientation="vertical">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:layout_marginBottom="2dp"
-        android:background="@color/cardview_dark_background">
+        android:background="@android:color/holo_green_light">
 
     </RelativeLayout>
     <TextView
@@ -17,15 +17,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Shopping Broadcast Location and Time"
-        android:textColor="@android:color/holo_blue_dark"
-        android:textSize="16sp"
-        android:textAlignment="textStart" />
+        android:textAlignment="textStart"
+        android:textColor="?android:attr/colorActivatedHighlight"
+        android:textSize="16sp" />
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:layout_marginBottom="3dp"
         android:layout_marginTop="3dp"
-        android:background="@color/cardview_dark_background">
+        android:background="@android:color/holo_green_light">
 
     </RelativeLayout>
     <TextView
@@ -51,8 +51,8 @@
         android:text="Not Available" />
 
     <RelativeLayout
-        android:layout_width="match_parent"
         android:id="@+id/bottomLine"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/holo_orange_light">
        </RelativeLayout>

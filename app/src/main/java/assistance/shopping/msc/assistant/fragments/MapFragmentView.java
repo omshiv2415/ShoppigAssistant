@@ -56,8 +56,8 @@ public class MapFragmentView extends Fragment {
 
             if (mLat == null || mLon == null) {
 
-                mLat= 51.388871;
-                mLon =  -0.120709;
+                mLat = 51.388871;
+                mLon = -0.120709;
                 view = inflater.inflate(R.layout.fragment_map, container, false);
 
                 ((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map)).getMapAsync(new OnMapReadyCallback() {
@@ -67,6 +67,17 @@ public class MapFragmentView extends Fragment {
                         final LocationManager locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
                         googleMap.addMarker(new MarkerOptions().position(new LatLng(mLat, mLon)).title("You are Here"));
                         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLat, mLon), 14.0f));
+                        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) !=
+                                PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                            // TODO: Consider calling
+                            //    ActivityCompat#requestPermissions
+                            // here to request the missing permissions, and then overriding
+                            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                            //                                          int[] grantResults)
+                            // to handle the case where the user grants the permission. See the documentation
+                            // for ActivityCompat#requestPermissions for more details.
+                            return;
+                        }
                         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 0, new android.location.LocationListener() {
                             /**
                              * Called when the location has changed.
@@ -78,9 +89,9 @@ public class MapFragmentView extends Fragment {
                             @Override
                             public void onLocationChanged(Location location) {
 
-                                if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-                                        != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(),
-                                        Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+                                if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
+                                        != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                                     // TODO: Consider calling
                                     //    ActivityCompat#requestPermissions
                                     // here to request the missing permissions, and then overriding
@@ -90,7 +101,6 @@ public class MapFragmentView extends Fragment {
                                     // for ActivityCompat#requestPermissions for more details.
                                     return;
                                 }
-
                                 googleMap.setMyLocationEnabled(true);
                                 googleMap.getUiSettings().setMyLocationButtonEnabled(true);
                                 googleMap.getUiSettings().setMapToolbarEnabled(true);

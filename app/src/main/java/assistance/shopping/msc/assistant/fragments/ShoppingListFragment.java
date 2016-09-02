@@ -167,28 +167,28 @@ public abstract class ShoppingListFragment extends Fragment {
                 if (model.starCount.equals("Completed")) {
 
                     viewHolder.starView.setImageResource(R.drawable.confirm_shopping_basket);
-                    viewHolder.rel.setBackgroundColor(Color.parseColor("#B399cc00"));
+                    //  viewHolder.rel.setBackgroundColor(Color.parseColor("#94CAD7"));
                     viewHolder.paymentTypeText.setText(model.paymentType);
                     viewHolder.hide.setVisibility(View.VISIBLE);
-                    viewHolder.srcity.setTextColor(Color.parseColor("#FFFFFFFF"));
-                    viewHolder.srfirstline.setTextColor(Color.parseColor("#FFFFFFFF"));
-                    viewHolder.srpostcode.setTextColor(Color.parseColor("#FFFFFFFF"));
-                    viewHolder.spdeliveredtime.setTextColor(Color.parseColor("#FFFFFFFF"));
+                    viewHolder.srcity.setTextColor(Color.parseColor("#000000"));
+                    viewHolder.srfirstline.setTextColor(Color.parseColor("#000000"));
+                    viewHolder.srpostcode.setTextColor(Color.parseColor("#000000"));
+                    viewHolder.spdeliveredtime.setTextColor(Color.parseColor("#000000"));
 
-                    viewHolder.paymentTypeText.setTextColor(Color.parseColor("#FFFFFFFF"));
-                    viewHolder.SaName.setTextColor(Color.parseColor("#FFFFFFFF"));
-                    viewHolder.transactioncompletedat.setTextColor(Color.parseColor("#FFFFFFFF"));
+                    viewHolder.paymentTypeText.setTextColor(Color.parseColor("#000000"));
+                    viewHolder.SaName.setTextColor(Color.parseColor("#000000"));
+                    viewHolder.transactioncompletedat.setTextColor(Color.parseColor("#000000"));
 
-                    viewHolder.saAddressfirstline.setTextColor(Color.parseColor("#FFFFFFFF"));
-                    viewHolder.sacity.setTextColor(Color.parseColor("#FFFFFFFF"));
-                    viewHolder.saPostcode.setTextColor(Color.parseColor("#FFFFFFFF"));
-                    viewHolder.timeView.setTextColor(Color.parseColor("#FFFFFFFF"));
+                    viewHolder.saAddressfirstline.setTextColor(Color.parseColor("#000000"));
+                    viewHolder.sacity.setTextColor(Color.parseColor("#000000"));
+                    viewHolder.saPostcode.setTextColor(Color.parseColor("#000000"));
+                    viewHolder.timeView.setTextColor(Color.parseColor("#000000"));
 
-                    viewHolder.titleView.setTextColor(Color.parseColor("#FFFFFFFF"));
-                    viewHolder.bodyView.setTextColor(Color.parseColor("#FFFFFFFF"));
+                    viewHolder.titleView.setTextColor(Color.parseColor("#000000"));
+                    viewHolder.bodyView.setTextColor(Color.parseColor("#000000"));
 
-                    viewHolder.authorView.setTextColor(Color.parseColor("#FFFFFFFF"));
-                    viewHolder.bodyView.setTextColor(Color.parseColor("#FFFFFFFF"));
+                    viewHolder.authorView.setTextColor(Color.parseColor("#000000"));
+                    viewHolder.bodyView.setTextColor(Color.parseColor("#000000"));
                     viewHolder.dotProgressBar.setVisibility(View.GONE);
 
 

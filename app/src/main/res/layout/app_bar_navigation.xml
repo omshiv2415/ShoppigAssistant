@@ -44,9 +44,8 @@
             android:layout_alignParentTop="true"
             android:background="@color/cardview_light_background"
             android:theme="@style/Base.CardView"
-            app:tabIndicatorColor="@android:color/holo_green_light"
-            app:tabMode="scrollable"
-            app:tabSelectedTextColor="@android:color/holo_green_light"
+            app:tabIndicatorColor="@android:color/holo_orange_dark"
+            app:tabSelectedTextColor="@android:color/holo_orange_dark"
             app:tabTextAppearance="@style/TextAppearance.StatusBar.EventContent.Time" />
 
     </RelativeLayout>
