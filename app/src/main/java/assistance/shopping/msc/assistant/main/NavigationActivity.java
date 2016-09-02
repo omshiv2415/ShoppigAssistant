@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -18,6 +19,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -46,6 +48,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
     public FirebaseAuth.AuthStateListener mAuthListener;
     public FragmentPagerAdapter mPagerAdapter;
     public ViewPager mViewPager;
+    public FloatingActionButton floatingActionButton;
 
     Bundle bundle;
 
@@ -113,13 +116,21 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
 
             }
 
-
         }
     }
 
 
+
     @Override
     public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+
+        } else {
+
+
+        }
 
         new AlertDialog.Builder(this)
                 .setMessage("Are you sure you want to exit?")
@@ -127,13 +138,28 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
-                        NavigationActivity.this.finish();
+                        final LocationManager manager = (LocationManager) NavigationActivity.this.getSystemService(Context.LOCATION_SERVICE);
+
+                        if (manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+
+                            Toast toast = Toast.makeText(NavigationActivity.this, "Please turn off Location and press back button", Toast.LENGTH_LONG);
+                            toast.setGravity(Gravity.BOTTOM, 0, 0);
+                            toast.show();
+                            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            startActivity(intent);
+
+                        } else {
+                            Intent intent = new Intent(Intent.ACTION_MAIN);
+                            intent.addCategory(Intent.CATEGORY_HOME);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                            NavigationActivity.this.finish();
+                        }
 
                     }
                 })
                 .setNegativeButton("No", null)
                 .show();
-
 
     }
 
@@ -282,21 +308,31 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
+        assert mViewPager != null;
         mViewPager.setAdapter(mPagerAdapter);
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        assert tabLayout != null;
         tabLayout.setupWithViewPager(mViewPager);
 
+        floatingActionButton = (FloatingActionButton) findViewById(R.id.fab_new_post);
 
         // Button launches NewPostActivity
-        findViewById(R.id.fab_new_post).setOnClickListener(new View.OnClickListener() {
+
+
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
                 if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+
                     //All location services are disabled
-                    Toast.makeText(NavigationActivity.this, "Please turn on Location and press back button", Toast.LENGTH_SHORT).show();
+                    Toast toast = Toast.makeText(NavigationActivity.this, "Please turn on Location and press back button", Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.BOTTOM, 0, 0);
+                    toast.show();
+
                     Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                     startActivity(intent);
+
                 }else{
                 NewShoppingFragment fragment = new NewShoppingFragment();
                 android.support.v4.app.FragmentTransaction fragmentTransaction =

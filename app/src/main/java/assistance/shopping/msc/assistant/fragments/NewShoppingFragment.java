@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.location.Address;
+import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
@@ -119,10 +120,8 @@ public class NewShoppingFragment extends Fragment {
         return view;
     }
 
+
     private void submitPost() {
-
-        final UtilLocation uti = new UtilLocation();
-
 
 
         final String title = mTitleField.getText().toString();
@@ -177,8 +176,25 @@ public class NewShoppingFragment extends Fragment {
                             fragmentTransaction.commit();
                         } else {
                             // Write new post
-                            Double Lat = uti.getLastKnownLoaction(true, getContext()).getLatitude();
-                            Double Lon =  uti.getLastKnownLoaction(true, getContext()).getLongitude();
+
+                            Criteria criteria = new Criteria();
+                            LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+                            String provider = locationManager.getBestProvider(criteria, false);
+                            if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                                    && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                                // TODO: Consider calling
+                                //    ActivityCompat#requestPermissions
+                                // here to request the missing permissions, and then overriding
+                                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                //                                          int[] grantResults)
+                                // to handle the case where the user grants the permission. See the documentation
+                                // for ActivityCompat#requestPermissions for more details.
+
+                            }
+                            Location location = locationManager.getLastKnownLocation(provider);
+
+                            Double Lat = location.getLatitude();
+                            Double Lon = location.getLongitude();
 
 
                             Geocoder gcd = new Geocoder(getContext(), Locale.getDefault());
@@ -205,7 +221,7 @@ public class NewShoppingFragment extends Fragment {
 
                             }else{
 
-                                Toast.makeText(getActivity(), "Please Update your Profile", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), "No Location Found...", Toast.LENGTH_SHORT).show();
 
                                 Intent takeUserHome = new Intent(getActivity(), NavigationActivity.class);
                                 startActivity(takeUserHome);
@@ -271,15 +287,24 @@ public class NewShoppingFragment extends Fragment {
                             } else {
                                 // Write new post
 
-                                Double Lat = uti.getLastKnownLoaction(true, getContext()).getLatitude();
-                                Double Lon =  uti.getLastKnownLoaction(true, getContext()).getLongitude();
+                                Criteria criteria = new Criteria();
+                                LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+                                String provider = locationManager.getBestProvider(criteria, false);
+                                if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                                        && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                                    // TODO: Consider calling
 
+                                }
+                                Location location = locationManager.getLastKnownLocation(provider);
+
+                                Double Lat = location.getLatitude();
+                                Double Lon = location.getLongitude();
 
                                 Geocoder gcd = new Geocoder(getContext(), Locale.getDefault());
 
                                 List<Address> addresses = null;
                                 try {
-                                    addresses = gcd.getFromLocation(Lat,Lon, 1);
+                                    addresses = gcd.getFromLocation(Lat, Lon, 1);
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
@@ -384,30 +409,6 @@ public class NewShoppingFragment extends Fragment {
         return pendingIntent;
     }
 
-    public class UtilLocation {
-        public Location getLastKnownLoaction(boolean enabledProvidersOnly, Context context) {
-            LocationManager manager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-            Location utilLocation = null;
-            List<String> providers = manager.getProviders(enabledProvidersOnly);
-            for (String provider : providers) {
-
-                if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(),
-                        Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    return TODO;
-                }
-                utilLocation = manager.getLastKnownLocation(provider);
-                if(utilLocation != null) return utilLocation;
-            }
-            return null;
-        }
-    }
 }
 
 

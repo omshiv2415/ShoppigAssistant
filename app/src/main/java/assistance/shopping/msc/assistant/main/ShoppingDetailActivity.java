@@ -306,6 +306,7 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
 
         // Clean up comments listener
         mAdapter.cleanupListener();
+        this.finish();
     }
 
     @Override
