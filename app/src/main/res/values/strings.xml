@@ -92,11 +92,17 @@
     <string name="email_label">Email</string>
     <string name="password_label">Password</string>
     <string name="send_text">Send</string>
-    <string name="lorem">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean nec condimentum ante, quis mattis mi. Proin ut rhoncus libero, ac euismod neque. Ut suscipit, enim a facilisis consequat, orci lacus venenatis orci, at ultricies orci nulla sed ex. In condimentum viverra velit, eget feugiat libero imperdiet vel. Aenean pretium, lectus vitae bibendum bibendum, diam turpis convallis eros, quis tristique leo sapien at ipsum. Praesent eu odio id nulla lobortis auctor. Donec eget dolor eget nisl euismod commodo vel a lacus. Quisque ut justo vitae urna pharetra accumsan. Etiam dignissim neque iaculis mauris viverra, blandit rhoncus odio porttitor. Phasellus nibh arcu.</string>
-    <string name="title_sign_in">Welcome</string>
     <string name="sign_up">Sign Up</string>
     <string name="Request_text">Can you buy a mik and bread for me please</string>
     <string name="some_value">shopping broadcast title</string>
+    <string name="invitation_title">Shopping Assistant</string>
+    <string name="invitation_message">Please Try New Way Of Helping People by doing shopping</string>
+    <string name="invitation_deep_link">https://play.google.com/store/apps/details?id=com.msc.fitnesstracker</string>
+    <string name="invitation_custom_image">https://lh3.googleusercontent.com/-et8-_Jd3MiY/AAAAAAAAAAI/AAAAAAAAAAs/9OWsA3w5ZGw/s96-c/photo.jpg</string>
+    <string name="invitation_cta">Please Try it......</string>
+    <string name="Invites">Invites</string>
+    <string name="update_profile">Update Profile</string>
+    <string name="NotAvailable">Shopping Broadcast is Not Available</string>
 
 
 </resources>

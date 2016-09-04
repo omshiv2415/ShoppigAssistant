@@ -16,6 +16,7 @@ public class MyShoppingBroadcastFragment extends ShoppingListFragment {
                 .orderByChild("starCount").equalTo("Processing");
         // [END my_top_posts_query]
 
+
         return myCompletedShoppingQuery;
 
     }

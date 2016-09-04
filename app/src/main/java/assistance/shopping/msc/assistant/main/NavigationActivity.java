@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
@@ -19,12 +20,16 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.google.firebase.auth.FirebaseAuth;
 
 import assistance.shopping.msc.assistant.R;
@@ -42,6 +47,7 @@ import assistance.shopping.msc.assistant.fragments.StreetFragment;
 
 public class NavigationActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "Navigation";
+    private static final int REQUEST_INVITE = 16;
 
     public FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
@@ -56,8 +62,6 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
-
-        bundle = getIntent().getExtras();
 
         if (bundle == null) {
 
@@ -117,6 +121,8 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
             }
 
         }
+
+
     }
 
 
@@ -138,15 +144,21 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
 
-                        final LocationManager manager = (LocationManager) NavigationActivity.this.getSystemService(Context.LOCATION_SERVICE);
+                        final LocationManager locationManager = (LocationManager) NavigationActivity.this.getSystemService(Context.LOCATION_SERVICE);
 
-                        if (manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
 
-                            Toast toast = Toast.makeText(NavigationActivity.this, "Please turn off Location and press back button", Toast.LENGTH_LONG);
-                            toast.setGravity(Gravity.BOTTOM, 0, 0);
-                            toast.show();
+
+                            showToastMessage("Please turn off Location");
                             Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                             startActivity(intent);
+
+                            Intent intent_finish = new Intent(Intent.ACTION_MAIN);
+                            intent_finish.addCategory(Intent.CATEGORY_HOME);
+                            intent_finish.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                            NavigationActivity.this.finish();
+
 
                         } else {
                             Intent intent = new Intent(Intent.ACTION_MAIN);
@@ -179,14 +191,27 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
 
         //noinspection SimplifiableIfStatement
 
-        if (id == R.id.action_logout) {
+        if (id == R.id.update_profile) {
+
+            GoToMyProfile();
+
+            return true;
+
+        } else if (id == R.id.invites) {
+
+            GoToShare();
+
+            return true;
+        } else if (id == R.id.logout) {
+
 
             FirebaseAuth.getInstance().signOut();
             mAuth.removeAuthStateListener(mAuthListener);
             Intent takeUserHome = new Intent(NavigationActivity.this, LoginActivity.class);
             startActivity(takeUserHome);
-
             return true;
+
+
         }
 
         return super.onOptionsItemSelected(item);
@@ -204,67 +229,38 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
 
         } else if (id == R.id.nav_chat) {
 
-            // need to implement chat feature
-            ChatFragment fragment = new ChatFragment();
-            android.support.v4.app.FragmentTransaction fragmentTransaction =
-                    getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.fragment_container, fragment);
-            fragmentTransaction.commit();
+            GoToChat();
 
         } else if (id == R.id.nav_direction) {
 
-            MapFragmentView fragment = new MapFragmentView();
-            android.support.v4.app.FragmentTransaction fragmentTransaction =
-                    getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.fragment_container,fragment);
-            fragmentTransaction.commit();
+            GoToDirection();
 
 
         } else if (id == R.id.nav_streetView) {
 
-            StreetFragment fragment = new StreetFragment();
-            android.support.v4.app.FragmentTransaction fragmentTransaction =
-                    getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.fragment_container,fragment);
-            fragmentTransaction.commit();
+            GoToStreetView();
 
         } else if (id == R.id.nav_history) {
 
-            HistoryFragment fragment = new HistoryFragment();
-            android.support.v4.app.FragmentTransaction fragmentTransaction =
-                    getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.fragment_container,fragment);
-            fragmentTransaction.commit();
-
+            GoToHistory();
 
 
         } else if (id == R.id.nav_shoppingPoints) {
 
-            ShoppingPointFragment fragment = new ShoppingPointFragment();
-            android.support.v4.app.FragmentTransaction fragmentTransaction =
-                    getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.fragment_container,fragment);
-            fragmentTransaction.commit();
+            GoToShoppingPoints();
 
 
         } else if (id == R.id.nav_payment) {
 
-            PaymentFragment fragment = new PaymentFragment();
-            android.support.v4.app.FragmentTransaction fragmentTransaction =
-                    getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.fragment_container,fragment);
-            fragmentTransaction.commit();
+            GoToPayment();
 
         } else if (id == R.id.nav_my_details) {
 
-            MyProfileFragment fragment = new MyProfileFragment();
-            android.support.v4.app.FragmentTransaction fragmentTransaction =
-                    getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.fragment_container,fragment);
-            fragmentTransaction.commit();
+            GoToMyProfile();
 
         } else if (id == R.id.nav_share) {
 
+            GoToShare();
 
         }
 
@@ -283,12 +279,24 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
             private final Fragment[] mFragments = new Fragment[] {
                     new RecentShoppingBroadcastFragment(),
                     new MyShoppingBroadcastFragment(),
-                    new MyCompletedShoppingBroadcastFragment()
+                    new MyCompletedShoppingBroadcastFragment(),
+                    new MapFragmentView(),
+                    new StreetFragment(),
+                    new ShoppingPointFragment(),
+                    new PaymentFragment(),
+                    new MyProfileFragment()
+
             };
+
             private final String[] mFragmentNames = new String[] {
                     "Shopping Assistant",
                     "Shopping Broadcast",
-                    "Completed Shopping"
+                    "Completed Shopping",
+                    "Direction",
+                    "Street View",
+                    "Shopping Points",
+                    "Payment",
+                    "My Profile"
             };
             @Override
             public Fragment getItem(int position) {
@@ -306,11 +314,12 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
         };
 
 
+
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         assert mViewPager != null;
         mViewPager.setAdapter(mPagerAdapter);
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        final TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         assert tabLayout != null;
         tabLayout.setupWithViewPager(mViewPager);
 
@@ -322,19 +331,23 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                final LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
                 if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
 
                     //All location services are disabled
-                    Toast toast = Toast.makeText(NavigationActivity.this, "Please turn on Location and press back button", Toast.LENGTH_LONG);
-                    toast.setGravity(Gravity.BOTTOM, 0, 0);
-                    toast.show();
+                    // Toast toast = Toast.makeText(NavigationActivity.this, "Please turn on Location", Toast.LENGTH_LONG);
+
+                    //  toast.show();
+
+                    showToastMessage("Please Turn On Location");
 
                     Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                     startActivity(intent);
 
+
                 }else{
-                NewShoppingFragment fragment = new NewShoppingFragment();
+
+                    NewShoppingFragment fragment = new NewShoppingFragment();
                 android.support.v4.app.FragmentTransaction fragmentTransaction =
                         getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.replace(R.id.fragment_container, fragment);
@@ -342,6 +355,128 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
             }}
         });
 
+
     }
+
+    public void showToastMessage(String Showtoast) {
+
+
+        LayoutInflater inflater = getLayoutInflater();
+        View layout = inflater.inflate(R.layout.custom_toast_message,
+                (ViewGroup) findViewById(R.id.custom_toast_container));
+
+        TextView text = (TextView) layout.findViewById(R.id.text);
+        text.setText(Showtoast);
+        Toast toast = new Toast(getApplicationContext());
+        toast.setDuration(Toast.LENGTH_LONG);
+
+        toast.setView(layout);
+        toast.show();
+
+
+    }
+
+    public void GoToChat() {
+
+        // need to implement chat feature
+        ChatFragment fragment = new ChatFragment();
+        android.support.v4.app.FragmentTransaction fragmentTransaction =
+                getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container, fragment);
+        fragmentTransaction.commit();
+
+    }
+
+    public void GoToDirection() {
+
+        MapFragmentView fragment = new MapFragmentView();
+        android.support.v4.app.FragmentTransaction fragmentTransaction =
+                getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container, fragment);
+        fragmentTransaction.commit();
+    }
+
+    public void GoToStreetView() {
+
+        StreetFragment fragment = new StreetFragment();
+        android.support.v4.app.FragmentTransaction fragmentTransaction =
+                getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container, fragment);
+        fragmentTransaction.commit();
+
+    }
+
+    public void GoToHistory() {
+
+        HistoryFragment fragment = new HistoryFragment();
+        android.support.v4.app.FragmentTransaction fragmentTransaction =
+                getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container, fragment);
+        fragmentTransaction.commit();
+    }
+
+    public void GoToShoppingPoints() {
+
+        ShoppingPointFragment fragment = new ShoppingPointFragment();
+        android.support.v4.app.FragmentTransaction fragmentTransaction =
+                getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container, fragment);
+        fragmentTransaction.commit();
+
+    }
+
+    public void GoToPayment() {
+
+        PaymentFragment fragment = new PaymentFragment();
+        android.support.v4.app.FragmentTransaction fragmentTransaction =
+                getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container, fragment);
+        fragmentTransaction.commit();
+
+    }
+
+    public void GoToMyProfile() {
+
+        MyProfileFragment fragment = new MyProfileFragment();
+        android.support.v4.app.FragmentTransaction fragmentTransaction =
+                getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container, fragment);
+        fragmentTransaction.commit();
+
+    }
+
+    public void GoToShare() {
+
+
+        Intent intent = new AppInviteInvitation.IntentBuilder(getString(R.string.invitation_title))
+                .setMessage(getString(R.string.invitation_message))
+                .setDeepLink(Uri.parse(getString(R.string.invitation_deep_link)))
+                .setCustomImage(Uri.parse(getString(R.string.invitation_custom_image)))
+                .setCallToActionText(getString(R.string.invitation_cta))
+                .build();
+        startActivityForResult(intent, REQUEST_INVITE);
+
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
+
+        if (requestCode == REQUEST_INVITE) {
+            if (resultCode == RESULT_OK) {
+                // Get the invitation IDs of all sent messages
+                String[] ids = AppInviteInvitation.getInvitationIds(resultCode, data);
+                for (String id : ids) {
+                    Log.d(TAG, "onActivityResult: sent invitation " + id);
+                }
+            } else {
+                // Sending failed or it was canceled, show failure message to the user
+                // ...
+            }
+        }
+    }
+
 
 }

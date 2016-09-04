@@ -262,17 +262,17 @@ public class MyProfileFragment extends Fragment  {
         final String sUserName = usernameFromEmail(mAuth.getCurrentUser().getEmail());
         final String authentication = FirebaseInstanceId.getInstance().getToken();
         final String uGPhoto = String.valueOf(mAuth.getCurrentUser().getPhotoUrl());
-        String uPhoto;
+
 
         if (mAuth.getCurrentUser().getProviders().contains("password")) {
 
+            final String uPhoto;
             uPhoto = "https://lh3.googleusercontent.com/-et8-_Jd3MiY/AAAAAAAAAAI/AAAAAAAAAAs/9OWsA3w5ZGw/s96-c/photo.jpg";
             final String userId = fragmentSupport.getUid();
 
             mDatabase.child("users");
             mDatabase.child(userId);
 
-            final String finalUPhoto1 = uPhoto;
             mDatabase.addListenerForSingleValueEvent(
                     new ValueEventListener() {
                         @Override
@@ -291,9 +291,9 @@ public class MyProfileFragment extends Fragment  {
                                 // Update User Details
                                 final Double TotalshoppingPoints = 00.00;
 
-                                if (user.TotalshoppingPoints.equals(null)) {
+                                if (user.TotalshoppingPoints == null) {
 
-                                    writeToProfile(userId, sFirstName, sLastName, sDateOfBirth, sGender, sEmail, sUserName, finalUPhoto1, authentication, TotalshoppingPoints);
+                                    writeToProfile(userId, sFirstName, sLastName, sDateOfBirth, sGender, sEmail, sUserName, uPhoto, authentication, TotalshoppingPoints);
                                     Toast.makeText(getActivity(), "Profile updated Successfully", Toast.LENGTH_LONG).show();
                                     Intent takeUserHome = new Intent(getActivity(), NavigationActivity.class);
                                     startActivity(takeUserHome);
@@ -301,7 +301,7 @@ public class MyProfileFragment extends Fragment  {
 
                                 } else {
 
-                                    writeToProfile(userId, sFirstName, sLastName, sDateOfBirth, sGender, sEmail, sUserName, finalUPhoto1, authentication, user.TotalshoppingPoints);
+                                    writeToProfile(userId, sFirstName, sLastName, sDateOfBirth, sGender, sEmail, sUserName, uPhoto, authentication, user.TotalshoppingPoints);
                                     Toast.makeText(getActivity(), "Profile updated Successfully", Toast.LENGTH_LONG).show();
                                     Intent takeUserHome = new Intent(getActivity(), NavigationActivity.class);
                                     startActivity(takeUserHome);
@@ -344,14 +344,26 @@ public class MyProfileFragment extends Fragment  {
                                         "Error: could not fetch user.",
                                         Toast.LENGTH_SHORT).show();
                             } else {
+
                                 final Double TotalshoppingPoints = 00.00;
 
+                                if (user.TotalshoppingPoints == null) {
 
-                                writeToProfile(userId, sFirstName, sLastName, sDateOfBirth, sGender, sEmail, sUserName, uGPhoto, authentication, user.TotalshoppingPoints);
-                                Toast.makeText(getActivity(), "Profile updated Successfully", Toast.LENGTH_LONG).show();
-                                Intent takeUserHome = new Intent(getActivity(), NavigationActivity.class);
-                                startActivity(takeUserHome);
+                                    writeToProfile(userId, sFirstName, sLastName, sDateOfBirth, sGender, sEmail, sUserName, uGPhoto, authentication, TotalshoppingPoints);
+                                    Toast.makeText(getActivity(), "Profile updated Successfully", Toast.LENGTH_LONG).show();
+                                    Intent takeUserHome = new Intent(getActivity(), NavigationActivity.class);
+                                    startActivity(takeUserHome);
 
+
+                                } else {
+
+                                    writeToProfile(userId, sFirstName, sLastName, sDateOfBirth, sGender, sEmail, sUserName, uGPhoto, authentication, user.TotalshoppingPoints);
+                                    Toast.makeText(getActivity(), "Profile updated Successfully", Toast.LENGTH_LONG).show();
+                                    Intent takeUserHome = new Intent(getActivity(), NavigationActivity.class);
+                                    startActivity(takeUserHome);
+
+
+                                }
 
                             }
 
