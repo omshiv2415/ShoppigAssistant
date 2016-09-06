@@ -2,6 +2,8 @@
   <dictionary name="admin">
     <words>
       <w>authenticaton</w>
+      <w>currentlatitude</w>
+      <w>currentlongitude</w>
       <w>emailreset</w>
       <w>showtoast</w>
       <w>srcity</w>

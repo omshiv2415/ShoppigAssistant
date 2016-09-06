@@ -2,6 +2,7 @@ package assistance.shopping.msc.assistant.fragments;
 
 
 import android.Manifest;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
@@ -24,6 +25,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import assistance.shopping.msc.assistant.R;
 
 import static android.content.Context.LOCATION_SERVICE;
+import static assistance.shopping.msc.assistant.fragments.ShoppingListFragment.PREFS_NAME;
 
 
 /**
@@ -66,7 +68,7 @@ public class MapFragmentView extends Fragment {
                     final LocationManager locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
                     googleMap.addMarker(new MarkerOptions().position(new LatLng(mLat, mLon)).title("You are Here"));
                     googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLat, mLon), 14.0f));
-                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 0, new android.location.LocationListener() {
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, new android.location.LocationListener() {
                         /**
                          * Called when the location has changed.
                          * <p>
@@ -94,6 +96,7 @@ public class MapFragmentView extends Fragment {
                             googleMap.getUiSettings().setMyLocationButtonEnabled(true);
                             googleMap.getUiSettings().setMapToolbarEnabled(true);
                             googleMap.getUiSettings().setAllGesturesEnabled(true);
+                            googleMap.setIndoorEnabled(true);
                             googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 16.0f));
                             googleMap.addMarker(new MarkerOptions()
                                     .position(new LatLng(location.getLatitude(), location.getLongitude()))

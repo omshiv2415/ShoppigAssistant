@@ -7,6 +7,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.location.Address;
@@ -51,6 +52,8 @@ import assistance.shopping.msc.assistant.model.ShoppingBroadcast;
 import assistance.shopping.msc.assistant.model.User;
 import assistance.shopping.msc.assistant.support.BaseActivity;
 
+import static assistance.shopping.msc.assistant.fragments.ShoppingListFragment.PREFS_NAME;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -70,11 +73,11 @@ public class NewShoppingFragment extends Fragment {
     private EditText mBodyField;
     private FirebaseAuth mAuth;
     private Location TODO = null;
-
+    public Double Lat;
+    public Double Lon;
     public NewShoppingFragment() {
         // Required empty public constructor
     }
-
 
 
     @Override
@@ -89,7 +92,6 @@ public class NewShoppingFragment extends Fragment {
 
             view = inflater.inflate(R.layout.fragment_new_shopping, container, false);
 
-
             // [START initialize_database_ref]
             mDatabase = FirebaseDatabase.getInstance().getReference();
             // [END initialize_database_ref]
@@ -97,6 +99,13 @@ public class NewShoppingFragment extends Fragment {
             mTitleField = (EditText) view.findViewById(R.id.field_title);
             mBodyField = (EditText) view.findViewById(R.id.field_body);
 
+            SharedPreferences preferences = this.getActivity().getSharedPreferences(PREFS_NAME, 0);
+
+            String lat = preferences.getString("current_lat", "");
+            String lon = preferences.getString("current_lon", "");
+
+            Lat = Double.parseDouble(lat);
+            Lon = Double.parseDouble(lon);
             mBodyField.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -108,6 +117,7 @@ public class NewShoppingFragment extends Fragment {
             view.findViewById(R.id.fab_submit_post).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
                     submitPost();
                 }
             });
@@ -143,59 +153,39 @@ public class NewShoppingFragment extends Fragment {
             Date date = new Date();
             final String createdAt = String.valueOf(dateFormat.format(date)).toUpperCase();
 
-        // Title is required
-        if (TextUtils.isEmpty(title)) {
-            mTitleField.setError(REQUIRED);
-            return;
-        }
+            // Title is required
+            if (TextUtils.isEmpty(title)) {
+                mTitleField.setError(REQUIRED);
+                return;
+            }
 
-        // Body is required
-        if (TextUtils.isEmpty(body)) {
-            mBodyField.setError(REQUIRED);
-            return;
-        }
+            // Body is required
+            if (TextUtils.isEmpty(body)) {
+                mBodyField.setError(REQUIRED);
+                return;
+            }
 
-        // [START single_value_read]
-        final String userId = baseActivity.getUid();
+            // [START single_value_read]
+            final String userId = baseActivity.getUid();
             final String finalSAPhoto = SAPhoto;
             mDatabase.child("users").child(userId).addListenerForSingleValueEvent(
-                new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        // Get user value
-                        User user = dataSnapshot.getValue(User.class);
+                    new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            // Get user value
+                            User user = dataSnapshot.getValue(User.class);
 
-                        // [START_EXCLUDE]
-                        if (user == null) {
-                            // User is null, error out
-                            Log.e(TAG, "User " + userId + " is unexpectedly null");
-                            Toast.makeText(getActivity(), "Please Update your Profile", Toast.LENGTH_SHORT).show();
-                            MyProfileFragment fragment = new MyProfileFragment();
-                            android.support.v4.app.FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-                            fragmentTransaction.replace(R.id.fragment_container, fragment);
-                            fragmentTransaction.commit();
-                        } else {
-                            // Write new post
-
-                            Criteria criteria = new Criteria();
-                            LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-                            String provider = locationManager.getBestProvider(criteria, false);
-                            if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                                    && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                                // TODO: Consider calling
-                                //    ActivityCompat#requestPermissions
-                                // here to request the missing permissions, and then overriding
-                                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                                //                                          int[] grantResults)
-                                // to handle the case where the user grants the permission. See the documentation
-                                // for ActivityCompat#requestPermissions for more details.
-
-                            }
-                            Location location = locationManager.getLastKnownLocation(provider);
-
-                            Double Lat = location.getLatitude();
-                            Double Lon = location.getLongitude();
-
+                            // [START_EXCLUDE]
+                            if (user == null) {
+                                // User is null, error out
+                                Log.e(TAG, "User " + userId + " is unexpectedly null");
+                                Toast.makeText(getActivity(), "Please Update your Profile", Toast.LENGTH_SHORT).show();
+                                MyProfileFragment fragment = new MyProfileFragment();
+                                android.support.v4.app.FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                                fragmentTransaction.replace(R.id.fragment_container, fragment);
+                                fragmentTransaction.commit();
+                            } else {
+                                // Write new post
 
                             Geocoder gcd = new Geocoder(getContext(), Locale.getDefault());
 
@@ -288,17 +278,14 @@ public class NewShoppingFragment extends Fragment {
                                 // Write new post
 
                                 Criteria criteria = new Criteria();
-                                LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+                                LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
                                 String provider = locationManager.getBestProvider(criteria, false);
-                                if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                                        && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                                if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                                        && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                                     // TODO: Consider calling
 
                                 }
-                                Location location = locationManager.getLastKnownLocation(provider);
 
-                                Double Lat = location.getLatitude();
-                                Double Lon = location.getLongitude();
 
                                 Geocoder gcd = new Geocoder(getContext(), Locale.getDefault());
 
@@ -324,7 +311,7 @@ public class NewShoppingFragment extends Fragment {
 
                                 }else{
 
-                                    Toast.makeText(getActivity(), "Please try later no location available", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getActivity(), "Please try later no location available" + Lat, Toast.LENGTH_SHORT).show();
 
                                     Intent takeUserHome = new Intent(getActivity(), NavigationActivity.class);
                                     startActivity(takeUserHome);

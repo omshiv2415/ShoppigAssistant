@@ -8,6 +8,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -19,6 +20,7 @@ import android.location.LocationManager;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
@@ -66,9 +68,13 @@ import assistance.shopping.msc.assistant.main.ShoppingDetailActivity;
 import assistance.shopping.msc.assistant.model.ShoppingBroadcast;
 import assistance.shopping.msc.assistant.model.ShoppingPoints;
 import assistance.shopping.msc.assistant.model.User;
+import assistance.shopping.msc.assistant.support.DownloadImageTask;
 import assistance.shopping.msc.assistant.support.FragmentSupport;
 
 import static android.R.style.Theme_Dialog;
+import static android.content.Context.INPUT_METHOD_SERVICE;
+import static android.content.Context.MODE_MULTI_PROCESS;
+import static junit.runner.BaseTestRunner.savePreferences;
 
 
 public abstract class ShoppingListFragment extends Fragment {
@@ -87,7 +93,11 @@ public abstract class ShoppingListFragment extends Fragment {
     private RecyclerView mRecycler;
     private LinearLayoutManager mManager;
     private Location TODO = null;
+    public static final String PREFS_NAME_START = "MyPreferencesFile1";
+    public static final String PREFS_NAME = "MyPreferencesFile";
 
+    public Double Lat;
+    public Double Lon;
     public ShoppingListFragment() {
     }
 
@@ -105,6 +115,15 @@ public abstract class ShoppingListFragment extends Fragment {
         mRecycler = (RecyclerView) rootView.findViewById(R.id.messages_list);
         mRecycler.setHasFixedSize(true);
         fab = (FloatingActionButton) rootView.findViewById(R.id.fab_new_post);
+
+
+        SharedPreferences preferences = this.getActivity().getSharedPreferences(PREFS_NAME, 0);
+
+        String lat = preferences.getString("current_lat", "");
+        String lon = preferences.getString("current_lon", "");
+
+        Lat = Double.parseDouble(lat);
+        Lon = Double.parseDouble(lon);
 
         return rootView;
     }
@@ -214,12 +233,6 @@ public abstract class ShoppingListFragment extends Fragment {
 
                     viewHolder.dotProgressBar.startProgress();
 
-                    Query myCompletedShoppingQuery = mDatabase.child("user-shopping-broadcast").child(userId)
-                            .orderByChild("starCount").equalTo("Processing");
-                    // [END my_top_posts_query]
-
-
-
 
 
                     viewHolder.saPostcode.setOnClickListener(new View.OnClickListener() {
@@ -240,24 +253,16 @@ public abstract class ShoppingListFragment extends Fragment {
                                     Double sendLon = address.getLongitude();
 
                                     // Create fragment and give it an argument for the selected article
-                                    MapFragmentView sendLatLangToMap = new MapFragmentView();
+
 
                                     Bundle args = new Bundle();
 
-                                    args.putDouble("Lat", sendLat);
-                                    args.putDouble("Lon", sendLon);
+                                    args.putDouble("LatMap", sendLat);
+                                    args.putDouble("LonMap", sendLon);
 
-                                    sendLatLangToMap.setArguments(args);
-
-                                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-
-                                    // Replace whatever is in the fragment_container view with this fragment,
-                                    // and add the transaction to the back stack so the user can navigate back
-                                    transaction.replace(R.id.fragment_container, sendLatLangToMap);
-                                    transaction.addToBackStack(null);
-
-                                    // Commit the transaction
-                                    transaction.commit();
+                                    Intent intent = new Intent(getActivity(), ShoppingListFragment.class);
+                                    intent.putExtras(args);
+                                    startActivity(intent);
 
 
 
@@ -416,19 +421,6 @@ public abstract class ShoppingListFragment extends Fragment {
 
                     } else {
                         // Star the post and add self to stars
-
-                        Criteria criteria = new Criteria();
-                        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-                        String provider = locationManager.getBestProvider(criteria, false);
-                        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                                && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                            // TODO: Consider calling
-
-                        }
-                        Location location = locationManager.getLastKnownLocation(provider);
-
-                        Double Lat = location.getLatitude();
-                        Double Lon = location.getLongitude();
 
 
                         Geocoder gcd = new Geocoder(getContext(), Locale.getDefault());
