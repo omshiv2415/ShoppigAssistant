@@ -36,6 +36,10 @@ public class RegisterActivity extends Activity {
     private FirebaseAuth mAuth;
     private TextToSpeech speech;
     private DatabaseReference mDatabase;
+    public Button mButtonGoogleLoginFromRegister;
+    public Button mButtonLoginFromRegister;
+    public Button mButtonResetFromRegister;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +51,11 @@ public class RegisterActivity extends Activity {
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
+
+        mButtonGoogleLoginFromRegister = (Button) findViewById(R.id.login_with_Google_from_register_screen);
+        mButtonLoginFromRegister = (Button) findViewById(R.id.login_from_register_screen);
+        mButtonResetFromRegister = (Button)findViewById(R.id.reset_from_register_screen);
+
 
 
         mButtonRegisterRegister.setOnClickListener(new View.OnClickListener() {
@@ -120,7 +129,7 @@ public class RegisterActivity extends Activity {
 
                                         onAuthSuccess(task.getResult().getUser());
 
-                                    }else if(!task.isSuccessful()){
+                                    } else if (!task.isSuccessful()) {
 
                                         Toast.makeText(RegisterActivity.this, "Authentication failed.",
                                                 Toast.LENGTH_SHORT).show();
@@ -133,13 +142,40 @@ public class RegisterActivity extends Activity {
                             });
 
 
-
                 }
 
 
             }
 
-        });}
+        });
+
+
+        mButtonGoogleLoginFromRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent takeUserToGoogleSignIn = new Intent(RegisterActivity.this, GoogleSignInActivity.class);
+                startActivity(takeUserToGoogleSignIn);
+
+            }
+        });
+
+        mButtonLoginFromRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent takeUserToLogin = new Intent(RegisterActivity.this, LoginActivity.class);
+                startActivity(takeUserToLogin);
+            }
+        });
+
+
+        mButtonResetFromRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent takeUserToRegister = new Intent(RegisterActivity.this, PasswordResetActivity.class);
+                startActivity(takeUserToRegister);
+            }
+        });
+    }
 
 
     public void onAuthSuccess(FirebaseUser user) {
@@ -162,8 +198,8 @@ public class RegisterActivity extends Activity {
         finish();
 
 
-
     }
+
     private String usernameFromEmail(String email) {
         if (email.contains("@")) {
             return email.split("@")[0];
@@ -181,8 +217,11 @@ public class RegisterActivity extends Activity {
 
         mDatabase.child("users").child(userId).setValue(user);
     }
-
-
+    @Override
+    public void onStop() {
+        super.onStop();
+        this.finish();
+    }
 
 }
 

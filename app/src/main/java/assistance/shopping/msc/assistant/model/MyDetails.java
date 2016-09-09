@@ -21,7 +21,6 @@ public class MyDetails {
     public Double TotalshoppingPoints;
 
 
-
     public Map<String, Boolean> stars = new HashMap<>();
 
     public MyDetails() {

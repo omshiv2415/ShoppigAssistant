@@ -2,35 +2,27 @@ package assistance.shopping.msc.assistant.main;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
-
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.Locale;
-
 
 import assistance.shopping.msc.assistant.R;
 
@@ -86,8 +78,8 @@ public class LoginActivity extends Activity implements GoogleApiClient.OnConnect
         mGoogleSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent takeUserResetPassword = new Intent(LoginActivity.this, GoogleSignInActivity.class);
-                startActivity(takeUserResetPassword);
+                Intent takeUserToGoogleSignIn = new Intent(LoginActivity.this, GoogleSignInActivity.class);
+                startActivity(takeUserToGoogleSignIn);
 
             }
         });
@@ -95,8 +87,8 @@ public class LoginActivity extends Activity implements GoogleApiClient.OnConnect
             @Override
             public void onClick(View v) {
 
-                Intent takeUserResetPassword = new Intent(LoginActivity.this, RegisterActivity.class);
-                startActivity(takeUserResetPassword);
+                Intent takeUserToRegister = new Intent(LoginActivity.this, RegisterActivity.class);
+                startActivity(takeUserToRegister);
 
             }
         });
@@ -104,8 +96,8 @@ public class LoginActivity extends Activity implements GoogleApiClient.OnConnect
             @Override
             public void onClick(View v) {
 
-               Intent takeUserPasswordReset = new Intent(LoginActivity.this, PasswordResetActivity.class);
-               startActivity(takeUserPasswordReset);
+                Intent takeUserPasswordReset = new Intent(LoginActivity.this, PasswordResetActivity.class);
+                startActivity(takeUserPasswordReset);
 
             }
         });
@@ -148,7 +140,7 @@ public class LoginActivity extends Activity implements GoogleApiClient.OnConnect
                                     if (task.isSuccessful()) {
                                         Intent takeUserHome = new Intent(LoginActivity.this, NavigationActivity.class);
                                         startActivity(takeUserHome);
-                                    }else if(!task.isSuccessful()){
+                                    } else if (!task.isSuccessful()) {
 
                                         Log.w(TAG, "signInWithEmail", task.getException());
                                         Toast.makeText(LoginActivity.this, "Authentication failed.",
@@ -214,7 +206,6 @@ public class LoginActivity extends Activity implements GoogleApiClient.OnConnect
     // [END onactivityresult]
 
     // [START auth_with_google]
-
 
 
     /**

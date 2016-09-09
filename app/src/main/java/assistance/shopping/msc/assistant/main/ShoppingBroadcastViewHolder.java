@@ -36,6 +36,7 @@ public class ShoppingBroadcastViewHolder extends RecyclerView.ViewHolder {
     public TextView spdeliveredtime;
     public TextView transactioncompletedat;
     public DottedProgressBar dotProgressBar;
+
     public ShoppingBroadcastViewHolder(View itemView) {
         super(itemView);
 
@@ -50,23 +51,23 @@ public class ShoppingBroadcastViewHolder extends RecyclerView.ViewHolder {
         paymentTypeText = (TextView) itemView.findViewById(R.id.paymentType);
         topline = (RelativeLayout) itemView.findViewById(R.id.bottomLine);
         hide = (LinearLayout) itemView.findViewById(R.id.hideShoppingRequester);
-        saAddressfirstline = (TextView)itemView.findViewById(R.id.firstLine);
-        sacity = (TextView)itemView.findViewById(R.id.city);
-        saPostcode = (TextView)itemView.findViewById(R.id.postCode);
-        SaName = (TextView)itemView.findViewById(R.id.shoppingAssistantName);
-        srfirstline = (TextView)itemView.findViewById(R.id.srFirstLineOfAddress);
-        srcity = (TextView)itemView.findViewById(R.id.shoppingRequesterCity);
-        srpostcode = (TextView)itemView.findViewById(R.id.shoppingRequesterPostcode);
-        spdeliveredtime = (TextView)itemView.findViewById(R.id.shoppingDeliveredTime);
-        transactioncompletedat = (TextView)itemView.findViewById(R.id.transactionCompletedAt);
+        saAddressfirstline = (TextView) itemView.findViewById(R.id.firstLine);
+        sacity = (TextView) itemView.findViewById(R.id.city);
+        saPostcode = (TextView) itemView.findViewById(R.id.postCode);
+        SaName = (TextView) itemView.findViewById(R.id.shoppingAssistantName);
+        srfirstline = (TextView) itemView.findViewById(R.id.srFirstLineOfAddress);
+        srcity = (TextView) itemView.findViewById(R.id.shoppingRequesterCity);
+        srpostcode = (TextView) itemView.findViewById(R.id.shoppingRequesterPostcode);
+        spdeliveredtime = (TextView) itemView.findViewById(R.id.shoppingDeliveredTime);
+        transactioncompletedat = (TextView) itemView.findViewById(R.id.transactionCompletedAt);
         dotProgressBar = (DottedProgressBar) itemView.findViewById(R.id.dot_progress);
     }
 
     public void bindToPost(ShoppingBroadcast shoppingBroadcast, View.OnClickListener starClickListener) {
-        titleView.setText(shoppingBroadcast.title);
+        titleView.setText(shoppingBroadcast.shoppingBroadcastTitle);
         authorView.setText(shoppingBroadcast.shoppingAssistant);
-        numStarsView.setText(String.valueOf(shoppingBroadcast.starCount));
-        bodyView.setText(shoppingBroadcast.body);
+        numStarsView.setText(String.valueOf(shoppingBroadcast.shoppingStatus));
+        bodyView.setText(shoppingBroadcast.shoppingBroadcastDescription);
         timeView.setText(shoppingBroadcast.createdAt);
         paymentTypeText.setText(shoppingBroadcast.paymentType);
         starView.setOnClickListener(starClickListener);

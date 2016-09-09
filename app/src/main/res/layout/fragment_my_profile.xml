@@ -121,7 +121,8 @@
             android:layout_below="@+id/textInputLayout2"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="35dp"
-            android:text="Submit" />
+            android:text="Submit"
+            android:background="@android:color/holo_green_light" />
 
         <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/profilePicture"

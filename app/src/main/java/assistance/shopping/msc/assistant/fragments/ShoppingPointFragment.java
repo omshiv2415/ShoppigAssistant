@@ -84,7 +84,7 @@ public class ShoppingPointFragment extends Fragment {
 
         // Set up FirebaseRecyclerAdapter with the Query
         Query postsQuery = getQuery(mDatabase);
-        // Query postsQuery = getQuery(mDatabase).orderByChild("starCount").equalTo("In Process");
+        // Query postsQuery = getQuery(mDatabase).orderByChild("shoppingStatus").equalTo("In Process");
 
         mAdapter = new FirebaseRecyclerAdapter<ShoppingPoints, ShoppingPointsViewHolder>(ShoppingPoints.class, R.layout.item_points,
                 ShoppingPointsViewHolder.class, postsQuery) {

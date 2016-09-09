@@ -10,7 +10,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 
 import assistance.shopping.msc.assistant.R;
-import assistance.shopping.msc.assistant.model.User;
 
 public class BaseActivity extends AppCompatActivity {
 
@@ -43,14 +42,12 @@ public class BaseActivity extends AppCompatActivity {
     public String getUid() {
         return FirebaseAuth.getInstance().getCurrentUser().getUid();
     }
+
     @Override
     public void onStop() {
         super.onStop();
         hideProgressDialog();
     }
-
-
-
 
 
 }

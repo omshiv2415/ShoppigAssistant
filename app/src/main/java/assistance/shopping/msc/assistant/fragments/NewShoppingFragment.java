@@ -65,6 +65,8 @@ public class NewShoppingFragment extends Fragment {
     private static final int TAG_SIMPLE_NOTIFICATION = 1;
     private static final String FIREBASE_URL = "https://testing-2b3ba.firebaseio.com/";
     private static View view;
+    public Double Lat;
+    public Double Lon;
     BaseActivity baseActivity = new BaseActivity();
     // [END declare_database_ref]
     // [START declare_database_ref]
@@ -73,8 +75,7 @@ public class NewShoppingFragment extends Fragment {
     private EditText mBodyField;
     private FirebaseAuth mAuth;
     private Location TODO = null;
-    public Double Lat;
-    public Double Lon;
+
     public NewShoppingFragment() {
         // Required empty public constructor
     }
@@ -106,6 +107,12 @@ public class NewShoppingFragment extends Fragment {
 
             Lat = Double.parseDouble(lat);
             Lon = Double.parseDouble(lon);
+
+
+
+
+
+
             mBodyField.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -187,52 +194,52 @@ public class NewShoppingFragment extends Fragment {
                             } else {
                                 // Write new post
 
-                            Geocoder gcd = new Geocoder(getContext(), Locale.getDefault());
+                                Geocoder gcd = new Geocoder(getContext(), Locale.getDefault());
 
-                            List<Address> addresses = null;
-                            try {
-                                addresses = gcd.getFromLocation(Lat,Lon, 1);
-                            } catch (IOException e) {
-                                e.printStackTrace();
+                                List<Address> addresses = null;
+                                try {
+                                    addresses = gcd.getFromLocation(Lat, Lon, 1);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                if (addresses.size() > 0) {
+                                    System.out.println(addresses.get(0).getLocality());
+
+                                    String City = addresses.get(0).getLocality();
+                                    String PostCode = addresses.get(0).getPostalCode();
+                                    String firstLineOfAddress = addresses.get(0).getAddressLine(0);
+
+                                    writeNewPost(userId, user.UserName, title, body, createdAt, finalSAPhoto, paymentType, tranCompletedAt,
+                                            user.FirstName, firstLineOfAddress, City, PostCode, srfirstlineofAddress, srcity, srpostcode, setTotalPoints);
+
+                                    Intent takeUserHome = new Intent(getActivity(), NavigationActivity.class);
+                                    startActivity(takeUserHome);
+
+
+                                } else {
+
+                                    Toast.makeText(getActivity(), "No Location Found...", Toast.LENGTH_SHORT).show();
+
+                                    Intent takeUserHome = new Intent(getActivity(), NavigationActivity.class);
+                                    startActivity(takeUserHome);
+
+
+                                }
+
+
                             }
-                            if (addresses.size() > 0) {
-                                System.out.println(addresses.get(0).getLocality());
 
-                                String City = addresses.get(0).getLocality();
-                                String PostCode = addresses.get(0).getPostalCode();
-                                String firstLineOfAddress = addresses.get(0).getAddressLine(0);
-
-                                writeNewPost(userId, user.UserName, title, body, createdAt, finalSAPhoto, paymentType, tranCompletedAt,
-                                        user.FirstName, firstLineOfAddress, City, PostCode, srfirstlineofAddress,srcity,srpostcode, setTotalPoints );
-
-                                Intent takeUserHome = new Intent(getActivity(), NavigationActivity.class);
-                                startActivity(takeUserHome);
-
-
-                            }else{
-
-                                Toast.makeText(getActivity(), "No Location Found...", Toast.LENGTH_SHORT).show();
-
-                                Intent takeUserHome = new Intent(getActivity(), NavigationActivity.class);
-                                startActivity(takeUserHome);
-
-
-                            }
-
-
+                            // Finish this Activity, back to the stream
+                            baseActivity.finish();
+                            // [END_EXCLUDE]
                         }
 
-                        // Finish this Activity, back to the stream
-                        baseActivity.finish();
-                        // [END_EXCLUDE]
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        Log.w(TAG, "getUser:onCancelled", databaseError.toException());
-                    }
-                });
-        // [END single_value_read]
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            Log.w(TAG, "getUser:onCancelled", databaseError.toException());
+                        }
+                    });
+            // [END single_value_read]
         } else {
 
 
@@ -277,16 +284,6 @@ public class NewShoppingFragment extends Fragment {
                             } else {
                                 // Write new post
 
-                                Criteria criteria = new Criteria();
-                                LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
-                                String provider = locationManager.getBestProvider(criteria, false);
-                                if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                                        && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                                    // TODO: Consider calling
-
-                                }
-
-
                                 Geocoder gcd = new Geocoder(getContext(), Locale.getDefault());
 
                                 List<Address> addresses = null;
@@ -303,13 +300,13 @@ public class NewShoppingFragment extends Fragment {
                                     String firstLineOfAddress = addresses.get(0).getAddressLine(0);
 
                                     writeNewPost(userId, user.UserName, title, body, createdAt, SAGPhoto, paymentType, tranCompletedAt,
-                                            user.FirstName, firstLineOfAddress, City, PostCode, srfirstlineofAddress,srcity,srpostcode, setTotalPoints);
+                                            user.FirstName, firstLineOfAddress, City, PostCode, srfirstlineofAddress, srcity, srpostcode, setTotalPoints);
 
                                     Intent takeUserHome = new Intent(getActivity(), NavigationActivity.class);
                                     startActivity(takeUserHome);
 
 
-                                }else{
+                                } else {
 
                                     Toast.makeText(getActivity(), "Please try later no location available" + Lat, Toast.LENGTH_SHORT).show();
 
@@ -344,7 +341,7 @@ public class NewShoppingFragment extends Fragment {
 
         String key = mDatabase.child("shopping-broadcast").push().getKey();
         ShoppingBroadcast shoppingBroadcast = new ShoppingBroadcast(userId, shoppingAssistant, title, body, createdAt, ShoppingAssistantPhoto, paymentType,
-                paymentCompletedAt,  shoppingAssistantName, saFirstLineAddress, saCity, saPostCode, srFirstLineAddress,srCity,srPostCode, setShoppingPoints);
+                paymentCompletedAt, shoppingAssistantName, saFirstLineAddress, saCity, saPostCode, srFirstLineAddress, srCity, srPostCode, setShoppingPoints);
         Map<String, Object> postValues = shoppingBroadcast.toMap();
 
         Map<String, Object> childUpdates = new HashMap<>();

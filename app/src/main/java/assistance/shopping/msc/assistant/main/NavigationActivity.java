@@ -62,23 +62,21 @@ import assistance.shopping.msc.assistant.fragments.StreetFragment;
 
 public class NavigationActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+    public static final String PREFS_NAME = "MyPreferencesFile";
+    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     private static final String TAG = "Navigation";
     private static final int REQUEST_INVITE = 16;
-
     public FirebaseAuth mAuth = FirebaseAuth.getInstance();
-
     public FirebaseAuth.AuthStateListener mAuthListener;
     public FragmentPagerAdapter mPagerAdapter;
     public ViewPager mViewPager;
     public FloatingActionButton floatingActionButton;
-    public  LocationRequest mLocationRequest;
+    public LocationRequest mLocationRequest;
     public GoogleApiClient mGoogleApiClient;
-    public  LocationManager locationManager;
+    public LocationManager locationManager;
     public double currentlatitude;
     public double currentlongitude;
     public Location mLastLocation;
-
-    public static final String PREFS_NAME = "MyPreferencesFile";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,10 +98,10 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
 
         buildGoogleApiClient();
 
-        Bundle getBundle = getIntent().getExtras();
+        Bundle bundle = getIntent().getExtras();
 
 
-        if (getBundle == null){
+        if (bundle == null) {
 
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
@@ -118,10 +116,10 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
             navigationView.setNavigationItemSelectedListener(this);
 
 
-        } else{
+        } else {
 
-            Double latV = getBundle.getDouble("LatMap");
-            Double lonV = getBundle.getDouble("LonMap");
+            Double latV = bundle.getDouble("LatMap");
+            Double lonV = bundle.getDouble("LonMap");
 
             if (!latV.equals("") || !lonV.equals("")) {
 
@@ -161,12 +159,10 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
             }
 
 
-
         }
 
 
-        }
-
+    }
 
     public void showGPSDisabledAlertToUser() {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
@@ -192,11 +188,11 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
     @Override
     protected void onStop() {
         super.onStop();
-        if (mGoogleApiClient.isConnected()) {mGoogleApiClient.disconnect();}
-        mGoogleApiClient.connect();
+        if (mGoogleApiClient.isConnected()) {
+           // mGoogleApiClient.disconnect();
+        }
+        //mGoogleApiClient.connect();
     }
-
-
 
     @Override
     public void onBackPressed() {
@@ -276,12 +272,14 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
 
         } else if (id == R.id.action_logout) {
 
-            FirebaseAuth.getInstance().signOut();
-            mAuth.removeAuthStateListener(mAuthListener);
-            Intent takeUserHome = new Intent(NavigationActivity.this, LoginActivity.class);
-            startActivity(takeUserHome);
-            return true;
 
+                    FirebaseAuth.getInstance().signOut();
+                    mAuth.removeAuthStateListener(mAuthListener);
+                    Intent takeUserHome = new Intent(NavigationActivity.this, LoginActivity.class);
+                    startActivity(takeUserHome);
+
+
+            return true;
 
         }
 
@@ -346,8 +344,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
         super.onStart();
 
 
-            mGoogleApiClient.connect();
-
+        mGoogleApiClient.connect();
 
 
         // Create the adapter that will return a fragment for each section
@@ -405,7 +402,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
                 if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
 
                     showToastMessage("Please Turn On Location");
@@ -413,7 +410,6 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
                     startActivity(intent);
 
                 } else {
-
 
                     if (ActivityCompat.checkSelfPermission(NavigationActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)
                             != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(NavigationActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -428,20 +424,19 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
                         return;
                     }
 
+                   if (Double.valueOf(currentlatitude).equals(null)) {
 
-                    Bundle bundle = new Bundle();
-                    double myLat = currentlatitude;
-                    double myLon = currentlongitude;
 
-                    bundle.putDouble("Lat", myLat);
-                    bundle.putDouble("Lon", myLon);
+                       showToastMessage("Please try again no Location available");
 
-                    NewShoppingFragment fragment = new NewShoppingFragment();
-                    fragment.setArguments(bundle);
-                    android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                    fragmentTransaction.replace(R.id.fragment_container, fragment);
-                    fragmentTransaction.commit();
 
+                    } else {
+
+                       NewShoppingFragment fragment = new NewShoppingFragment();
+                       android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                       fragmentTransaction.replace(R.id.fragment_container, fragment);
+                       fragmentTransaction.commit();
+                   }
                 }
             }
 
@@ -571,7 +566,6 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
         }
     }
 
-
     public synchronized void buildGoogleApiClient() {
         Log.i("TAG", "Building GoogleApiClient");
         mGoogleApiClient = new GoogleApiClient.Builder(this.getApplicationContext())
@@ -581,7 +575,6 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
                 .build();
         mGoogleApiClient.connect();
     }
-
 
     @Override
     public void onConnectionSuspended(int i) {
@@ -593,7 +586,6 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
         }
         mGoogleApiClient.connect();
     }
-
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
@@ -620,6 +612,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
 
     @Override
     public void onConnected(Bundle bundle) {
+
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(1000);
         mLocationRequest.setFastestInterval(1000);
@@ -634,6 +627,8 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
 
             mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
 
+
+            if (mLastLocation != null) {
 
                 currentlatitude = mLastLocation.getLatitude();
                 currentlongitude = mLastLocation.getLongitude();
@@ -650,12 +645,15 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
                 savePreferences("current_lat", String.valueOf(myLat));
                 savePreferences("current_lon", String.valueOf(myLon));
 
+            }else{
 
+                showToastMessage("No Location Available");
+
+            }
 
         }
 
     }
-
 
     private void savePreferences(String key, String value) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -672,18 +670,24 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
         currentlatitude = location.getLatitude();
         currentlongitude = location.getLongitude();
 
+        double myLat = currentlatitude;
+        double myLon = currentlongitude;
+
+        SharedPreferences preferences = getSharedPreferences(PREFS_NAME, 0);
+
+        SharedPreferences.Editor editor = preferences.edit();
+
+        editor.putString("current_lat", String.valueOf(myLat));
+        editor.putString("current_lon", String.valueOf(myLon));
+        editor.apply();
+        savePreferences("current_lat", String.valueOf(myLat));
+        savePreferences("current_lon", String.valueOf(myLon));
     }
 
-
-    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
-
-    public boolean checkLocationPermission()
-    {
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-        {
+    public boolean checkLocationPermission() {
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.ACCESS_FINE_LOCATION))
-            {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.ACCESS_FINE_LOCATION)) {
                 // Show an expanation to the user *asynchronously* -- don't block
                 // this thread waiting for the user's response! After the user
                 // sees the explanation, try again to request the permission.
@@ -691,19 +695,14 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
                 //Prompt the user once explanation has been shown
                 ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                         MY_PERMISSIONS_REQUEST_LOCATION);
-            }
-            else
-            {
+            } else {
                 // No explanation needed, we can request the permission.
                 ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                         MY_PERMISSIONS_REQUEST_LOCATION);
             }
             return false;
-        }
-        else
-        {
-            if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
-            {
+        } else {
+            if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                 showGPSDisabledAlertToUser();
             }
 
@@ -712,34 +711,25 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults)
-    {
-        switch (requestCode)
-        {
-            case MY_PERMISSIONS_REQUEST_LOCATION:
-            {
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_LOCATION: {
                 // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
-                    if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
-                    {
+                    if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
-                        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
-                        {
+                        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                             showGPSDisabledAlertToUser();
                         }
 
-                        if (mGoogleApiClient == null)
-                        {
+                        if (mGoogleApiClient == null) {
                             buildGoogleApiClient();
                         }
 
                     }
-                }
-                else
-                {
+                } else {
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
                     Toast.makeText(this, "permission denied", Toast.LENGTH_LONG).show();

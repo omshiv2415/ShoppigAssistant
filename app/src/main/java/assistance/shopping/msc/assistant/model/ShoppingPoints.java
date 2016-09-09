@@ -13,12 +13,12 @@ import java.util.Map;
 
 public class ShoppingPoints {
 
-        public String uid;
-        public String shoppingAssistantName;
-        public String createdAt;
+    public String uid;
+    public String shoppingAssistantName;
+    public String createdAt;
     public String transactionCompletedAt;
-        public Double totalShoppingPoints;
-        public Double earnedShoppingPoints;
+    public Double totalShoppingPoints;
+    public Double earnedShoppingPoints;
     public String sAPhotoUrl;
     public String sAEmail;
 
@@ -30,32 +30,32 @@ public class ShoppingPoints {
 
     public ShoppingPoints(String uid, String shoppingAssistantName, String createdAt, String transactionCompletedAt, Double totalShoppingPoints,
                           Double earnedShoppingPoints, String sAPhotoUrl, String sAEmail) {
-            this.uid = uid;
-            this.shoppingAssistantName = shoppingAssistantName;
-            this.createdAt = createdAt;
+        this.uid = uid;
+        this.shoppingAssistantName = shoppingAssistantName;
+        this.createdAt = createdAt;
         this.transactionCompletedAt = transactionCompletedAt;
-            this.totalShoppingPoints = totalShoppingPoints;
-            this.earnedShoppingPoints = earnedShoppingPoints;
+        this.totalShoppingPoints = totalShoppingPoints;
+        this.earnedShoppingPoints = earnedShoppingPoints;
         this.sAPhotoUrl = sAPhotoUrl;
         this.sAEmail = sAEmail;
 
-        }
-
-        // [START post_to_map]
-        @Exclude
-        public Map<String, Object> toMap() {
-            HashMap<String, Object> result = new HashMap<>();
-            result.put("uid", uid);
-            result.put("shoppingAssistantName", shoppingAssistantName);
-            result.put("createdAt", createdAt);
-            result.put("transactionCompletedAt", transactionCompletedAt);
-            result.put("totalShoppingPoints", totalShoppingPoints);
-            result.put("earnedShoppingPoints", earnedShoppingPoints);
-            result.put("sAPhotoUrl", sAPhotoUrl);
-            result.put("sAEmail", sAEmail);
-
-            return result;
-        }
-
     }
+
+    // [START post_to_map]
+    @Exclude
+    public Map<String, Object> toMap() {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("uid", uid);
+        result.put("shoppingAssistantName", shoppingAssistantName);
+        result.put("createdAt", createdAt);
+        result.put("transactionCompletedAt", transactionCompletedAt);
+        result.put("totalShoppingPoints", totalShoppingPoints);
+        result.put("earnedShoppingPoints", earnedShoppingPoints);
+        result.put("sAPhotoUrl", sAPhotoUrl);
+        result.put("sAEmail", sAEmail);
+
+        return result;
+    }
+
+}
 // [END post_class]

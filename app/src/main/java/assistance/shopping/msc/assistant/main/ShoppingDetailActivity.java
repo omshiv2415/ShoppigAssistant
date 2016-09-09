@@ -78,7 +78,6 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
         }
 
 
-
         // Initialize Database
         mPostReference = FirebaseDatabase.getInstance().getReference()
                 .child("shopping-broadcast").child(mPostKey);
@@ -101,7 +100,6 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
         mAuth = FirebaseAuth.getInstance();
 
 
-
     }
 
 
@@ -121,17 +119,17 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
                 final ShoppingBroadcast shoppingBroadcast = dataSnapshot.getValue(ShoppingBroadcast.class);
                 // [START_EXCLUDE]
                 mAuthorView.setText(shoppingBroadcast.shoppingAssistant);
-                mTitleView.setText(shoppingBroadcast.title);
-                mBodyView.setText(shoppingBroadcast.body);
+                mTitleView.setText(shoppingBroadcast.shoppingBroadcastTitle);
+                mBodyView.setText(shoppingBroadcast.shoppingBroadcastDescription);
 
                 new DownloadImageTask((ImageView) findViewById(R.id.post_author_photo))
-                        .execute(String.valueOf(shoppingBroadcast.ShoppingAssistantPhoto));
+                        .execute(String.valueOf(shoppingBroadcast.shoppingAssistantPhotoUrl));
 
                 // mTimeView.setText(shoppingBroadcast.createdAt);
                 // [END_EXCLUDE]
                 if (shoppingBroadcast.uid.equals(mAuth.getCurrentUser().getUid())) {
-                    mTitleView.setText(shoppingBroadcast.title + ".......");
-                    mBodyView.setText(shoppingBroadcast.body + ".......");
+                    mTitleView.setText(shoppingBroadcast.shoppingBroadcastTitle + ".......");
+                    mBodyView.setText(shoppingBroadcast.shoppingBroadcastDescription + ".......");
                     mCommentField.setHint("Respond to shopping request");
                     mTitleView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.edit_icon, 0);
                     mBodyView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.edit_icon, 0);
@@ -144,9 +142,9 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
                             AlertDialog.Builder alert = new AlertDialog.Builder(ShoppingDetailActivity.this);
 
                             final EditText edittext = new EditText(ShoppingDetailActivity.this);
-                            edittext.setText(shoppingBroadcast.title);
-                            alert.setMessage(shoppingBroadcast.body);
-                            alert.setTitle(shoppingBroadcast.title);
+                            edittext.setText(shoppingBroadcast.shoppingBroadcastTitle);
+                            alert.setMessage(shoppingBroadcast.shoppingBroadcastDescription);
+                            alert.setTitle(shoppingBroadcast.shoppingBroadcastTitle);
                             alert.setView(edittext);
 
                             alert.setPositiveButton("Done", new DialogInterface.OnClickListener() {
@@ -192,7 +190,6 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
                                     // what ever you want to do with No option.
 
 
-
                                 }
                             });
 
@@ -209,8 +206,8 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
                             AlertDialog.Builder alert = new AlertDialog.Builder(ShoppingDetailActivity.this);
 
                             final EditText edittext = new EditText(ShoppingDetailActivity.this);
-                            alert.setMessage(shoppingBroadcast.body);
-                            alert.setTitle(shoppingBroadcast.title);
+                            alert.setMessage(shoppingBroadcast.shoppingBroadcastDescription);
+                            alert.setTitle(shoppingBroadcast.shoppingBroadcastTitle);
 
                             alert.setView(edittext);
 
@@ -225,7 +222,7 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
                                         @Override
                                         public void onDataChange(DataSnapshot dataSnapshot) {
 
-                                            mPostReference.child("body").setValue(YouEditTextValue);
+                                            mPostReference.child("shoppingBroadcastDescription").setValue(YouEditTextValue);
 
                                         }
 
@@ -238,7 +235,7 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
                                         @Override
                                         public void onDataChange(DataSnapshot dataSnapshot) {
 
-                                            mUserPostReference.child("body").setValue(YouEditTextValue);
+                                            mUserPostReference.child("shoppingBroadcastDescription").setValue(YouEditTextValue);
 
 
                                         }
@@ -259,7 +256,6 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
                             });
 
                             alert.show();
-
 
 
                         }
@@ -361,7 +357,6 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
                             mCommentField.setText(null);
 
                         }
-
 
 
                     }

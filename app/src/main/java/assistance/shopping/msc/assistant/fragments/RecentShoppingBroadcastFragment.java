@@ -15,7 +15,7 @@ public class RecentShoppingBroadcastFragment extends ShoppingListFragment {
         // due to sorting by push() keys
         //Query recentShoppingQuery = databaseReference.child("shopping-broadcast").limitToFirst(100);
         Query recentShoppingQuery = databaseReference.child("shopping-broadcast")
-                .orderByChild("starCount").equalTo("Processing");
+                .orderByChild("shoppingStatus").equalTo("Processing");
 
         // [END recent_posts_query]
 

@@ -13,7 +13,7 @@ public class MyShoppingBroadcastFragment extends ShoppingListFragment {
         // All my posts
         String myUserId = getUid();
         Query myCompletedShoppingQuery = databaseReference.child("user-shopping-broadcast").child(myUserId)
-                .orderByChild("starCount").equalTo("Processing");
+                .orderByChild("shoppingStatus").equalTo("Processing");
         // [END my_top_posts_query]
 
 

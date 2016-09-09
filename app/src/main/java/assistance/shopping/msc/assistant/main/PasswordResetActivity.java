@@ -17,7 +17,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import java.util.Locale;
 
 import assistance.shopping.msc.assistant.R;
-import assistance.shopping.msc.assistant.fragments.PaymentFragment;
 import assistance.shopping.msc.assistant.support.Support;
 
 public class PasswordResetActivity extends LoginActivity {
@@ -27,7 +26,9 @@ public class PasswordResetActivity extends LoginActivity {
     private Button mButtonPasswordReset;
     private EditText mEmailPasswordReset;
     private TextToSpeech speech;
-
+    private Button mButtonLoginFromReset;
+    private Button mButtonRegisterFromReset;
+    private Button mButtonGoogleLoginFromReset;
 
     public PasswordResetActivity() {
         // Required empty public constructor
@@ -41,6 +42,10 @@ public class PasswordResetActivity extends LoginActivity {
 
         mButtonPasswordReset = (Button) findViewById(R.id.buttonPasswordReset);
         mEmailPasswordReset = (EditText) findViewById(R.id.editTextPasswordReset);
+        mButtonLoginFromReset = (Button) findViewById(R.id.login_from_reset);
+        mButtonRegisterFromReset = (Button) findViewById(R.id.register_from_reset);
+        mButtonGoogleLoginFromReset = (Button)findViewById(R.id.login_withGoogle_from_reset);
+
 
 
         mButtonPasswordReset.setOnClickListener(new View.OnClickListener() {
@@ -93,5 +98,38 @@ public class PasswordResetActivity extends LoginActivity {
             }
         });
 
+
+        mButtonGoogleLoginFromReset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent takeUserToGoogleSignIn = new Intent(PasswordResetActivity.this, GoogleSignInActivity.class);
+                startActivity(takeUserToGoogleSignIn);
+
+            }
+        });
+
+        mButtonLoginFromReset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent takeUserToLogin = new Intent(PasswordResetActivity.this, LoginActivity.class);
+                startActivity(takeUserToLogin);
+            }
+        });
+
+        mButtonRegisterFromReset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent takeUserToRegister = new Intent(PasswordResetActivity.this, RegisterActivity.class);
+                startActivity(takeUserToRegister);
+            }
+        });
+
+
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        this.finish();
     }
 }

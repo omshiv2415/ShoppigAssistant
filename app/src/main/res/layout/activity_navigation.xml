@@ -20,7 +20,6 @@
             android:layout_height="match_parent"
             android:layout_gravity="start"
             android:background="#259ED7"
-            android:backgroundTint="#D9259ED7"
             android:clickable="true"
             android:fitsSystemWindows="true"
             app:headerLayout="@layout/nav_header_navigation"

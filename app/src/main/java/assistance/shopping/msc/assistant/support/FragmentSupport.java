@@ -2,7 +2,6 @@ package assistance.shopping.msc.assistant.support;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.support.v7.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -14,12 +13,11 @@ import assistance.shopping.msc.assistant.R;
 
 public class FragmentSupport extends Activity {
 
+    private ProgressDialog mProgressDialog;
+
     public String getUid() {
         return FirebaseAuth.getInstance().getCurrentUser().getUid();
     }
-
-
-    private ProgressDialog mProgressDialog;
 
     public void showProgressDialog() {
         if (mProgressDialog == null) {

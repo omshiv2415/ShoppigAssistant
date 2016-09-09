@@ -46,14 +46,13 @@ import assistance.shopping.msc.assistant.support.FragmentSupport;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MyProfileFragment extends Fragment  {
+public class MyProfileFragment extends Fragment {
 
 
     // [END declare_database_ref]
     private static final String TAG = "MyProfileFragment";
     private static final String REQUIRED = "Required";
     private static View view;
-    public BaseActivity baseActivity = new BaseActivity();
     FragmentSupport fragmentSupport = new FragmentSupport();
     final String userId = fragmentSupport.getUid();
     private DatabaseReference mDatabase;
@@ -72,8 +71,9 @@ public class MyProfileFragment extends Fragment  {
     private AutoCompleteTextView mGender;
     private Button btnSubmit;
     private FirebaseAuth mAuth;
-    private ImageView uProfile;
-    private String mPhotoUrl;
+    public ImageView uProfile;
+    public String mPhotoUrl;
+
     public MyProfileFragment() {
         // Required empty public constructor
     }
@@ -111,8 +111,7 @@ public class MyProfileFragment extends Fragment  {
             btnSubmit = (Button) view.findViewById(R.id.profileButton);
 
 
-
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),android.R.layout.select_dialog_singlechoice, state);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.select_dialog_singlechoice, state);
             //Find TextView control
             mGender = (AutoCompleteTextView) view.findViewById(R.id.gender);
             //Set the number of characters the user must type before the drop down list is shown
@@ -134,7 +133,7 @@ public class MyProfileFragment extends Fragment  {
                         @Override
                         public void onDateSet(DatePicker datePicker, int i, int i2, int i3) {
                             mDateOfBirth.setFocusable(false);
-                            mDateOfBirth.setText(i3 + "/" + (i2+1) + "/"+ i);
+                            mDateOfBirth.setText(i3 + "/" + (i2 + 1) + "/" + i);
                         }
                     }, mDay, mMonth, mYear);//Yes 24 hour time
 
@@ -148,7 +147,7 @@ public class MyProfileFragment extends Fragment  {
 
                 }
             });
-                mUserFirstName.addValueEventListener(new ValueEventListener() {
+            mUserFirstName.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     String text = dataSnapshot.getValue(String.class);
@@ -227,7 +226,7 @@ public class MyProfileFragment extends Fragment  {
         return view;
     }
 
-    private void submitProfile(){
+    private void submitProfile() {
 
         final String sFirstName = mFirstName.getText().toString();
         final String sLastName = mLastName.getText().toString();
@@ -396,15 +395,16 @@ public class MyProfileFragment extends Fragment  {
             , String email, String username, String uPhoto, String authentication, Double TotalshoppingPoints) {
 
 
-        MyDetails myDetails = new MyDetails(userId, firstname, lastname, dateofbirth, gender, email, username, uPhoto, authentication,TotalshoppingPoints);
+        MyDetails myDetails = new MyDetails(userId, firstname, lastname, dateofbirth, gender, email, username, uPhoto, authentication, TotalshoppingPoints);
         Map<String, Object> myDetailsValues = myDetails.toMap();
 
-        Map<String, Object> childUpdates  = new HashMap<>();
+        Map<String, Object> childUpdates = new HashMap<>();
 
-        childUpdates.put("/users/" + userId + "/" , myDetailsValues);
+        childUpdates.put("/users/" + userId + "/", myDetailsValues);
 
         mDatabase.updateChildren(childUpdates);
     }
+
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         ImageView bmImage;
 

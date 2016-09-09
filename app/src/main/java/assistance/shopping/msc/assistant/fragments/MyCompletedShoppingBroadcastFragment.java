@@ -11,10 +11,10 @@ public class MyCompletedShoppingBroadcastFragment extends ShoppingListFragment {
     @Override
     public Query getQuery(DatabaseReference databaseReference) {
         // [START my_top_posts_query]
-        // My top posts by number of stars
+        // My top posts by number of status
         String myUserId = getUid();
         Query myCompletedShoppingQuery = databaseReference.child("user-shopping-broadcast").child(myUserId)
-                .orderByChild("starCount").equalTo("Completed");
+                .orderByChild("shoppingStatus").equalTo("Completed");
         // [END my_top_posts_query]
 
         return myCompletedShoppingQuery;

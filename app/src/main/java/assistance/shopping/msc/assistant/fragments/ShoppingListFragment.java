@@ -1,6 +1,5 @@
 package assistance.shopping.msc.assistant.fragments;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -9,23 +8,18 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.location.Address;
-import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -68,22 +62,22 @@ import assistance.shopping.msc.assistant.main.ShoppingDetailActivity;
 import assistance.shopping.msc.assistant.model.ShoppingBroadcast;
 import assistance.shopping.msc.assistant.model.ShoppingPoints;
 import assistance.shopping.msc.assistant.model.User;
-import assistance.shopping.msc.assistant.support.DownloadImageTask;
 import assistance.shopping.msc.assistant.support.FragmentSupport;
 
 import static android.R.style.Theme_Dialog;
-import static android.content.Context.INPUT_METHOD_SERVICE;
-import static android.content.Context.MODE_MULTI_PROCESS;
-import static junit.runner.BaseTestRunner.savePreferences;
 
 
 public abstract class ShoppingListFragment extends Fragment {
 
+    public static final String PREFS_NAME_START = "MyPreferencesFile1";
+    public static final String PREFS_NAME = "MyPreferencesFile";
     private static final String TAG = "ShoppingListFragment";
     private static final int TAG_SIMPLE_NOTIFICATION = 1;
     public ProgressBar Shopping;
     public DatabaseReference mShoppingPoint;
     public FloatingActionButton fab;
+    public Double Lat;
+    public Double Lon;
     FragmentSupport fragmentSupport = new FragmentSupport();
     final String userId = fragmentSupport.getUid();
     // [END define_database_reference]
@@ -93,11 +87,7 @@ public abstract class ShoppingListFragment extends Fragment {
     private RecyclerView mRecycler;
     private LinearLayoutManager mManager;
     private Location TODO = null;
-    public static final String PREFS_NAME_START = "MyPreferencesFile1";
-    public static final String PREFS_NAME = "MyPreferencesFile";
 
-    public Double Lat;
-    public Double Lon;
     public ShoppingListFragment() {
     }
 
@@ -107,7 +97,7 @@ public abstract class ShoppingListFragment extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         View rootView = inflater.inflate(R.layout.fragment_all_shopping_request, container, false);
 
-        NavigationActivity nav = new NavigationActivity();
+
         // [START create_database_reference]
         mDatabase = FirebaseDatabase.getInstance().getReference();
         // [END create_database_reference]
@@ -117,13 +107,7 @@ public abstract class ShoppingListFragment extends Fragment {
         fab = (FloatingActionButton) rootView.findViewById(R.id.fab_new_post);
 
 
-        SharedPreferences preferences = this.getActivity().getSharedPreferences(PREFS_NAME, 0);
 
-        String lat = preferences.getString("current_lat", "");
-        String lon = preferences.getString("current_lon", "");
-
-        Lat = Double.parseDouble(lat);
-        Lon = Double.parseDouble(lon);
 
         return rootView;
     }
@@ -141,7 +125,7 @@ public abstract class ShoppingListFragment extends Fragment {
 
         // Set up FirebaseRecyclerAdapter with the Query
         Query postsQuery = getQuery(mDatabase);
-        // Query postsQuery = getQuery(mDatabase).orderByChild("starCount").equalTo("In Process");
+        // Query postsQuery = getQuery(mDatabase).orderByChild("shoppingStatus").equalTo("In Process");
 
         mAdapter = new FirebaseRecyclerAdapter<ShoppingBroadcast, ShoppingBroadcastViewHolder>(ShoppingBroadcast.class, R.layout.item_post,
                 ShoppingBroadcastViewHolder.class, postsQuery) {
@@ -149,14 +133,14 @@ public abstract class ShoppingListFragment extends Fragment {
             protected void populateViewHolder(final ShoppingBroadcastViewHolder viewHolder, final ShoppingBroadcast model, final int position) {
                 final DatabaseReference postRef = getRef(position);
 
-                // showSimpleNotification(model.body);
+                // showSimpleNotification(model.shoppingBroadcastDescription);
                 // Set click listener for the whole post view
                 final String postKey = postRef.getKey();
                 viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
-                        if (model.starCount.equals("Completed")) {
+                        if (model.shoppingStatus.equals("Completed")) {
 
                             Toast.makeText(getActivity(), "Transaction is Completed", Toast.LENGTH_LONG).show();
 
@@ -171,21 +155,21 @@ public abstract class ShoppingListFragment extends Fragment {
                     }
                 });
 
-                if (model.ShoppingAssistantPhoto == null) {
+                if (model.shoppingAssistantPhotoUrl == null) {
                     viewHolder.shoppingAssistantPhoto
                             .setImageDrawable(ContextCompat
                                     .getDrawable(getActivity(),
                                             R.drawable.profile));
                 } else {
                     Glide.with(getActivity())
-                            .load(model.ShoppingAssistantPhoto)
+                            .load(model.shoppingAssistantPhotoUrl)
                             .into(viewHolder.shoppingAssistantPhoto);
                 }
 
 
                 // Determine if the current user has liked this post and set UI accordingly
 
-                if (model.starCount.equals("Completed")) {
+                if (model.shoppingStatus.equals("Completed")) {
 
                     viewHolder.starView.setImageResource(R.drawable.confirm_shopping_basket);
                     //  viewHolder.rel.setBackgroundColor(Color.parseColor("#94CAD7"));
@@ -234,7 +218,6 @@ public abstract class ShoppingListFragment extends Fragment {
                     viewHolder.dotProgressBar.startProgress();
 
 
-
                     viewHolder.saPostcode.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -260,10 +243,9 @@ public abstract class ShoppingListFragment extends Fragment {
                                     args.putDouble("LatMap", sendLat);
                                     args.putDouble("LonMap", sendLon);
 
-                                    Intent intent = new Intent(getActivity(), ShoppingListFragment.class);
+                                    Intent intent = new Intent(getActivity(), NavigationActivity.class);
                                     intent.putExtras(args);
                                     startActivity(intent);
-
 
 
                                 } else {
@@ -284,7 +266,7 @@ public abstract class ShoppingListFragment extends Fragment {
                 // Bind ShoppingBroadcast to ViewHolder, setting OnClickListener for the star button
                 viewHolder.bindToPost(model, new View.OnClickListener() {
                     @Override
-                    public void onClick(View starView) {
+                    public void onClick(View statusView) {
                         LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
                         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
                             //All location services are disabled
@@ -295,7 +277,7 @@ public abstract class ShoppingListFragment extends Fragment {
 
                         } else {
 
-                            if (model.starCount.equals("Completed")) {
+                            if (model.shoppingStatus.equals("Completed")) {
 
                                 Toast.makeText(getActivity(), "Shopping Assistant is not Available", Toast.LENGTH_LONG).show();
 
@@ -333,10 +315,10 @@ public abstract class ShoppingListFragment extends Fragment {
 
                                                     public void onClick(DialogInterface dialog, int which) {
                                                         // Do nothing but close the dialog
-                                                        String indexYear1 = String.valueOf(Arrays.asList(items).get(0));
+                                                        String getPaymentType = String.valueOf(Arrays.asList(items).get(0));
 
-                                                        onStatusClicked(globalPostRef, indexYear1);
-                                                        onStatusClicked(userPostRef, indexYear1);
+                                                        onStatusClicked(globalPostRef, getPaymentType);
+                                                        onStatusClicked(userPostRef, getPaymentType);
                                                         dialog.dismiss();
                                                     }
                                                 });
@@ -402,7 +384,6 @@ public abstract class ShoppingListFragment extends Fragment {
         Date date = new Date();
         final String transactionCompletedAt = String.valueOf(dateFormat.format(date)).toUpperCase();
 
-
         postRef.runTransaction(new Transaction.Handler() {
             @Override
             public Transaction.Result doTransaction(MutableData mutableData) {
@@ -413,16 +394,22 @@ public abstract class ShoppingListFragment extends Fragment {
 
                 if (p.uid.equals(userId)) {
 
-                    if (p.stars.containsKey(getUid())) {
-                        // Unstar the post and remove self from stars
-                        p.starCount = "Processing";
-                        p.stars.remove(getUid());
+                    if (p.status.containsKey(getUid())) {
+                        // Unstar the post and remove self from status
+                        p.shoppingStatus = "Processing";
+                        p.status.remove(getUid());
 
 
                     } else {
-                        // Star the post and add self to stars
+                        // Star the post and add self to status
 
+                        SharedPreferences preferences = getActivity().getSharedPreferences(PREFS_NAME, 0);
 
+                        String lat = preferences.getString("current_lat", "");
+                        String lon = preferences.getString("current_lon", "");
+
+                        Lat = Double.parseDouble(lat);
+                        Lon = Double.parseDouble(lon);
                         Geocoder gcd = new Geocoder(getContext(), Locale.getDefault());
 
                         List<Address> addresses = null;
@@ -437,8 +424,8 @@ public abstract class ShoppingListFragment extends Fragment {
                             String City = addresses.get(0).getLocality();
                             String PostCode = addresses.get(0).getPostalCode();
                             String firstLineOfAddress = addresses.get(0).getAddressLine(0);
-                            p.starCount = "Completed";
-                            p.stars.put(getUid(), true);
+                            p.shoppingStatus = "Completed";
+                            p.status.put(getUid(), true);
                             p.paymentType = PaymentType;
                             p.paymentCompletedAt = transactionCompletedAt;
                             p.srPostCode = PostCode;
@@ -452,8 +439,8 @@ public abstract class ShoppingListFragment extends Fragment {
                             String PostCode = addresses.get(0).getPostalCode();
                             String firstLineOfAddress = addresses.get(0).getAddressLine(0);
 
-                            p.starCount = "Completed";
-                            p.stars.put(getUid(), true);
+                            p.shoppingStatus = "Completed";
+                            p.status.put(getUid(), true);
                             p.paymentType = PaymentType;
                             p.paymentCompletedAt = transactionCompletedAt;
                             p.srPostCode = PostCode;
@@ -462,45 +449,44 @@ public abstract class ShoppingListFragment extends Fragment {
 
 
                         }
-                        mShoppingPoint = FirebaseDatabase.getInstance().getReference().child("users").child(userId);
-
-                        mShoppingPoint.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                                User point = dataSnapshot.getValue(User.class);
-
-                                // [START_EXCLUDE]
-                                if (point == null) {
-                                    // User is null, error out
-                                    Log.e(TAG, "User " + userId + " is unexpectedly null");
-                                    Toast.makeText(getActivity(),
-                                            "Error: could not fetch user.",
-                                            Toast.LENGTH_SHORT).show();
-                                } else {
-
-                                    Double earnedShopPoints = 50.00;
-                                    Double totalShopPoint = point.TotalshoppingPoints + earnedShopPoints;
-                                    mShoppingPoint.child("TotalshoppingPoints").setValue(totalShopPoint);
-                                    writeNewShoppingPoint(p.uid, p.shoppingAssistantName, p.createdAt, p.paymentCompletedAt,
-                                            totalShopPoint, earnedShopPoints, p.ShoppingAssistantPhoto, FirebaseAuth.getInstance().getCurrentUser().getEmail());
-
-
-                                }
-
-
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-
-                            }
-                        });
-
 
                     }
+                    mShoppingPoint = FirebaseDatabase.getInstance().getReference().child("users").child(userId);
 
+                    mShoppingPoint.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+
+                            User point = dataSnapshot.getValue(User.class);
+
+                            // [START_EXCLUDE]
+                            if (point == null) {
+                                // User is null, error out
+                                Log.e(TAG, "User " + userId + " is unexpectedly null");
+                                Toast.makeText(getActivity(),
+                                        "Error: could not fetch user.",
+                                        Toast.LENGTH_SHORT).show();
+                            } else {
+
+                                Double earnedShopPoints = 50.00;
+                                Double totalShopPoint = point.TotalshoppingPoints + earnedShopPoints;
+                                mShoppingPoint.child("TotalshoppingPoints").setValue(totalShopPoint);
+                                writeNewShoppingPoint(p.uid, p.shoppingAssistantName, p.createdAt, p.paymentCompletedAt,
+                                        totalShopPoint, earnedShopPoints, p.shoppingAssistantPhotoUrl, FirebaseAuth.getInstance().getCurrentUser().getEmail());
+
+
+                            }
+
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
                 }
+
                 // Set value and report transaction success
                 mutableData.setValue(p);
                 return Transaction.success(mutableData);
@@ -592,7 +578,6 @@ public abstract class ShoppingListFragment extends Fragment {
         PendingIntent pendingIntent = PendingIntent.getActivity(getActivity(), 1, intent, 0);
         return pendingIntent;
     }
-
 
 
 }
