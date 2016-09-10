@@ -56,8 +56,8 @@ public class StreetFragment extends Fragment implements OnStreetViewPanoramaRead
     public Bundle bundle;
     public double currentlatitude;
     public double currentlongitude;
-
-
+    public String lat;
+    public String lon;
     private StreetViewPanoramaFragment streetViewPanoramaFragment;
 
 
@@ -76,8 +76,11 @@ public class StreetFragment extends Fragment implements OnStreetViewPanoramaRead
         }
         try {
             view = inflater.inflate(R.layout.fragment_street, container, false);
+            SharedPreferences preferences = this.getActivity().getSharedPreferences(PREFS_NAME, 0);
 
-            locationManager = (LocationManager) this.getActivity().getSystemService(LOCATION_SERVICE);
+             lat = preferences.getString("current_lat", "");
+             lon = preferences.getString("current_lon", "");
+             locationManager = (LocationManager) this.getActivity().getSystemService(LOCATION_SERVICE);
 
             streetViewPanoramaFragment = (StreetViewPanoramaFragment) getActivity().getFragmentManager().findFragmentById(R.id.streetView);
             streetViewPanoramaFragment.getStreetViewPanoramaAsync(this);
@@ -94,20 +97,9 @@ public class StreetFragment extends Fragment implements OnStreetViewPanoramaRead
     @Override
     public void onStreetViewPanoramaReady(final StreetViewPanorama streetViewPanorama) {
 
-        SharedPreferences preferences = this.getActivity().getSharedPreferences(PREFS_NAME, 0);
-
-        String lat = preferences.getString("current_lat", "");
-        String lon = preferences.getString("current_lon", "");
-
         currentlatitude = Double.parseDouble(lat);
         currentlongitude = Double.parseDouble(lon);
-
         streetViewPanorama.setPosition(new LatLng(currentlatitude, currentlongitude));
-        streetViewPanorama.setPanningGesturesEnabled(true);
-        streetViewPanorama.setUserNavigationEnabled(true);
-        streetViewPanorama.setZoomGesturesEnabled(true);
-        streetViewPanorama.setStreetNamesEnabled(true);
-
 
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -133,7 +125,7 @@ public class StreetFragment extends Fragment implements OnStreetViewPanoramaRead
             public void onLocationChanged(Location location) {
 
 
-                streetViewPanorama.setPosition(new LatLng(location.getLatitude(), location.getLongitude()));
+                streetViewPanorama.setPosition(new LatLng(currentlatitude, currentlongitude));
 
 
 

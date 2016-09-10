@@ -221,9 +221,9 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
     protected void onStop() {
         super.onStop();
         if (mGoogleApiClient.isConnected()) {
-           // mGoogleApiClient.disconnect();
+            //mGoogleApiClient.disconnect();
         }
-        //mGoogleApiClient.connect();
+
     }
 
     @Override

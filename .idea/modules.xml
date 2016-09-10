@@ -3,7 +3,10 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/ShoppigAssistant.iml" filepath="$PROJECT_DIR$/ShoppigAssistant.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ShoppingAssistant.iml" filepath="$PROJECT_DIR$/ShoppingAssistant.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/firebase_support/firebase_support.iml" filepath="$PROJECT_DIR$/firebase_support/firebase_support.iml" />
       <module fileurl="file://$PROJECT_DIR$/firebase_support/firebase_support.iml" filepath="$PROJECT_DIR$/firebase_support/firebase_support.iml" />
     </modules>
   </component>

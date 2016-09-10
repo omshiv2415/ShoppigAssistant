@@ -5,6 +5,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.AsyncTask;
@@ -532,8 +534,18 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
 
             holder.authorView.setText(comment.author);
             holder.bodyView.setText(comment.text);
+            final String checkReg = "^(([gG][iI][rR] {0,}0[aA]{2})|((([a-pr-uwyzA-PR-UWYZ][a-hk-yA-HK-Y]?[0-9][0-9]?)|(([a-pr-uwyzA-PR-UWYZ][0-9][a-hjkstuwA-HJKSTUW])|" +
+                    "([a-pr-uwyzA-PR-UWYZ][a-hk-yA-HK-Y][0-9][abehmnprv-yABEHMNPRV-Y]))) {0,}[0-9][abd-hjlnp-uw-zABD-HJLNP-UW-Z]{2}))$";
 
             final String PostCode = holder.bodyView.getText().toString();
+
+            if (PostCode.matches(checkReg)){
+
+                holder.bodyView.setTextColor(Color.parseColor("#82BF00"));
+                holder.bodyView.setTypeface(null, Typeface.ITALIC);
+                holder.bodyView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.flag_location, 0);
+
+            }
 
             new DownloadImageTask((holder.shoppingRequestPhoto)).execute(comment.ShoppingAssistantPhoto);
             // Toast.makeText(ShoppingDetailActivity.this, "Welcome to the Shopping Assistant", Toast.LENGTH_LONG).show();
@@ -541,9 +553,6 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-                    String checkReg = "^(([gG][iI][rR] {0,}0[aA]{2})|((([a-pr-uwyzA-PR-UWYZ][a-hk-yA-HK-Y]?[0-9][0-9]?)|(([a-pr-uwyzA-PR-UWYZ][0-9][a-hjkstuwA-HJKSTUW])|" +
-                            "([a-pr-uwyzA-PR-UWYZ][a-hk-yA-HK-Y][0-9][abehmnprv-yABEHMNPRV-Y]))) {0,}[0-9][abd-hjlnp-uw-zABD-HJLNP-UW-Z]{2}))$";
 
                     if (PostCode.matches(checkReg)) {
 
@@ -554,20 +563,22 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
                             if (addresses != null && !addresses.isEmpty()) {
                                 Address address = addresses.get(0);
                                 // Use the address as needed
-                                String message = String.format("Latitude: %f, Longitude: %f", address.getLatitude(), address.getLongitude());
+                                String message = "You are going to " + address.getAddressLine(0).toUpperCase();
                                 Toast.makeText(ShoppingDetailActivity.this, message, Toast.LENGTH_LONG).show();
 
                                 Double sendLat = address.getLatitude();
                                 Double sendLon = address.getLongitude();
 
+                                // Create fragment and give it an argument for the selected article
 
-                                Intent mIntent = new Intent(ShoppingDetailActivity.this, NavigationActivity.class);
+                                Bundle args = new Bundle();
 
-                                mIntent.putExtra("Lat", sendLat);
-                                mIntent.putExtra("Lon", sendLon);
+                                args.putDouble("LatMap", sendLat);
+                                args.putDouble("LonMap", sendLon);
 
-                                startActivity(mIntent);
-                                ShoppingDetailActivity.this.finish();
+                                Intent intent = new Intent(ShoppingDetailActivity.this, NavigationActivity.class);
+                                intent.putExtras(args);
+                                startActivity(intent);
 
                             } else {
                                 // Display appropriate message when Geocoder services are not available

@@ -10,6 +10,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -183,15 +185,12 @@ public abstract class ShoppingListFragment extends Fragment {
                     viewHolder.paymentTypeText.setTextColor(Color.parseColor("#000000"));
                     viewHolder.SaName.setTextColor(Color.parseColor("#000000"));
                     viewHolder.transactioncompletedat.setTextColor(Color.parseColor("#000000"));
-
                     viewHolder.saAddressfirstline.setTextColor(Color.parseColor("#000000"));
                     viewHolder.sacity.setTextColor(Color.parseColor("#000000"));
                     viewHolder.saPostcode.setTextColor(Color.parseColor("#000000"));
                     viewHolder.timeView.setTextColor(Color.parseColor("#000000"));
-
                     viewHolder.titleView.setTextColor(Color.parseColor("#000000"));
                     viewHolder.bodyView.setTextColor(Color.parseColor("#000000"));
-
                     viewHolder.authorView.setTextColor(Color.parseColor("#000000"));
                     viewHolder.bodyView.setTextColor(Color.parseColor("#000000"));
                     viewHolder.dotProgressBar.setVisibility(View.GONE);
@@ -206,12 +205,12 @@ public abstract class ShoppingListFragment extends Fragment {
 
                     viewHolder.saAddressfirstline.setTextColor(Color.parseColor("#000000"));
                     viewHolder.sacity.setTextColor(Color.parseColor("#000000"));
-                    viewHolder.saPostcode.setTextColor(Color.parseColor("#000000"));
                     viewHolder.timeView.setTextColor(Color.parseColor("#000000"));
-
                     viewHolder.titleView.setTextColor(Color.parseColor("#000000"));
                     viewHolder.bodyView.setTextColor(Color.parseColor("#000000"));
-
+                    viewHolder.saPostcode.setTextColor(Color.parseColor("#000000"));
+                    viewHolder.saPostcode.setTypeface(null, Typeface.ITALIC);
+                    viewHolder.saPostcode.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.loc_item, 0);
                     viewHolder.authorView.setTextColor(Color.parseColor("#000000"));
                     viewHolder.bodyView.setTextColor(Color.parseColor("#000000"));
 
@@ -228,9 +227,9 @@ public abstract class ShoppingListFragment extends Fragment {
                                 if (addresses != null && !addresses.isEmpty()) {
                                     Address address = addresses.get(0);
                                     // Use the address as needed
-                                    String message = String.format("Latitude: %f, Longitude: %f", address.getLatitude(), address.getLongitude());
+                                   // String message = String.format("Latitude: %f, Longitude: %f", address.getLatitude(), address.getLongitude());
+                                    String message = "You are going to " + address.getAddressLine(0).toUpperCase();
                                     Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
-
 
                                     Double sendLat = address.getLatitude();
                                     Double sendLon = address.getLongitude();
