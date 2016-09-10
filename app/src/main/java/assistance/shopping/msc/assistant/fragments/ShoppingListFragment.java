@@ -228,7 +228,7 @@ public abstract class ShoppingListFragment extends Fragment {
                                     Address address = addresses.get(0);
                                     // Use the address as needed
                                    // String message = String.format("Latitude: %f, Longitude: %f", address.getLatitude(), address.getLongitude());
-                                    String message = "You are going to " + address.getAddressLine(0).toUpperCase();
+                                    String message = "You are going to " + address.getAddressLine(0).toUpperCase() + " " + address.getLocality().toUpperCase();
                                     Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
 
                                     Double sendLat = address.getLatitude();

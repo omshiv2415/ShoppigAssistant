@@ -186,7 +186,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
 
                 // Commit the transaction
                 transaction.commit();
-                showToastMessage("Navigated to map");
+
 
             }
 

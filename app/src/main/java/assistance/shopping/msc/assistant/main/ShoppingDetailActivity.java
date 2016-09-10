@@ -541,9 +541,9 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
 
             if (PostCode.matches(checkReg)){
 
-                holder.bodyView.setTextColor(Color.parseColor("#82BF00"));
+                holder.bodyView.setTextColor(Color.parseColor("#000000"));
                 holder.bodyView.setTypeface(null, Typeface.ITALIC);
-                holder.bodyView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.flag_location, 0);
+                holder.bodyView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.loc_item, 0);
 
             }
 
@@ -563,7 +563,7 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
                             if (addresses != null && !addresses.isEmpty()) {
                                 Address address = addresses.get(0);
                                 // Use the address as needed
-                                String message = "You are going to " + address.getAddressLine(0).toUpperCase();
+                                String message = "You are going to " + address.getAddressLine(0).toUpperCase() + " " + address.getLocality().toUpperCase() ;
                                 Toast.makeText(ShoppingDetailActivity.this, message, Toast.LENGTH_LONG).show();
 
                                 Double sendLat = address.getLatitude();
