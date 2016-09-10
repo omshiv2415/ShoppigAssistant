@@ -16,7 +16,7 @@ public class MyDetails {
     public String uGender;
     public String uUserName;
     public String uEmail;
-    public String uPhoto;
+    public String UserPhoto;
     public String uAuthentication;
     public Double TotalshoppingPoints;
 
@@ -36,7 +36,7 @@ public class MyDetails {
         this.uid = uid;
         this.uEmail = mEmail;
         this.uUserName = mUserName;
-        this.uPhoto = mPhoto;
+        this.UserPhoto = mPhoto;
         this.uAuthentication = uAuthentication;
         this.TotalshoppingPoints = TotalshoppingPoints;
     }
@@ -52,7 +52,7 @@ public class MyDetails {
         result.put("Gender", uGender);
         result.put("Email", uEmail);
         result.put("UserName", uUserName);
-        result.put("UserPhoto", uPhoto);
+        result.put("UserPhoto", UserPhoto);
         result.put("authentication", uAuthentication);
         result.put("TotalshoppingPoints", TotalshoppingPoints);
 

@@ -214,11 +214,11 @@ public class GoogleSignInActivity extends BaseActivity implements GoogleApiClien
     public void onAuthSuccess(final FirebaseUser user) {
 
         final String username = usernameFromEmail(user.getEmail());
-        final String userFirstname = "Update Your Name";
-        final String userLastname = "Update Your Last Name";
-        final String userGender = "Male";
-        final String userphoto = "https://lh3.googleusercontent.com/-et8-_Jd3MiY/AAAAAAAAAAI/AAAAAAAAAAs/9OWsA3w5ZGw/s96-c/photo.jpg";
-        final String userDateofBirth = "16/10/1981";
+        final String userFirstname = "Update";
+        final String userLastname = "Update";
+        final String userGender = "";
+        final String userphoto = String.valueOf(user.getPhotoUrl());
+        final String userDateofBirth = "";
         final String uid = mAuth.getCurrentUser().getUid();
 
         mDatabase.child("users").child(uid).addValueEventListener(new ValueEventListener() {
@@ -229,14 +229,14 @@ public class GoogleSignInActivity extends BaseActivity implements GoogleApiClien
                     writeNewUser(user.getUid(), username, user.getEmail(), FirebaseInstanceId.getInstance().getToken(), userFirstname,
                             userLastname, userGender, userDateofBirth, userphoto, uid, 50.00);
                     // Go to MainActivity
-                    Toast.makeText(GoogleSignInActivity.this, "Welcome to the Shopping Assistant", Toast.LENGTH_LONG).show();
+                    // Toast.makeText(GoogleSignInActivity.this, "Welcome to the Shopping Assistant", Toast.LENGTH_LONG).show();
                     Intent takeUserHome = new Intent(GoogleSignInActivity.this, NavigationActivity.class);
                     startActivity(takeUserHome);
                     finish();
 
                 } else {
 
-                    Toast.makeText(GoogleSignInActivity.this, "Welcome to the Shopping Assistant", Toast.LENGTH_LONG).show();
+                   // Toast.makeText(GoogleSignInActivity.this, "Welcome to the Shopping Assistant", Toast.LENGTH_LONG).show();
                     Intent takeUserHome = new Intent(GoogleSignInActivity.this, NavigationActivity.class);
                     startActivity(takeUserHome);
                     finish();
@@ -264,9 +264,9 @@ public class GoogleSignInActivity extends BaseActivity implements GoogleApiClien
 
     // [START basic_write]
     private void writeNewUser(String userId, String name, String email, String authentication, String FirstName, String LastName, String Gender, String DateOfBirth,
-                              String PhotoUri, String uid, Double TotalshoppingPoints) {
+                              String UserPhoto, String uid, Double TotalshoppingPoints) {
 
-        User user = new User(name, email, authentication, FirstName, LastName, Gender, DateOfBirth, PhotoUri, uid, TotalshoppingPoints);
+        User user = new User(name, email, authentication, FirstName, LastName, Gender, DateOfBirth, UserPhoto, uid, TotalshoppingPoints);
 
         mDatabase.child("users").child(userId).setValue(user);
     }

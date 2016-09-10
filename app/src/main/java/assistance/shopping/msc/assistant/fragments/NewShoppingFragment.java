@@ -1,24 +1,19 @@
 package assistance.shopping.msc.assistant.fragments;
 
 
-import android.Manifest;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.location.Address;
-import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationManager;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
@@ -153,95 +148,6 @@ public class NewShoppingFragment extends Fragment {
         String SAPhoto;
         final String SAGPhoto = String.valueOf(mAuth.getCurrentUser().getPhotoUrl());
 
-        if (mAuth.getCurrentUser().getProviders().contains("password")) {
-
-            SAPhoto = "https://lh3.googleusercontent.com/-et8-_Jd3MiY/AAAAAAAAAAI/AAAAAAAAAAs/9OWsA3w5ZGw/s96-c/photo.jpg";
-            DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy EEE HH:mm:ss a");
-            Date date = new Date();
-            final String createdAt = String.valueOf(dateFormat.format(date)).toUpperCase();
-
-            // Title is required
-            if (TextUtils.isEmpty(title)) {
-                mTitleField.setError(REQUIRED);
-                return;
-            }
-
-            // Body is required
-            if (TextUtils.isEmpty(body)) {
-                mBodyField.setError(REQUIRED);
-                return;
-            }
-
-            // [START single_value_read]
-            final String userId = baseActivity.getUid();
-            final String finalSAPhoto = SAPhoto;
-            mDatabase.child("users").child(userId).addListenerForSingleValueEvent(
-                    new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            // Get user value
-                            User user = dataSnapshot.getValue(User.class);
-
-                            // [START_EXCLUDE]
-                            if (user == null) {
-                                // User is null, error out
-                                Log.e(TAG, "User " + userId + " is unexpectedly null");
-                                Toast.makeText(getActivity(), "Please Update your Profile", Toast.LENGTH_SHORT).show();
-                                MyProfileFragment fragment = new MyProfileFragment();
-                                android.support.v4.app.FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-                                fragmentTransaction.replace(R.id.fragment_container, fragment);
-                                fragmentTransaction.commit();
-                            } else {
-                                // Write new post
-
-                                Geocoder gcd = new Geocoder(getContext(), Locale.getDefault());
-
-                                List<Address> addresses = null;
-                                try {
-                                    addresses = gcd.getFromLocation(Lat, Lon, 1);
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                                if (addresses.size() > 0) {
-                                    System.out.println(addresses.get(0).getLocality());
-
-                                    String City = addresses.get(0).getLocality();
-                                    String PostCode = addresses.get(0).getPostalCode();
-                                    String firstLineOfAddress = addresses.get(0).getAddressLine(0);
-
-                                    writeNewPost(userId, user.UserName, title, body, createdAt, finalSAPhoto, paymentType, tranCompletedAt,
-                                            user.FirstName, firstLineOfAddress, City, PostCode, srfirstlineofAddress, srcity, srpostcode, setTotalPoints);
-
-                                    Intent takeUserHome = new Intent(getActivity(), NavigationActivity.class);
-                                    startActivity(takeUserHome);
-
-
-                                } else {
-
-                                    Toast.makeText(getActivity(), "No Location Found...", Toast.LENGTH_SHORT).show();
-
-                                    Intent takeUserHome = new Intent(getActivity(), NavigationActivity.class);
-                                    startActivity(takeUserHome);
-
-
-                                }
-
-
-                            }
-
-                            // Finish this Activity, back to the stream
-                            baseActivity.finish();
-                            // [END_EXCLUDE]
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                            Log.w(TAG, "getUser:onCancelled", databaseError.toException());
-                        }
-                    });
-            // [END single_value_read]
-        } else {
-
 
             DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy EEE HH:mm:ss a");
             Date date = new Date();
@@ -299,7 +205,7 @@ public class NewShoppingFragment extends Fragment {
                                     String PostCode = addresses.get(0).getPostalCode();
                                     String firstLineOfAddress = addresses.get(0).getAddressLine(0);
 
-                                    writeNewPost(userId, user.UserName, title, body, createdAt, SAGPhoto, paymentType, tranCompletedAt,
+                                    writeNewPost(userId, user.UserName, title, body, createdAt, user.UserPhoto, paymentType, tranCompletedAt,
                                             user.FirstName, firstLineOfAddress, City, PostCode, srfirstlineofAddress, srcity, srpostcode, setTotalPoints);
 
                                     Intent takeUserHome = new Intent(getActivity(), NavigationActivity.class);
@@ -331,7 +237,7 @@ public class NewShoppingFragment extends Fragment {
             // [END single_value_read]
 
         }
-    }
+
 
 
     // [START write_fan_out]

@@ -45,6 +45,11 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import assistance.shopping.msc.assistant.R;
 import assistance.shopping.msc.assistant.fragments.ChatFragment;
@@ -58,6 +63,8 @@ import assistance.shopping.msc.assistant.fragments.PaymentFragment;
 import assistance.shopping.msc.assistant.fragments.RecentShoppingBroadcastFragment;
 import assistance.shopping.msc.assistant.fragments.ShoppingPointFragment;
 import assistance.shopping.msc.assistant.fragments.StreetFragment;
+import assistance.shopping.msc.assistant.model.User;
+import assistance.shopping.msc.assistant.support.BaseActivity;
 
 
 public class NavigationActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
@@ -77,7 +84,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
     public double currentlatitude;
     public double currentlongitude;
     public Location mLastLocation;
-
+    private DatabaseReference mDatabase;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,6 +102,31 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
                 showGPSDisabledAlertToUser();
             }
         }
+
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase.child("users").child(new BaseActivity().getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+
+                if (user.DateOfBirth.isEmpty()) {
+                    // User is null, error out
+
+                    Toast.makeText(NavigationActivity.this, "Please Update your Profile", Toast.LENGTH_SHORT).show();
+                    MyProfileFragment fragment = new MyProfileFragment();
+                    android.support.v4.app.FragmentTransaction fragmentTransaction = NavigationActivity.this.getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction.replace(R.id.fragment_container, fragment);
+                    fragmentTransaction.commit();
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
 
         buildGoogleApiClient();
 
@@ -633,17 +665,17 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
                 currentlatitude = mLastLocation.getLatitude();
                 currentlongitude = mLastLocation.getLongitude();
 
-                double myLat = currentlatitude;
-                double myLon = currentlongitude;
-                SharedPreferences preferences = getSharedPreferences(PREFS_NAME, 0);
+                //double myLat = currentlatitude;
+                //double myLon = currentlongitude;
+                //SharedPreferences preferences = getSharedPreferences(PREFS_NAME, 0);
 
-                SharedPreferences.Editor editor = preferences.edit();
-
-                editor.putString("current_lat", String.valueOf(myLat));
-                editor.putString("current_lon", String.valueOf(myLon));
-                editor.apply();
-                savePreferences("current_lat", String.valueOf(myLat));
-                savePreferences("current_lon", String.valueOf(myLon));
+                //SharedPreferences.Editor editor = preferences.edit();
+//
+                //editor.putString("current_lat", String.valueOf(myLat));
+               // editor.putString("current_lon", String.valueOf(myLon));
+               // editor.apply();
+               // savePreferences("current_lat", String.valueOf(myLat));
+               // savePreferences("current_lon", String.valueOf(myLon));
 
             }else{
 
@@ -732,7 +764,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
                 } else {
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
-                    Toast.makeText(this, "permission denied", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Please turn off apps appear on top in the settings", Toast.LENGTH_LONG).show();
                 }
                 return;
             }

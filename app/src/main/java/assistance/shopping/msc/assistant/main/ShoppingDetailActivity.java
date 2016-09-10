@@ -143,8 +143,9 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
 
                             final EditText edittext = new EditText(ShoppingDetailActivity.this);
                             edittext.setText(shoppingBroadcast.shoppingBroadcastTitle);
-                            alert.setMessage(shoppingBroadcast.shoppingBroadcastDescription);
-                            alert.setTitle(shoppingBroadcast.shoppingBroadcastTitle);
+                           
+                            alert.setTitle("Update");
+                            alert.setMessage("Shopping Broadcast Title");
                             alert.setView(edittext);
 
                             alert.setPositiveButton("Done", new DialogInterface.OnClickListener() {
@@ -206,12 +207,15 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
                             AlertDialog.Builder alert = new AlertDialog.Builder(ShoppingDetailActivity.this);
 
                             final EditText edittext = new EditText(ShoppingDetailActivity.this);
-                            alert.setMessage(shoppingBroadcast.shoppingBroadcastDescription);
-                            alert.setTitle(shoppingBroadcast.shoppingBroadcastTitle);
+
+                            edittext.setText(shoppingBroadcast.shoppingBroadcastDescription);
+
+                            alert.setTitle("Update");
+                            alert.setMessage("Shopping Broadcast Description");
 
                             alert.setView(edittext);
 
-                            alert.setPositiveButton("Yes Option", new DialogInterface.OnClickListener() {
+                            alert.setPositiveButton("Done", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int whichButton) {
                                     //What ever you want to do with the value
 
@@ -237,7 +241,6 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
 
                                             mUserPostReference.child("shoppingBroadcastDescription").setValue(YouEditTextValue);
 
-
                                         }
 
                                         @Override
@@ -249,7 +252,7 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
                                 }
                             });
 
-                            alert.setNegativeButton("No Option", new DialogInterface.OnClickListener() {
+                            alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int whichButton) {
                                     // what ever you want to do with No option.
                                 }

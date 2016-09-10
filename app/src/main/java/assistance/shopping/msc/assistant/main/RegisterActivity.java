@@ -180,11 +180,11 @@ public class RegisterActivity extends Activity {
 
     public void onAuthSuccess(FirebaseUser user) {
         String username = usernameFromEmail(user.getEmail());
-        String userFirstname = "ShoppingAssistant Update your name";
-        String userLastname = "ShoppingAssistant Update your name";
-        String userGender = "ShoppingAssistant Update your name";
-        String userphoto = "ShoppingAssistant Update your name";
-        String userDateofBirth = "ShoppingAssistant Update your name";
+        String userFirstname = "Update";
+        String userLastname = "Update";
+        String userGender = "";
+        String userphoto = "https://lh3.googleusercontent.com/-et8-_Jd3MiY/AAAAAAAAAAI/AAAAAAAAAAs/9OWsA3w5ZGw/s96-c/photo.jpg";
+        String userDateofBirth = "";
         String uid = mAuth.getCurrentUser().getUid();
         Double TotalshoppingPoints = 50.00;
         // Write new user
@@ -211,9 +211,9 @@ public class RegisterActivity extends Activity {
 
     // [START basic_write]
     private void writeNewUser(String userId, String name, String email, String authentication, String FirstName, String LastName, String Gender, String DateOfBirth,
-                              String PhotoUri, String uid, Double TotalshoppingPoints) {
+                              String UserPhoto, String uid, Double TotalshoppingPoints) {
 
-        User user = new User(name, email, authentication, FirstName, LastName, Gender, DateOfBirth, PhotoUri, uid, TotalshoppingPoints);
+        User user = new User(name, email, authentication, FirstName, LastName, Gender, DateOfBirth, UserPhoto, uid, TotalshoppingPoints);
 
         mDatabase.child("users").child(userId).setValue(user);
     }

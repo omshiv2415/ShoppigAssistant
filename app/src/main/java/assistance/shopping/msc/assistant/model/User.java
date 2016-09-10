@@ -13,7 +13,7 @@ public class User {
     public String LastName;
     public String Gender;
     public String DateOfBirth;
-    public String PhotoUri;
+    public String UserPhoto;
     public String uid;
     public Double TotalshoppingPoints;
 
@@ -23,7 +23,7 @@ public class User {
     }
 
     public User(String username, String email, String AuthenticationToken, String FirstName, String LastName, String Gender,
-                String DateOfBirth, String PhotoUri, String uid, Double TotalshoppingPoints) {
+                String DateOfBirth, String UserPhoto, String uid, Double TotalshoppingPoints) {
         this.UserName = username;
         this.email = email;
         this.authentication = AuthenticationToken;
@@ -31,7 +31,7 @@ public class User {
         this.LastName = LastName;
         this.Gender = Gender;
         this.DateOfBirth = DateOfBirth;
-        this.PhotoUri = PhotoUri;
+        this.UserPhoto = UserPhoto;
         this.uid = uid;
         this.TotalshoppingPoints = TotalshoppingPoints;
     }

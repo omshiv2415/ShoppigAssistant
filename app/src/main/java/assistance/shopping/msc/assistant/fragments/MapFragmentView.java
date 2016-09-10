@@ -129,7 +129,6 @@ public class MapFragmentView extends Fragment {
                         @Override
                         public void onLocationChanged(Location location) {
 
-
                             googleMap.getUiSettings().setMyLocationButtonEnabled(true);
                             googleMap.getUiSettings().setMapToolbarEnabled(true);
                             googleMap.getUiSettings().setAllGesturesEnabled(true);
