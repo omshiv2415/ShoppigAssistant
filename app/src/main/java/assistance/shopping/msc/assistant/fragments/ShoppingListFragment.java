@@ -28,6 +28,9 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,6 +52,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
@@ -109,9 +113,12 @@ public abstract class ShoppingListFragment extends Fragment {
         fab = (FloatingActionButton) rootView.findViewById(R.id.fab_new_post);
 
 
-
-
         return rootView;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
     }
 
     @Override
@@ -157,6 +164,10 @@ public abstract class ShoppingListFragment extends Fragment {
                     }
                 });
 
+
+
+
+
                 if (model.shoppingAssistantPhotoUrl == null) {
                     viewHolder.shoppingAssistantPhoto
                             .setImageDrawable(ContextCompat
@@ -170,6 +181,9 @@ public abstract class ShoppingListFragment extends Fragment {
 
 
                 // Determine if the current user has liked this post and set UI accordingly
+
+
+
 
                 if (model.shoppingStatus.equals("Completed")) {
 
@@ -215,6 +229,48 @@ public abstract class ShoppingListFragment extends Fragment {
                     viewHolder.bodyView.setTextColor(Color.parseColor("#000000"));
 
                     viewHolder.dotProgressBar.startProgress();
+
+                    viewHolder.bodyView.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+
+                        }
+
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+
+                        }
+
+                        @Override
+                        public void afterTextChanged(Editable s) {
+
+                            String str = model.createdAt.substring(00,23);
+
+                            DateFormat format = new SimpleDateFormat("dd-MM-yyyy EEE HH:mm:ss", Locale.ENGLISH);
+
+                            long pastTime = 0;
+                            try {
+                                Date date = format.parse(str);
+                                pastTime = date.getTime();
+                            } catch (ParseException e) {
+                                Log.e("log", e.getMessage(), e);
+                            }
+
+                            long curTime = System.currentTimeMillis();
+
+                            pastTime = pastTime + 20000;
+
+                            if (curTime < pastTime){
+
+                                showSimpleNotification(model.shoppingAssistantName + " is doing shopping at " +  model.saFirstLineAddress,model.shoppingBroadcastTitle);
+                            }
+
+
+                        }
+
+                    });
 
 
                     viewHolder.saPostcode.setOnClickListener(new View.OnClickListener() {
@@ -510,6 +566,8 @@ public abstract class ShoppingListFragment extends Fragment {
     }
 
 
+
+
     public String getUid() {
         return FirebaseAuth.getInstance().getCurrentUser().getUid();
     }
@@ -571,7 +629,7 @@ public abstract class ShoppingListFragment extends Fragment {
 
     private PendingIntent pendingIntentForNotification() {
         //Create the intent you want to show when the notification is clicked
-        Intent intent = new Intent(getActivity(), ShoppingListFragment.class);
+        Intent intent = new Intent(getActivity(), NavigationActivity.class);
 
         //This will hold the intent you've created until the notification is tapped.
         PendingIntent pendingIntent = PendingIntent.getActivity(getActivity(), 1, intent, 0);
