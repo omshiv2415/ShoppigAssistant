@@ -4,7 +4,7 @@
 Requirements
 
 1. Google Firebase Account
-2. Android Studio Version 2.0 +
+2. Android Studio Version 2.0 or latest version AND gradle 2.2.0-rc1 or upgraded version
 3. Android SDK
 4. Android Device or Emulator Running API Level between 16 and 23
 
