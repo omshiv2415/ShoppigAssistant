@@ -8,26 +8,27 @@ Step 1. CREATE A FIREBASE ACCOUNT OR LOGIN WITH GOOGLE
         To run this project in Android Studio you must have to sign up for the google firebase
         console. 
         
-Here is the link you can register  https://www.firebase.com/login/
+Here is the link you can register:  https://www.firebase.com/login/
 
 
-        please follow the tutorial to crete project on the firebase console
+        Please follow the tutorial to crete project on the firebase console
 
 
-Here is the link you can register     https://www.youtube.com/watch?v=8UJQIkI8LhA
-
+Here is the video Tutorial link you can follow:  https://www.youtube.com/watch?v=8UJQIkI8LhA
 
       
 
 Step 2. Clone or import the project in android studio
 
 
-
         Repository Name: git@github.com:omshiv2415/ShoppingAssistant.git
         or 
         Download the project and import to the Android Studio
         
-download: https://github.com/omshiv2415/ShoppingAssistant
+Download: https://github.com/omshiv2415/ShoppingAssistant
+
+
+Here is the video Tutorial link you can follow to import project:  https://youtu.be/vFLiZgdppYQ
 
 
 <h1 align="center">SHOPPING ASSISTANT ANDROID MOBILE APPLICATION</h1>
