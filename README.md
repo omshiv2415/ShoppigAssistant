@@ -10,7 +10,6 @@ Step 1. CREATE A FIREBASE ACCOUNT OR LOGIN WITH GOOGLE
         
 Here is the link you can register  https://www.firebase.com/login/
 
-please follow this Tutorial if you need more details to setup the account and creating a project
 
         Register and setup environment in the firebase console Development after that clone the
         Following repository
@@ -24,8 +23,9 @@ please follow this Tutorial if you need more details to setup the account and cr
 
 Step 2. After Cloning the git type following
 
-        Command Name: bundle install
-        
+Here is the link you can register     https://www.youtube.com/watch?v=8UJQIkI8LhA
+
+
 Step 3. After install bundle
 
         Command Name:  rake db:migrate
