@@ -1,3 +1,4 @@
+------------
 
 == README
 
@@ -19,7 +20,7 @@ SHOPPING ASSISTANT SETUP GUIDE
 Here is the link you can register:  https://www.firebase.com/login/
 
 
-        Please follow the tutorial to crete project on the firebase console
+        Please follow the tutorial to create project on the firebase console
 
 
 Here is the video Tutorial link you can follow:  https://www.youtube.com/watch?v=8UJQIkI8LhA
@@ -33,6 +34,7 @@ Here is the video Tutorial link you can follow:  https://www.youtube.com/watch?v
         Repository Name: git@github.com:omshiv2415/ShoppingAssistant.git
         or 
         Download the project and import to the Android Studio
+        
         
 Download: https://github.com/omshiv2415/ShoppingAssistant
 
