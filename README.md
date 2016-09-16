@@ -11,31 +11,23 @@ Step 1. CREATE A FIREBASE ACCOUNT OR LOGIN WITH GOOGLE
 Here is the link you can register  https://www.firebase.com/login/
 
 
-        Register and setup environment in the firebase console Development after that clone the
-        Following repository
+        please follow the tutorial to crete project on the firebase console
 
-        Command Name: git@github.com:omshiv2415/ShoppingAssistant.git
-        or 
-        Download the project and import to the Android Studio
-        
-        https://github.com/omshiv2415/ShoppingAssistant
-        
-
-Step 2. After Cloning the git type following
 
 Here is the link you can register     https://www.youtube.com/watch?v=8UJQIkI8LhA
 
 
-Step 3. After install bundle
+      
 
-        Command Name:  rake db:migrate
+Step 2. Clone or import the project in android studio
+
+
+
+        Repository Name: git@github.com:omshiv2415/ShoppingAssistant.git
+        or 
+        Download the project and import to the Android Studio
         
-Step 4. To run the Project
-
-        Command Name:        rails s -b 0.0.0.0
-        Press from tool bar: Preview
-        
-
+download: https://github.com/omshiv2415/ShoppingAssistant
 
 
 <h1 align="center">SHOPPING ASSISTANT ANDROID MOBILE APPLICATION</h1>
