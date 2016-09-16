@@ -144,8 +144,8 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
                             AlertDialog.Builder alert = new AlertDialog.Builder(ShoppingDetailActivity.this);
 
                             final EditText edittext = new EditText(ShoppingDetailActivity.this);
+
                             edittext.setText(shoppingBroadcast.shoppingBroadcastTitle);
-                           
                             alert.setTitle("Update");
                             alert.setMessage("Shopping Broadcast Title");
                             alert.setView(edittext);

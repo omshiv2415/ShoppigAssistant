@@ -325,47 +325,30 @@ public abstract class ShoppingListFragment extends Fragment {
                         LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
                         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
                             //All location services are disabled
-
                             Toast.makeText(getActivity(), "Please turn on Location and press back Button", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                             startActivity(intent);
-
                         } else {
-
                             if (model.shoppingStatus.equals("Completed")) {
-
                                 Toast.makeText(getActivity(), "Shopping Assistant is not Available", Toast.LENGTH_LONG).show();
-
                             } else if ((!model.uid.equals(FirebaseAuth.getInstance().getCurrentUser().getUid()))) {
-
                                 Toast.makeText(getActivity(), "This is not your shopping Broadcast", Toast.LENGTH_LONG).show();
-
                             } else {
-
-                                // Need to write to both places the post is stored
+                                // Need to write to both places the broadcast is stored
                                 final DatabaseReference globalPostRef = mDatabase.child("shopping-broadcast").child(postRef.getKey());
                                 final DatabaseReference userPostRef = mDatabase.child("user-shopping-broadcast").child(model.uid).child(postRef.getKey());
-
-
                                 final CharSequence[] items = {"Cash", "Apple Pay", "Android Pay", "Debit or Credit Card", "PayPal"};
-
                                 // Creating and Building the Dialog
                                 final AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(getActivity(), Theme_Dialog));
-                                builder.setTitle("Please confirmed payment type");
-
-
+                                builder.setTitle("Please confirm payment type");
                                 builder.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, final int item) {
-
-
                                         switch (item) {
                                             case 0:
                                                 // Run two transactions
                                                 final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
                                                 builder.setTitle("Confirm");
                                                 builder.setMessage("Are you sure?");
-
                                                 builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
 
                                                     public void onClick(DialogInterface dialog, int which) {
@@ -377,39 +360,28 @@ public abstract class ShoppingListFragment extends Fragment {
                                                         dialog.dismiss();
                                                     }
                                                 });
-
                                                 builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
 
                                                     @Override
                                                     public void onClick(DialogInterface dialog, int which) {
-
                                                         // Do nothing
                                                         dialog.dismiss();
                                                     }
                                                 });
-
                                                 AlertDialog alert = builder.create();
                                                 alert.show();
-
-
                                                 break;
                                             case 1:
                                                 // Run two transactions
-
                                                 Toast.makeText(getActivity(), "This Payment will be available very soon", Toast.LENGTH_LONG).show();
-
                                                 break;
                                             case 2:
-
                                                 Toast.makeText(getActivity(), "This Payment will be available very soon", Toast.LENGTH_LONG).show();
-
                                                 break;
                                             case 3:
-
                                                 Toast.makeText(getActivity(), "This Payment will be available very soon", Toast.LENGTH_LONG).show();
                                                 break;
                                             case 4:
-
                                                 Toast.makeText(getActivity(), "This Payment will be available very soon", Toast.LENGTH_LONG).show();
                                                 break;
 
@@ -490,19 +462,7 @@ public abstract class ShoppingListFragment extends Fragment {
 
                         } else {
 
-                            String City = addresses.get(0).getLocality();
-                            String PostCode = addresses.get(0).getPostalCode();
-                            String firstLineOfAddress = addresses.get(0).getAddressLine(0);
-
-                            p.shoppingStatus = "Completed";
-                            p.status.put(getUid(), true);
-                            p.paymentType = PaymentType;
-                            p.paymentCompletedAt = transactionCompletedAt;
-                            p.srPostCode = PostCode;
-                            p.srCity = City;
-                            p.srFirstLineAddress = firstLineOfAddress;
-
-
+                            Toast.makeText(getActivity(), "Please try agin no location found", Toast.LENGTH_LONG).show();
                         }
 
                     }

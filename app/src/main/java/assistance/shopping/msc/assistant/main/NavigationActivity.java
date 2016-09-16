@@ -44,6 +44,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -85,6 +86,7 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
     public double currentlongitude;
     public Location mLastLocation;
     private DatabaseReference mDatabase;
+    private FirebaseAnalytics mFirebaseAnalytics;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,12 +104,20 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
                 showGPSDisabledAlertToUser();
             }
         }
-
+        // getting firebase analytic instances.
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mDatabase.child("users").child(new BaseActivity().getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User user = dataSnapshot.getValue(User.class);
+
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, user.uid);
+                bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, user.Gender);
+                bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Gender");
+                mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+
 
                 if (user.DateOfBirth.isEmpty()) {
                     // User is null, error out
@@ -430,40 +440,40 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
         assert tabLayout != null;
         tabLayout.setupWithViewPager(mViewPager);
 
+        // setting up on click listner on floating action button
         floatingActionButton = (FloatingActionButton) findViewById(R.id.fab_new_post);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+                // getting user's location from location provider and checking the location is on or off
+                // if location is not enabled
+                if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) &&
+                        !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
 
                     showToastMessage("Please Turn On Location");
                     Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                     startActivity(intent);
 
-                } else {
-
+                }// if location is enabled...
+                else {
+                    // taking a permission from user in Android 23+ API
                     if (ActivityCompat.checkSelfPermission(NavigationActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)
-                            != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(NavigationActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION)
-                            != PackageManager.PERMISSION_GRANTED) {
+                            != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(NavigationActivity.
+                            this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                         // TODO: Consider calling
-                        //    ActivityCompat#requestPermissions
-                        // here to request the missing permissions, and then overriding
-                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                        //                                          int[] grantResults)
-                        // to handle the case where the user grants the permission. See the documentation
-                        // for ActivityCompat#requestPermissions for more details.
+
                         return;
                     }
 
                    if (Double.valueOf(currentlatitude).equals(null)) {
 
-
+                       // if location in not giving current LatLang it will show following message
                        showToastMessage("Please try again no Location available");
 
 
                     } else {
 
+                       // grant access to the new shopping fragment.
                        NewShoppingFragment fragment = new NewShoppingFragment();
                        android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                        fragmentTransaction.replace(R.id.fragment_container, fragment);

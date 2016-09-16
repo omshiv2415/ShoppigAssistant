@@ -120,7 +120,7 @@ public class NewShoppingFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
 
-                    submitPost();
+                    submitShoppingBroadcast();
                 }
             });
 
@@ -133,7 +133,7 @@ public class NewShoppingFragment extends Fragment {
     }
 
 
-    private void submitPost() {
+    private void submitShoppingBroadcast() {
 
 
         final String title = mTitleField.getText().toString();
@@ -205,7 +205,7 @@ public class NewShoppingFragment extends Fragment {
                                     String PostCode = addresses.get(0).getPostalCode();
                                     String firstLineOfAddress = addresses.get(0).getAddressLine(0);
 
-                                    writeNewPost(userId, user.UserName, title, body, createdAt, user.UserPhoto, paymentType, tranCompletedAt,
+                                    writeNewShoppingBroadcast(userId, user.UserName, title, body, createdAt, user.UserPhoto, paymentType, tranCompletedAt,
                                             user.FirstName, firstLineOfAddress, City, PostCode, srfirstlineofAddress, srcity, srpostcode, setTotalPoints);
 
                                     Intent takeUserHome = new Intent(getActivity(), NavigationActivity.class);
@@ -241,9 +241,9 @@ public class NewShoppingFragment extends Fragment {
 
 
     // [START write_fan_out]
-    private void writeNewPost(String userId, String shoppingAssistant, String title, String body, String createdAt, String ShoppingAssistantPhoto, String paymentType,
-                              String paymentCompletedAt, String shoppingAssistantName, String saFirstLineAddress, String saCity, String saPostCode, String srFirstLineAddress,
-                              String srCity, String srPostCode, Double setShoppingPoints) {
+    private void writeNewShoppingBroadcast(String userId, String shoppingAssistant, String title, String body, String createdAt, String ShoppingAssistantPhoto, String paymentType,
+                                           String paymentCompletedAt, String shoppingAssistantName, String saFirstLineAddress, String saCity, String saPostCode, String srFirstLineAddress,
+                                           String srCity, String srPostCode, Double setShoppingPoints) {
 
         String key = mDatabase.child("shopping-broadcast").push().getKey();
         ShoppingBroadcast shoppingBroadcast = new ShoppingBroadcast(userId, shoppingAssistant, title, body, createdAt, ShoppingAssistantPhoto, paymentType,

@@ -126,16 +126,15 @@ public class RegisterActivity extends Activity {
                                     Log.d(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
 
                                     if (task.isSuccessful()) {
-
+                                        // calling onAutSuccess method when task is successful
                                         onAuthSuccess(task.getResult().getUser());
 
                                     } else if (!task.isSuccessful()) {
-
+                                        // setting up toast error message
                                         Toast.makeText(RegisterActivity.this, "Authentication failed.",
                                                 Toast.LENGTH_SHORT).show();
 
                                     }
-
 
                                 }
 
