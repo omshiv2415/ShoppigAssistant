@@ -37,8 +37,8 @@ Download: https://github.com/omshiv2415/ShoppingAssistant
 
 Here is the video Tutorial link you can follow to import project:  https://youtu.be/vFLiZgdppYQ
 
-
-
+------------
+------------
 
 <h1 align="center">SHOPPING ASSISTANT ANDROID MOBILE APPLICATION</h1>
 
