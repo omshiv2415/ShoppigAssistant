@@ -4,6 +4,7 @@
 SHOPPING ASSISTANT SETUP GUIDE
 
 Step 1. CREATE A FIREBASE ACCOUNT OR LOGIN WITH GOOGLE
+
         To run this project in Android Studio you must have to sign up for the google firebase
         console. 
         
@@ -22,13 +23,19 @@ please follow this Tutorial if you need more details to setup the account and cr
         
 
 Step 2. After Cloning the git type following
+
         Command Name: bundle install
+        
 Step 3. After install bundle
+
         Command Name:  rake db:migrate
+        
 Step 4. To run the Project
+
         Command Name:        rails s -b 0.0.0.0
         Press from tool bar: Preview
-Step 5. Setup Tutorial (Optional)
+        
+
 
 
 <h1 align="center">SHOPPING ASSISTANT ANDROID MOBILE APPLICATION</h1>
