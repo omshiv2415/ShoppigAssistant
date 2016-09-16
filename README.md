@@ -10,7 +10,8 @@ Requirements
 
 SHOPPING ASSISTANT SETUP GUIDE
 
-Step 1. CREATE A FIREBASE ACCOUNT OR LOGIN WITH GOOGLE
+<h3 align="center">Step 1. CREATE A FIREBASE ACCOUNT OR LOGIN WITH GOOGLE</h3>
+
 
         To run this project in Android Studio you must have to sign up for the google firebase
         console. 
@@ -24,8 +25,8 @@ Here is the link you can register:  https://www.firebase.com/login/
 Here is the video Tutorial link you can follow:  https://www.youtube.com/watch?v=8UJQIkI8LhA
 
       
+<h3 align="center">Step 2. Clone or import the project in android studio</h3>
 
-Step 2. Clone or import the project in android studio
 
 
         Repository Name: git@github.com:omshiv2415/ShoppingAssistant.git
