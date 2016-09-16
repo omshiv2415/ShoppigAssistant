@@ -1,6 +1,13 @@
 
 == README
 
+Requirements
+
+1. Google Firebase Account
+2. Android Studio Version 2.0 +
+3. Android SDK
+4. Android Device or Emulator Running API Level between 16 and 23
+
 SHOPPING ASSISTANT SETUP GUIDE
 
 Step 1. CREATE A FIREBASE ACCOUNT OR LOGIN WITH GOOGLE
