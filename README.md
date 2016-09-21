@@ -1,5 +1,9 @@
+
 ------------
 
+<h1 align="center">SHOPPING ASSISTANT ANDROID MOBILE APPLICATION</h1>
+
+------------
 == README
 
 Requirements
