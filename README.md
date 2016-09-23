@@ -31,6 +31,15 @@ Here is the link you can register:  https://www.firebase.com/login/
 
 Here is the video Tutorial link you can follow:  https://www.youtube.com/watch?v=8UJQIkI8LhA
 
+Once you have created project goto the Database rules like bellow code
+
+{
+  "rules": {
+    ".read": "auth != null",
+    ".write": "auth != null"
+  }
+}
+
 ------------
       
 <h3 align="left">Step 2. Clone or import the project in android studio</h3>
