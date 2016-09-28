@@ -16,6 +16,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -160,7 +161,7 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
                                         @Override
                                         public void onDataChange(DataSnapshot dataSnapshot) {
 
-                                            mPostReference.child("title").setValue(YouEditTextValue);
+                                            mPostReference.child("shoppingBroadcastTitle").setValue(YouEditTextValue);
 
 
                                         }
@@ -174,7 +175,7 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
                                         @Override
                                         public void onDataChange(DataSnapshot dataSnapshot) {
 
-                                            mUserPostReference.child("title").setValue(YouEditTextValue);
+                                            mUserPostReference.child("shoppingBroadcastTitle").setValue(YouEditTextValue);
 
 
                                         }
@@ -328,7 +329,7 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
                         // Get user information
                         User user = dataSnapshot.getValue(User.class);
                         String shoppingAssistantName = user.UserName;
-                        String shoppingAssistantPhoto = mAuth.getCurrentUser().getPhotoUrl().toString();
+                        String shoppingAssistantPhoto = user.UserPhoto;
 
 
                         // Create new comment object
@@ -550,7 +551,7 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
             new DownloadImageTask((holder.shoppingRequestPhoto)).execute(comment.ShoppingAssistantPhoto);
             // Toast.makeText(ShoppingDetailActivity.this, "Welcome to the Shopping Assistant", Toast.LENGTH_LONG).show();
 
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
+            holder.bodyView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
@@ -564,7 +565,7 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
                                 Address address = addresses.get(0);
                                 // Use the address as needed
                                 String message = "You are going to " + address.getAddressLine(0).toUpperCase() + " " + address.getLocality().toUpperCase() ;
-                                Toast.makeText(ShoppingDetailActivity.this, message, Toast.LENGTH_LONG).show();
+                                Toast.makeText(ShoppingDetailActivity.this, message,Toast.LENGTH_LONG).show();
 
                                 Double sendLat = address.getLatitude();
                                 Double sendLon = address.getLongitude();
@@ -582,6 +583,7 @@ public class ShoppingDetailActivity extends BaseActivity implements View.OnClick
 
                             } else {
                                 // Display appropriate message when Geocoder services are not available
+
                                 Toast.makeText(ShoppingDetailActivity.this, "Sorry unable to find location", Toast.LENGTH_LONG).show();
                             }
                         } catch (IOException e) {

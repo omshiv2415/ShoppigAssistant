@@ -82,8 +82,8 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
     public LocationRequest mLocationRequest;
     public GoogleApiClient mGoogleApiClient;
     public LocationManager locationManager;
-    public double currentlatitude;
-    public double currentlongitude;
+    public double currentlatitude ; //51.388871
+    public double currentlongitude ; //51.392204;
     public Location mLastLocation;
     private DatabaseReference mDatabase;
     private FirebaseAnalytics mFirebaseAnalytics;
