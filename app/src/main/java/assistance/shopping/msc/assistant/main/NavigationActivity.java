@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
@@ -14,6 +16,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
+import android.speech.tts.TextToSpeech;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -30,6 +33,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -51,6 +55,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 import assistance.shopping.msc.assistant.R;
 import assistance.shopping.msc.assistant.fragments.ChatFragment;
@@ -82,15 +90,17 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
     public LocationRequest mLocationRequest;
     public GoogleApiClient mGoogleApiClient;
     public LocationManager locationManager;
-    public double currentlatitude ; //51.388871
-    public double currentlongitude ; //51.392204;
+    public double currentlatitude; //51.388871
+    public double currentlongitude; //51.392204;
     public Location mLastLocation;
     private DatabaseReference mDatabase;
     private FirebaseAnalytics mFirebaseAnalytics;
+    private TextToSpeech speech;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
+
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
@@ -315,13 +325,65 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
         } else if (id == R.id.action_logout) {
 
 
-                    FirebaseAuth.getInstance().signOut();
-                    mAuth.removeAuthStateListener(mAuthListener);
-                    Intent takeUserHome = new Intent(NavigationActivity.this, LoginActivity.class);
-                    startActivity(takeUserHome);
+            FirebaseAuth.getInstance().signOut();
+            mAuth.removeAuthStateListener(mAuthListener);
+            Intent takeUserHome = new Intent(NavigationActivity.this, LoginActivity.class);
+            startActivity(takeUserHome);
 
 
             return true;
+
+        } else if (id == R.id.action_gps) {
+            Geocoder gcd = new Geocoder(NavigationActivity.this, Locale.getDefault());
+
+            List<Address> addresses = null;
+            try {
+                addresses = gcd.getFromLocation(currentlatitude, currentlongitude, 1);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if (addresses.size() > 0) {
+                System.out.println(addresses.get(0).getLocality());
+
+                final String City = addresses.get(0).getLocality();
+                final String PostCode = addresses.get(0).getPostalCode();
+                final String firstLineOfAddress = addresses.get(0).getAddressLine(0);
+
+
+                mDatabase.child("users").child(mAuth.getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        final User user = dataSnapshot.getValue(User.class);
+                        speech = new TextToSpeech(NavigationActivity.this, new TextToSpeech.OnInitListener() {
+                            @Override
+                            public void onInit(int status) {
+                                if (status != TextToSpeech.ERROR) {
+                                    speech.setLanguage(Locale.UK);
+                                    String toSpeak =  user.FirstName + " " + "Your current location is " + " " + firstLineOfAddress + " " + City + " " + PostCode ;
+                                    speech.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
+                                    Toast toast= Toast.makeText(NavigationActivity.this,toSpeak.toUpperCase(), Toast.LENGTH_SHORT);
+                                    toast.setDuration(Toast.LENGTH_LONG);
+                                    toast.setGravity(Gravity.CENTER, 0, 0);
+                                    toast.show();
+
+
+                                }
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+
+
+
+
+            }
 
         }
 
@@ -465,20 +527,20 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
                         return;
                     }
 
-                   if (Double.valueOf(currentlatitude).equals(null)) {
+                    if (Double.valueOf(currentlatitude).equals(null)) {
 
-                       // if location in not giving current LatLang it will show following message
-                       showToastMessage("Please try again no Location available");
+                        // if location in not giving current LatLang it will show following message
+                        showToastMessage("Please try again no Location available");
 
 
                     } else {
 
-                       // grant access to the new shopping fragment.
-                       NewShoppingFragment fragment = new NewShoppingFragment();
-                       android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                       fragmentTransaction.replace(R.id.fragment_container, fragment);
-                       fragmentTransaction.commit();
-                   }
+                        // grant access to the new shopping fragment.
+                        NewShoppingFragment fragment = new NewShoppingFragment();
+                        android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                        fragmentTransaction.replace(R.id.fragment_container, fragment);
+                        fragmentTransaction.commit();
+                    }
                 }
             }
 
@@ -682,12 +744,12 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
                 //SharedPreferences.Editor editor = preferences.edit();
 //
                 //editor.putString("current_lat", String.valueOf(myLat));
-               // editor.putString("current_lon", String.valueOf(myLon));
-               // editor.apply();
-               // savePreferences("current_lat", String.valueOf(myLat));
-               // savePreferences("current_lon", String.valueOf(myLon));
+                // editor.putString("current_lon", String.valueOf(myLon));
+                // editor.apply();
+                // savePreferences("current_lat", String.valueOf(myLat));
+                // savePreferences("current_lon", String.valueOf(myLon));
 
-            }else{
+            } else {
 
                 showToastMessage("No Location Available");
 
