@@ -380,7 +380,11 @@ public class NavigationActivity extends AppCompatActivity implements NavigationV
                 });
 
 
-
+            } else {
+                Toast toast = Toast.makeText(NavigationActivity.this, "No Location Found....Please try again", Toast.LENGTH_SHORT);
+                toast.setDuration(Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
 
 
             }
