@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/action_gps"
-        android:icon="@drawable/cur_my_location"
+        android:icon="@drawable/button_loc"
         android:title="get location"
         app:showAsAction="always"/>
     <item
