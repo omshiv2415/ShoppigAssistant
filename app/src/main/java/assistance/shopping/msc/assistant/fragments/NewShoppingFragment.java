@@ -105,9 +105,6 @@ public class NewShoppingFragment extends Fragment {
 
 
 
-
-
-
             mBodyField.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

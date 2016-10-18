@@ -3,6 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/action_gps"
+        android:icon="@drawable/button_loc"
+        android:title="get location"
+        app:showAsAction="always"/>
+    <item
 
         android:id="@+id/action_logout"
         android:orderInCategory="100"
@@ -18,4 +23,7 @@
         android:orderInCategory="100"
         android:title="@string/update_profile"
         app:showAsAction="never" />
+
 </menu>
+
+
